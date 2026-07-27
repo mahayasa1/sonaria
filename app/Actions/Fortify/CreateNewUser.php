@@ -21,13 +21,23 @@ class CreateNewUser implements CreatesNewUsers
     {
         Validator::make($input, [
             ...$this->profileRules(),
+            'username' => ['required', 'string', 'max:50', 'unique:users,username'],
             'password' => $this->passwordRules(),
         ])->validate();
-
+    
+        $defaultRole  = \App\Models\Role::where('role_name', 'Member')->first();
+        $defaultLevel = \App\Models\Level::orderBy('min_xp')->first();
+    
         return User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => $input['password'],
+            'role_id'    => $defaultRole?->role_id,
+            'level_id'   => $defaultLevel?->level_id,
+            'username'   => $input['username'],
+            'name'       => $input['name'],
+            'email'      => $input['email'],
+            'password'   => $input['password'],
+            'total_xp'   => 0,
+            'total_point'=> 0,
+            'status'     => 'Active',
         ]);
     }
 }

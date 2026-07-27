@@ -28,10 +28,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
-// ==== Terproteksi (harus login) ====
-Route::middleware('auth')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
     // Satu pintu masuk dashboard — otomatis dialihkan ke tampilan yang
     // sesuai role (Admin/Ketua/Wakil Ketua/Staff/Member) di DashboardController.
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -66,7 +62,9 @@ Route::middleware('auth')->group(function () {
     | Route::get('/admin/settings', [AdminWebController::class, 'settings'])->name('admin.settings');
     |----------------------------------------------------------------------
     */
-});
 
 require __DIR__.'/settings.php';
-require __DIR__.'/api.php';
+
+Route::prefix('api')->group(function () {
+    require __DIR__.'/api.php';
+});

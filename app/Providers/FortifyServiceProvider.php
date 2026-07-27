@@ -13,6 +13,8 @@ use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
+use Illuminate\Validation\ValidationException;
+use Laravel\Fortify\Contracts\LogoutResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -32,6 +34,29 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+
+        Fortify::authenticateUsing(function (Request $request) {
+            $user = \App\Models\User::where('email', $request->email)->first();
+        
+            if (! $user || ! \Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
+                return null;
+            }
+        
+            if ($user->status !== 'Active') {
+                throw ValidationException::withMessages([
+                    Fortify::username() => 'Akun tidak aktif atau diblokir.',
+                ]);
+            }
+        
+            return $user;
+        });
+        
+        $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
+            public function toResponse($request)
+            {
+                return redirect()->route('landing');
+            }
+        });
     }
 
     /**
