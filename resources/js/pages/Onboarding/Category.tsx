@@ -43,7 +43,7 @@ export default function Category({
   };
 
   return (
-    <AppLayout title="Pilih Kategori Alat Musik" role="Member">
+    <AppLayout title="Pilih Kategori Alat Musik" role="Member" hideSidebar>
       <header>
         <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
           Satu langkah lagi

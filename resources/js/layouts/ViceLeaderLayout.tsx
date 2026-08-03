@@ -15,7 +15,7 @@ type ViceLeaderLayoutProps = {
  */
 export default function ViceLeaderLayout({ title, communityName, children }: ViceLeaderLayoutProps) {
   return (
-    <AppLayout title={title}>
+    <AppLayout title={title ?? undefined} role="Member" communityRole="Wakil Ketua" communityName={communityName ?? undefined}>
       <div className="mb-6 flex justify-end">
         <RoleBadge icon={ShieldHalf} label="Wakil Ketua" accent="#4C8C86" />
       </div>

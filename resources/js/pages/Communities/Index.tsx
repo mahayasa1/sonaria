@@ -44,7 +44,7 @@ export default function Index({
   };
 
   return (
-    <AppLayout title="Cari Komunitas" role="Member">
+    <AppLayout title="Cari Komunitas" role="Member" hideSidebar>
       <header>
         <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
           Alur berikutnya

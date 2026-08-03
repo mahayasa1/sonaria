@@ -45,7 +45,7 @@ export default function Show({
   };
 
   return (
-    <AppLayout title={community.community_name} role="Member">
+    <AppLayout title={community.community_name} role="Member" hideSidebar>
       {/* Banner + info dasar */}
       <div className="h-32 rounded-xl bg-gradient-to-br from-[#332B40] to-[#1E1826]" />
       <div className="-mt-10 flex flex-col gap-4 px-2 sm:flex-row sm:items-end sm:justify-between">

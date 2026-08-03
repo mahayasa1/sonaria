@@ -8,9 +8,9 @@ import { Crown } from 'lucide-react';
  * Sidebar otomatis menampilkan section "Kelola Komunitas" lengkap lewat
  * AppLayout(communityRole="Ketua").
  */
-export default function CommunityLeaderLayout({ title, communityName, children }) {
+export default function CommunityLeaderLayout({ title, communityName, children } : { title?: string; communityName: string; children: React.ReactNode }) {
   return (
-    <AppLayout title={title} role="Member" communityRole="Ketua" communityName={communityName}>
+    <AppLayout title={title ?? undefined} role="Member" communityRole="Ketua" communityName={communityName ?? undefined}>
       <div className="mb-6 flex justify-end">
         <RoleBadge icon={Crown} label="Ketua Komunitas" accent="#D9A441" />
       </div>

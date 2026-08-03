@@ -8,26 +8,34 @@ interface AppLayoutProps {
   role?: string;
   communityRole?: string | null;
   communityName?: string | null;
+  hideSidebar?: boolean;
   children: ReactNode;
 }
 
 /**
  * Layout dashboard untuk user yang sudah login (Member, Ketua, Wakil Ketua,
  * Staff, Admin). Sidebar menyesuaikan berdasarkan role & communityRole.
+ * Set `hideSidebar` untuk halaman seperti onboarding yang tetap pakai
+ * layout (background, Head, container) tapi tanpa sidebar.
  */
 export default function AppLayout({
   title,
   role = 'Member',
   communityRole = null,
   communityName = null,
+  hideSidebar = false,
   children,
 }: AppLayoutProps) {
   return (
     <div className="flex min-h-screen bg-[#14101B] text-[#F3EEE2]">
       <Head title={title} />
-      <Sidebar role={role} communityRole={communityRole} communityName={communityName} />
+      {!hideSidebar && (
+        <Sidebar role={role} communityRole={communityRole} communityName={communityName} />
+      )}
       <div className="flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-5xl px-8 py-8">{children}</div>
+        <div className={`mx-auto px-8 py-8 ${hideSidebar ? 'max-w-3xl' : 'max-w-5xl'}`}>
+          {children}
+        </div>
       </div>
     </div>
   );

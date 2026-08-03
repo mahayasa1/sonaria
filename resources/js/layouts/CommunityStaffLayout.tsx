@@ -9,9 +9,9 @@ import { Headset } from 'lucide-react';
  * AppLayout hanya menampilkan section itu untuk communityRole Ketua/Wakil
  * Ketua (lihat Components/Sidebar.jsx).
  */
-export default function CommunityStaffLayout({ title, communityName, children }) {
+export default function CommunityStaffLayout({ title, communityName, children }: { title?: string; communityName: string; children: React.ReactNode }) {
   return (
-    <AppLayout title={title} role="Member" communityRole="Staff" communityName={communityName}>
+    <AppLayout title={title ?? undefined} role="Member" communityRole="Staff" communityName={communityName ?? undefined}>
       <div className="mb-6 flex justify-end">
         <RoleBadge icon={Headset} label="Staff Komunitas" accent="#9C93A8" />
       </div>

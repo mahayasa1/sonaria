@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 /**
@@ -72,5 +73,16 @@ class UserFactory extends Factory
                 'total_xp' => $level7?->min_xp ?? 8000,
             ];
         });
+    }
+
+    public function withTwoFactor(?string $secret = null, ?array $recoveryCodes = null): static
+    {
+        return $this->state(fn () => [
+            'two_factor_secret' => encrypt($secret ?? 'test-secret-key'),
+            'two_factor_recovery_codes' => encrypt(json_encode(
+                $recoveryCodes ?? Collection::times(8, fn () => Str::random(10))->all()
+            )),
+            'two_factor_confirmed_at' => now(),
+        ]);
     }
 }
