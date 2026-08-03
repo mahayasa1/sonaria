@@ -1,7 +1,7 @@
 import React from 'react';
-import AppLayout from '@/Layouts/AppLayout';
-import StaffProgress from '@/Components/StaffProgress';
-import ManagerPanel from '@/Components/ManagerPanel';
+import AppLayout from '@/layouts/AppLayout';
+import StaffProgress from '@/components/StaffProgress';
+import ManagerPanel from '@/components/ManagerPanel';
 import { Crown } from 'lucide-react';
 
 /**

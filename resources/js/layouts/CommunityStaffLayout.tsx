@@ -1,6 +1,6 @@
 import React from 'react';
-import AppLayout from '@/Layouts/AppLayout';
-import RoleBadge from '@/Components/RoleBadge';
+import AppLayout from '@/layouts/AppLayout';
+import RoleBadge from '@/components/RoleBadge';
 import { Headset } from 'lucide-react';
 
 /**

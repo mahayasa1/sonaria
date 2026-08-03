@@ -3,13 +3,50 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\MainQuest;
 use App\Models\Material;
 use App\Models\MaterialProgress;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class MaterialController extends Controller
 {
+    /**
+     * Tambah Learning Material baru ke sebuah birama Main Quest.
+     * Hanya Ketua/Wakil Ketua komunitas pemilik quest tersebut.
+     */
+    public function store(Request $request, MainQuest $mainQuest): JsonResponse
+    {
+        $this->authorize('manage', $mainQuest->community);
+
+        $data = $request->validate([
+            'instrument_id' => ['required', 'exists:instruments,intruments_id'],
+            'title' => ['required', 'string', 'max:200'],
+            'description' => ['nullable', 'string', 'max:255'],
+            'difficulty' => ['required', 'in:Easy,Medium,Hard'],
+            'estimated_time' => ['nullable', 'integer', 'min:0'],
+            'order_number' => ['nullable', 'integer', 'min:0'],
+            'status' => ['nullable', 'in:Draft,Published'],
+        ]);
+
+        $slug = Str::slug($data['title']);
+        $suffix = 1;
+        $uniqueSlug = $slug;
+        while (Material::where('slug', $uniqueSlug)->exists()) {
+            $uniqueSlug = "{$slug}-".(++$suffix);
+        }
+
+        $material = Material::create([
+            ...$data,
+            'main_quest_id' => $mainQuest->main_quests_id,
+            'slug' => $uniqueSlug,
+            'status' => $data['status'] ?? 'Draft',
+        ]);
+
+        return response()->json($material, 201);
+    }
+
     public function show(Request $request, Material $material): JsonResponse
     {
         $user = $request->user();

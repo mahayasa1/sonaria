@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
-import AppLayout from '@/Layouts/AppLayout';
-import StaffProgress from '@/Components/StaffProgress';
-import { Swords, Flame, Trophy, MessageSquare, ChevronRight } from 'lucide-react';
+import AppLayout from '@/layouts/AppLayout';
+import StaffProgress from '@/components/StaffProgress';
+import EmptyState from '@/components/EmptyState';
+import { Swords, Flame, Trophy, MessageSquare, ChevronRight, Compass } from 'lucide-react';
 
 /**
  * Dashboard untuk role Member biasa di dalam sebuah komunitas.
@@ -39,6 +40,37 @@ export default function Member({
   const percentage = Math.round((xpIntoLevel / xpNeeded) * 100);
   const completedQuests = mainQuests.filter((q) => q.is_completed).length;
   const completedMissions = dailyMissions.filter((m) => m.my_progress?.is_completed).length;
+
+  // Belum gabung komunitas manapun (lihat DashboardController::index) — tampilkan
+  // ajakan mencari komunitas alih-alih Main Quest/Daily Mission/Challenge palsu.
+  if (!community) {
+    return (
+      <AppLayout title="Dashboard" role="Member">
+        <header>
+          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
+            Selamat berlatih,
+          </p>
+          <h1 className="font-fraunces text-3xl text-[#F3EEE2]">{user.name}</h1>
+        </header>
+
+        <div className="mt-6">
+          <EmptyState
+            icon={Compass}
+            title="Kamu belum tergabung di komunitas manapun"
+            description="Cari komunitas sesuai instrumenmu untuk mulai mengerjakan Main Quest, Daily Mission, dan Challenge."
+            action={
+              <Link
+                href="/communities"
+                className="rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B] transition-opacity hover:opacity-90"
+              >
+                Cari Komunitas
+              </Link>
+            }
+          />
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout title="Dashboard" role="Member" communityName={community.community_name}>

@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
 
@@ -55,16 +55,19 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // ==== Materi ====
     Route::get('/materials/{material:materials_id}', [MaterialController::class, 'show']);
+    Route::post('/main-quests/{mainQuest:main_quests_id}/materials', [MaterialController::class, 'store']);
     Route::post('/materials/{material:materials_id}/progress', [MaterialController::class, 'updateProgress']);
 
     // ==== Practice (misi video latihan) ====
     Route::get('/practices/{practice:practices_id}', [PracticeController::class, 'show']);
+    Route::post('/materials/{material:materials_id}/practices', [PracticeController::class, 'store']);
     Route::post('/practices/{practice:practices_id}/submissions', [PracticeSubmissionController::class, 'store']);
     Route::get('/practices/{practice:practices_id}/submissions', [PracticeSubmissionController::class, 'index']);
     Route::post('/practice-submissions/{submission:practice_submissions_id}/review', [PracticeSubmissionController::class, 'review']);
 
     // ==== Quiz ====
     Route::get('/quizzes/{quiz:quizzes_id}', [QuizController::class, 'show']);
+    Route::post('/materials/{material:materials_id}/quizzes', [QuizController::class, 'store']);
     Route::post('/quizzes/{quiz:quizzes_id}/attempts', [QuizAttemptController::class, 'start']);
     Route::post('/quiz-attempts/{attempt:quiz_attempts_id}/submit', [QuizAttemptController::class, 'submit']);
 

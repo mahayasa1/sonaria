@@ -1,6 +1,15 @@
 import React from 'react';
+import type { ReactNode } from 'react';
 import { Head } from '@inertiajs/react';
-import Sidebar from '@/Components/Sidebar';
+import Sidebar from '@/components/Sidebar';
+
+interface AppLayoutProps {
+  title?: string;
+  role?: string;
+  communityRole?: string | null;
+  communityName?: string | null;
+  children: ReactNode;
+}
 
 /**
  * Layout dashboard untuk user yang sudah login (Member, Ketua, Wakil Ketua,
@@ -12,7 +21,7 @@ export default function AppLayout({
   communityRole = null,
   communityName = null,
   children,
-}) {
+}: AppLayoutProps) {
   return (
     <div className="flex min-h-screen bg-[#14101B] text-[#F3EEE2]">
       <Head title={title} />

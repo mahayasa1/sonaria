@@ -1,6 +1,6 @@
 import React from 'react';
-import AppLayout from '@/Layouts/AppLayout';
-import ManagerPanel from '@/Components/ManagerPanel';
+import AppLayout from '@/layouts/AppLayout';
+import ManagerPanel from '@/components/ManagerPanel';
 import { ShieldHalf } from 'lucide-react';
 
 /**

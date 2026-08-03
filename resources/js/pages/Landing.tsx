@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
-import GuestLayout from '@/Layouts/GuestLayout';
+import GuestLayout from '@/layouts/GuestLayout';
 import { Swords, Flame, Trophy, MessageSquare } from 'lucide-react';
 
 const CATEGORIES = [
@@ -37,7 +37,7 @@ const FEATURES = [
   },
 ];
 
-export default function Landing() {
+function Landing() {
   return (
     <GuestLayout title="Sonaria — Komunitas Belajar Musik">
       {/* HERO */}
@@ -164,3 +164,12 @@ export default function Landing() {
     </GuestLayout>
   );
 }
+
+// Halaman ini sudah membungkus dirinya sendiri dengan GuestLayout (tanpa
+// Sidebar). Baris di bawah ini WAJIB ada supaya default persistent layout
+// di app.tsx (yang membungkus semua halaman dengan AppLayout/Sidebar)
+// tidak ikut menimpa Landing page — itu sebabnya Sidebar sempat muncul
+// dobel dengan header GuestLayout.
+Landing.layout = (page: React.ReactNode) => page;
+
+export default Landing;

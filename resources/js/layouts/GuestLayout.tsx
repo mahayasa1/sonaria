@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import { Music2 } from 'lucide-react';
 
@@ -6,7 +6,7 @@ import { Music2 } from 'lucide-react';
  * Layout publik: landing page, login, register.
  * Latar panggung gelap + garis paranada tipis sebagai tekstur ambient.
  */
-export default function GuestLayout({ title, children, showNav = true }) {
+export default function GuestLayout({ title, children, showNav = true }: { title: string; children: ReactNode; showNav?: boolean }) {
   return (
     <div className="min-h-screen bg-[#14101B] text-[#F3EEE2]">
       <Head title={title} />

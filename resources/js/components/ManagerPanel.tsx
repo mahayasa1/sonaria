@@ -1,6 +1,27 @@
 import React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { Users, ShieldCheck, Swords, Flame, Trophy, Check, X } from 'lucide-react';
+import { apiFetch } from '@/lib/api';
+
+interface JoinRequest {
+  community_join_requests_id: number;
+  user: { name: string };
+}
+interface PendingSubmission {
+  id: number;
+  title: string;
+  user: { name: string };
+  type: string;
+  reviewUrl: string;
+}
+
+interface ManagerPanelProps {
+  communityId: number;
+  joinRequests?: JoinRequest[];
+  pendingSubmissions?: PendingSubmission[];
+  canCreateContent?: boolean;
+  canModerate?: boolean;
+}
 
 /**
  * Panel pengelolaan komunitas, dipakai bersama oleh dashboard Ketua,
@@ -17,13 +38,15 @@ export default function ManagerPanel({
   pendingSubmissions = [],
   canCreateContent = false,
   canModerate = true,
-}) {
-  function approve(id) {
-    router.post(`/communities/${communityId}/join-requests/${id}/approve`);
+}: ManagerPanelProps) {
+  async function approve(id: number) {
+    await apiFetch(`/api/communities/${communityId}/join-requests/${id}/approve`, { method: 'POST' });
+    router.reload();
   }
 
-  function reject(id) {
-    router.post(`/communities/${communityId}/join-requests/${id}/reject`);
+  async function reject(id: number) {
+    await apiFetch(`/api/communities/${communityId}/join-requests/${id}/reject`, { method: 'POST' });
+    router.reload();
   }
 
   return (

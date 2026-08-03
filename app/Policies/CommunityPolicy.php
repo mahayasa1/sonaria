@@ -21,10 +21,23 @@ class CommunityPolicy
 
     /**
      * Boleh mereview submission (practice/challenge) di komunitas ini.
+     * Berbeda dengan manage(): Staff juga diberi wewenang moderasi/review
+     * (lihat menu "Challenge Review" & "Member Verification" di CLAUDE.md),
+     * meski tidak boleh membuat Main Quest/Daily Mission/Challenge baru.
      */
     public function review(User $user, Community $community): bool
     {
-        return $this->manage($user, $community);
+        if ($this->manage($user, $community)) {
+            return true;
+        }
+
+        return $community->members()
+            ->where('user_id', $user->users_id)
+            ->where('status', 'Active')
+            ->whereHas('role', function ($query) {
+                $query->where('role_name', 'Staff');
+            })
+            ->exists();
     }
 
     /**

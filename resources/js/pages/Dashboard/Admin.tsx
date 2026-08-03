@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
-import AppLayout from '@/Layouts/AppLayout';
+import AppLayout from '@/layouts/AppLayout';
 import { Users, Layers, Music2, ShieldAlert } from 'lucide-react';
 
 /**

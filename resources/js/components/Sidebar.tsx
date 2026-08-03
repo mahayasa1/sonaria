@@ -7,23 +7,32 @@ import {
   Flame,
   Trophy,
   MessageSquare,
+  BarChart3,
   Users,
   ShieldCheck,
   UserCog,
+  Award,
+  BadgeCheck,
   Settings,
   LogOut,
 } from 'lucide-react';
+
+interface SidebarProps {
+  role?: string;
+  communityRole?: string | null;
+  communityName?: string | null;
+}
 
 /**
  * Navigasi role-aware. `role` = role global (Admin/Member), `communityRole`
  * = role di dalam komunitas aktif (Ketua/Wakil Ketua/Staff/null).
  */
-export default function Sidebar({ role = 'Member', communityRole = null, communityName }) {
+export default function Sidebar({ role = 'Member', communityRole = null, communityName }: SidebarProps) {
   const { url } = usePage();
 
-  const isActive = (href) => url.startsWith(href);
+  const isActive = (href: string) => url.startsWith(href);
 
-  const itemClass = (href) =>
+  const itemClass = (href: string) =>
     `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
       isActive(href)
         ? 'bg-[#D9A441]/12 text-[#D9A441]'
@@ -47,6 +56,9 @@ export default function Sidebar({ role = 'Member', communityRole = null, communi
       <Link href="/forum" className={itemClass('/forum')}>
         <MessageSquare size={18} /> Forum
       </Link>
+      <Link href="/leaderboard" className={itemClass('/leaderboard')}>
+        <BarChart3 size={18} /> Leaderboard
+      </Link>
     </>
   );
 
@@ -60,14 +72,14 @@ export default function Sidebar({ role = 'Member', communityRole = null, communi
       </Link>
       {(communityRole === 'Ketua' || communityRole === 'Wakil Ketua') && (
         <>
-          <Link href="/manage/main-quests" className={itemClass('/manage/main-quests')}>
-            <Swords size={18} /> Kelola Main Quest
+          <Link href="/manage/main-quests/create" className={itemClass('/manage/main-quests')}>
+            <Swords size={18} /> Buat Main Quest
           </Link>
-          <Link href="/manage/daily-missions" className={itemClass('/manage/daily-missions')}>
-            <Flame size={18} /> Kelola Daily Mission
+          <Link href="/manage/daily-missions/create" className={itemClass('/manage/daily-missions')}>
+            <Flame size={18} /> Buat Daily Mission
           </Link>
-          <Link href="/manage/challenge" className={itemClass('/manage/challenge')}>
-            <Trophy size={18} /> Kelola Challenge
+          <Link href="/manage/challenge/create" className={itemClass('/manage/challenge')}>
+            <Trophy size={18} /> Buat Challenge
           </Link>
         </>
       )}
@@ -79,7 +91,7 @@ export default function Sidebar({ role = 'Member', communityRole = null, communi
 
   const adminNav = (
     <>
-      <Link href="/admin" className={itemClass('/admin')}>
+      <Link href="/dashboard" className={itemClass('/dashboard')}>
         <LayoutGrid size={18} /> Ringkasan
       </Link>
       <Link href="/admin/users" className={itemClass('/admin/users')}>
@@ -88,8 +100,17 @@ export default function Sidebar({ role = 'Member', communityRole = null, communi
       <Link href="/admin/communities" className={itemClass('/admin/communities')}>
         <Users size={18} /> Komunitas
       </Link>
+      <Link href="/admin/categories" className={itemClass('/admin/categories')}>
+        <Music2 size={18} /> Kategori Alat Musik
+      </Link>
+      <Link href="/admin/achievements" className={itemClass('/admin/achievements')}>
+        <Award size={18} /> Achievement
+      </Link>
+      <Link href="/admin/badges" className={itemClass('/admin/badges')}>
+        <BadgeCheck size={18} /> Badge
+      </Link>
       <Link href="/admin/settings" className={itemClass('/admin/settings')}>
-        <Settings size={18} /> Master Data
+        <Settings size={18} /> Pengaturan
       </Link>
     </>
   );

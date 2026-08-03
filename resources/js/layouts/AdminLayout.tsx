@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import AppLayout from '@/Layouts/AppLayout';
+import AppLayout from '@/layouts/AppLayout';
 import RoleBadge from '@/components/RoleBadge';
 import { ShieldCheck } from 'lucide-react';
 

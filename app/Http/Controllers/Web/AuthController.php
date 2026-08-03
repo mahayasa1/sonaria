@@ -23,12 +23,12 @@ class AuthController extends Controller
 {
     public function showLogin(): Response
     {
-        return Inertia::render('Auth/Login');
+        return Inertia::render('auth/Login');
     }
 
     public function showRegister(): Response
     {
-        return Inertia::render('Auth/Register');
+        return Inertia::render('auth/Register');
     }
 
     public function login(Request $request): RedirectResponse
@@ -86,7 +86,7 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('dashboard');
+        return redirect()->route('onboarding.category');
     }
 
     public function logout(Request $request): RedirectResponse

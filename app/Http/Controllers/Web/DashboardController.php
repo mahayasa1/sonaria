@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CommunityJoinRequest;
 use App\Models\CommunityMember;
 use App\Models\Role;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -17,12 +18,18 @@ use Inertia\Response;
  */
 class DashboardController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request): Response|RedirectResponse
     {
         $user = $request->user()->load('role', 'level', 'instrument');
 
         if ($user->role?->role_name === 'Admin') {
             return $this->renderAdmin();
+        }
+
+        // Onboarding (pilih instrumen) wajib selesai dulu sebelum masuk dashboard
+        // atau mencari komunitas — lihat OnboardingWebController & alur no. 3.
+        if (! $user->instrument_id) {
+            return redirect()->route('onboarding.category');
         }
 
         // Ambil keanggotaan komunitas Active pertama sebagai "komunitas aktif".
