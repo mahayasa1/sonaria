@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AchievementController as AdminAchievementController;
+use App\Http\Controllers\Api\Admin\BadgeController as AdminBadgeController;
+use App\Http\Controllers\Api\Admin\LevelController as AdminLevelController;
+use App\Http\Controllers\Api\Admin\MusicCategoryController as AdminMusicCategoryController;
+use App\Http\Controllers\Api\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChallengeController;
 use App\Http\Controllers\Api\ChallengeSubmissionController;
@@ -10,6 +15,7 @@ use App\Http\Controllers\Api\ForumPostController;
 use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\MainQuestController;
 use App\Http\Controllers\Api\MaterialController;
+use App\Http\Controllers\Api\MaterialFileController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\OnboardingController;
 use App\Http\Controllers\Api\PracticeController;
@@ -58,6 +64,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/main-quests/{mainQuest:main_quests_id}/materials', [MaterialController::class, 'store']);
     Route::post('/materials/{material:materials_id}/progress', [MaterialController::class, 'updateProgress']);
 
+    // ==== File Materi (video/PDF/audio/gambar pada sebuah Learning Material) ====
+    Route::get('/materials/{material:materials_id}/files', [MaterialFileController::class, 'index']);
+    Route::post('/materials/{material:materials_id}/files', [MaterialFileController::class, 'store']);
+    Route::get('/material-files/{materialFile:material_files_id}', [MaterialFileController::class, 'show']);
+    Route::put('/material-files/{materialFile:material_files_id}', [MaterialFileController::class, 'update']);
+    Route::delete('/material-files/{materialFile:material_files_id}', [MaterialFileController::class, 'destroy']);
+
     // ==== Practice (misi video latihan) ====
     Route::get('/practices/{practice:practices_id}', [PracticeController::class, 'show']);
     Route::post('/materials/{material:materials_id}/practices', [PracticeController::class, 'store']);
@@ -101,4 +114,35 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/{notification:notifications_id}/read', [NotificationController::class, 'markRead']);
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead']);
+
+    // ==== Admin: Roles, Levels, Kategori Alat Musik, Badge, Achievement ====
+    // Otorisasi Admin dicek di dalam masing-masing controller (EnsuresAdmin::ensureAdmin).
+    Route::prefix('admin')->group(function () {
+        Route::get('/roles', [AdminRoleController::class, 'index']);
+        Route::post('/roles', [AdminRoleController::class, 'store']);
+        Route::put('/roles/{role:role_id}', [AdminRoleController::class, 'update']);
+        Route::delete('/roles/{role:role_id}', [AdminRoleController::class, 'destroy']);
+
+        Route::get('/levels', [AdminLevelController::class, 'index']);
+        Route::post('/levels', [AdminLevelController::class, 'store']);
+        Route::put('/levels/{level:level_id}', [AdminLevelController::class, 'update']);
+        Route::delete('/levels/{level:level_id}', [AdminLevelController::class, 'destroy']);
+
+        Route::get('/categories', [AdminMusicCategoryController::class, 'index']);
+        Route::post('/categories', [AdminMusicCategoryController::class, 'store']);
+        Route::put('/categories/{category:music_categories_id}', [AdminMusicCategoryController::class, 'update']);
+        Route::delete('/categories/{category:music_categories_id}', [AdminMusicCategoryController::class, 'destroy']);
+        Route::post('/categories/{category:music_categories_id}/instruments', [AdminMusicCategoryController::class, 'storeInstrument']);
+        Route::delete('/instruments/{instrument:intruments_id}', [AdminMusicCategoryController::class, 'destroyInstrument']);
+
+        Route::get('/badges', [AdminBadgeController::class, 'index']);
+        Route::post('/badges', [AdminBadgeController::class, 'store']);
+        Route::put('/badges/{badge:badges_id}', [AdminBadgeController::class, 'update']);
+        Route::delete('/badges/{badge:badges_id}', [AdminBadgeController::class, 'destroy']);
+
+        Route::get('/achievements', [AdminAchievementController::class, 'index']);
+        Route::post('/achievements', [AdminAchievementController::class, 'store']);
+        Route::put('/achievements/{achievement:achievements_id}', [AdminAchievementController::class, 'update']);
+        Route::delete('/achievements/{achievement:achievements_id}', [AdminAchievementController::class, 'destroy']);
+    });
 });

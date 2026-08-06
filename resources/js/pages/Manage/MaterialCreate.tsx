@@ -75,9 +75,15 @@ export default function MaterialCreate({
       {createdId ? (
         <div className="mt-6 max-w-lg space-y-3 rounded-xl border border-[#4C8C86]/30 bg-[#4C8C86]/8 p-6">
           <p className="font-manrope text-sm text-[#4C8C86]">
-            Materi berhasil dibuat. Sekarang tambahkan Quiz dan/atau Practice untuk materi ini.
+            Materi berhasil dibuat. Sekarang tambahkan File Materi (video/PDF), Quiz, dan/atau Practice untuk materi ini.
           </p>
           <div className="flex flex-wrap gap-2">
+            <Link
+              href={`/manage/materials/${createdId}/files/create`}
+              className="rounded-full bg-[#4C8C86] px-5 py-2.5 font-manrope text-sm text-[#14101B]"
+            >
+              Tambah File Materi
+            </Link>
             <Link
               href={`/manage/materials/${createdId}/quizzes/create`}
               className="rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B]"

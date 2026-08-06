@@ -11,6 +11,10 @@ import {
   CheckCircle2,
   Loader2,
   Clock,
+  FileText,
+  Music,
+  Image as ImageIcon,
+  ExternalLink,
 } from 'lucide-react';
 
 interface QuizOption {
@@ -40,12 +44,20 @@ interface MaterialProgress {
   progress_percentage: number;
   status: string;
 }
+interface MaterialFile {
+  material_files_id: number;
+  file_type: 'Video' | 'PDF' | 'Audio' | 'Image';
+  title: string;
+  file_path: string;
+  duration?: string;
+}
 interface Material {
   materials_id: number;
   title: string;
   description?: string;
   difficulty?: string;
   estimated_time?: number;
+  files: MaterialFile[];
   quizzes: Quiz[];
   practices: Practice[];
   progress: MaterialProgress[];
@@ -238,6 +250,37 @@ function PracticePanel({ practice }: { practice: Practice }) {
   );
 }
 
+function fileTypeIcon(type: MaterialFile['file_type']) {
+  switch (type) {
+    case 'Video':
+      return <Video size={14} />;
+    case 'PDF':
+      return <FileText size={14} />;
+    case 'Audio':
+      return <Music size={14} />;
+    default:
+      return <ImageIcon size={14} />;
+  }
+}
+
+function MaterialFileRow({ file }: { file: MaterialFile }) {
+  return (
+    <a
+      href={file.file_path}
+      target="_blank"
+      rel="noreferrer"
+      className="flex items-center gap-2.5 rounded-lg border border-[#2A2333] px-3 py-2.5 font-manrope text-sm text-[#B7AFC2] hover:border-[#4C8C86]/40 hover:text-[#F3EEE2]"
+    >
+      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#4C8C86]/12 text-[#4C8C86]">
+        {fileTypeIcon(file.file_type)}
+      </span>
+      <span className="min-w-0 flex-1 truncate">{file.title}</span>
+      {file.duration && <span className="shrink-0 font-mono text-xs text-[#75708A]">{file.duration}</span>}
+      <ExternalLink size={12} className="shrink-0 text-[#75708A]" />
+    </a>
+  );
+}
+
 function MaterialCard({ material, canManage }: { material: Material; canManage: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const [marking, setMarking] = useState(false);
@@ -302,6 +345,14 @@ function MaterialCard({ material, canManage }: { material: Material; canManage: 
             </button>
           )}
 
+          {material.files.length > 0 && (
+            <div className="space-y-2">
+              {material.files.map((file) => (
+                <MaterialFileRow key={file.material_files_id} file={file} />
+              ))}
+            </div>
+          )}
+
           {material.quizzes.map((quiz) => (
             <div key={quiz.quizzes_id}>
               <div className="mb-2 flex items-center gap-2 text-[#D9A441]">
@@ -326,6 +377,12 @@ function MaterialCard({ material, canManage }: { material: Material; canManage: 
 
           {canManage && (
             <div className="flex flex-wrap gap-2 border-t border-[#2A2333] pt-4">
+              <Link
+                href={`/manage/materials/${material.materials_id}/files/create`}
+                className="rounded-full border border-[#4C8C86]/40 px-4 py-1.5 font-manrope text-xs text-[#4C8C86]"
+              >
+                + Tambah File Materi
+              </Link>
               <Link
                 href={`/manage/materials/${material.materials_id}/quizzes/create`}
                 className="rounded-full border border-[#D9A441]/40 px-4 py-1.5 font-manrope text-xs text-[#D9A441]"

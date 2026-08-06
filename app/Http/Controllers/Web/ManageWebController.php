@@ -140,6 +140,16 @@ class ManageWebController extends Controller
         ]);
     }
 
+    public function materialFileCreate(Request $request, \App\Models\Material $material): Response
+    {
+        $material->loadMissing('mainQuest.community');
+        $this->authorize('manage', $material->mainQuest->community);
+
+        return Inertia::render('Manage/MaterialFileCreate', [
+            'material' => $material,
+        ]);
+    }
+
     public function reviewPractice(Request $request, PracticeSubmission $submission): Response
     {
         $submission->load(['user', 'practice.material.mainQuest.community']);
