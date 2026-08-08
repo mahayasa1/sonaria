@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Community;
 use App\Models\CommunityJoinRequest;
+use App\Models\CommunityMember;
 use App\Models\CommunityRole;
+use App\Models\Notification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -156,6 +158,121 @@ class CommunityController extends Controller
 
         $joinRequest->update(['status' => 'Removed']);
 
+        Notification::create([
+            'user_id' => $joinRequest->user_id,
+            'title' => 'Permintaan bergabung ditolak',
+            'message' => "Permintaan kamu untuk bergabung ke komunitas \"{$community->community_name}\" ditolak oleh pengelola.",
+            'type' => 'System',
+            'reference_type' => Community::class,
+            'reference_id' => $community->communities_id,
+        ]);
+
         return response()->json(['message' => 'Permintaan bergabung ditolak.']);
+    }
+
+    /**
+     * Keluar dari komunitas. Ketua tidak boleh keluar begitu saja selama
+     * masih ada member lain — harus transfer kepemimpinan dulu lewat
+     * updateMemberRole(), supaya komunitas tidak kehilangan pengelola.
+     */
+    public function leave(Request $request, Community $community): JsonResponse
+    {
+        $user = $request->user();
+
+        $membership = $community->members()
+            ->where('user_id', $user->users_id)
+            ->where('status', 'Active')
+            ->with('role')
+            ->first();
+
+        if (! $membership) {
+            return response()->json(['message' => 'Kamu bukan member komunitas ini.'], 404);
+        }
+
+        $isKetua = $membership->role?->role_name === 'Ketua';
+        $otherActiveMembers = $community->members()->where('status', 'Active')
+            ->where('community_members_id', '!=', $membership->community_members_id)
+            ->exists();
+
+        if ($isKetua && $otherActiveMembers) {
+            throw ValidationException::withMessages([
+                'role' => ['Sebagai Ketua, kamu harus menunjuk Ketua baru dulu sebelum keluar komunitas.'],
+            ]);
+        }
+
+        $membership->update(['status' => 'Removed']);
+        $community->decrement('total_member');
+
+        if ($isKetua && ! $otherActiveMembers) {
+            $community->update(['status' => 'Inactive']);
+        }
+
+        return response()->json(['message' => 'Kamu telah keluar dari komunitas.']);
+    }
+
+    /**
+     * Ubah role member (mis. jadikan Wakil Ketua/Staff, atau transfer
+     * kepemimpinan). Hanya Ketua/Wakil Ketua yang boleh mengelola.
+     */
+    public function updateMemberRole(Request $request, Community $community, CommunityMember $member): JsonResponse
+    {
+        $this->authorize('manage', $community);
+
+        abort_unless($member->community_id === $community->communities_id, 404);
+
+        $data = $request->validate([
+            'role_name' => ['required', 'string', 'in:Wakil Ketua,Staff,Member,Ketua'],
+        ]);
+
+        $role = CommunityRole::firstOrCreate(['role_name' => $data['role_name']]);
+
+        if ($data['role_name'] === 'Ketua') {
+            // Transfer kepemimpinan: Ketua lama otomatis jadi Wakil Ketua.
+            $currentKetua = $community->members()
+                ->where('status', 'Active')
+                ->whereHas('role', fn ($q) => $q->where('role_name', 'Ketua'))
+                ->first();
+
+            if ($currentKetua && $currentKetua->community_members_id !== $member->community_members_id) {
+                $wakilRole = CommunityRole::firstOrCreate(['role_name' => 'Wakil Ketua']);
+                $currentKetua->update(['role_id' => $wakilRole->community_roles_id]);
+            }
+
+            $community->update(['owner_id' => $member->user_id]);
+        }
+
+        $member->update(['role_id' => $role->community_roles_id]);
+
+        return response()->json($member->load('role', 'user'));
+    }
+
+    /**
+     * Keluarkan member dari komunitas (bukan menghapus akun user).
+     */
+    public function removeMember(Request $request, Community $community, CommunityMember $member): JsonResponse
+    {
+        $this->authorize('manage', $community);
+
+        abort_unless($member->community_id === $community->communities_id, 404);
+
+        if ($member->role?->role_name === 'Ketua') {
+            throw ValidationException::withMessages([
+                'role' => ['Ketua tidak bisa dikeluarkan. Transfer kepemimpinan dulu.'],
+            ]);
+        }
+
+        $member->update(['status' => 'Removed']);
+        $community->decrement('total_member');
+
+        Notification::create([
+            'user_id' => $member->user_id,
+            'title' => 'Dikeluarkan dari komunitas',
+            'message' => "Kamu dikeluarkan dari komunitas \"{$community->community_name}\" oleh pengelola.",
+            'type' => 'System',
+            'reference_type' => Community::class,
+            'reference_id' => $community->communities_id,
+        ]);
+
+        return response()->json(['message' => 'Member dikeluarkan dari komunitas.']);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\CommunityMember;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,7 +42,43 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            // Konteks komunitas aktif user (kalau ada), dipakai Sidebar.tsx supaya
+            // menu "Kelola Komunitas" & label role konsisten di SEMUA halaman
+            // (Main Quest, Daily Mission, Forum, dst), bukan cuma di /dashboard.
+            // Sebelumnya tiap controller harus kirim communityRole/communityName
+            // sendiri-sendiri dan banyak yang lupa, jadi sidebar Ketua/Wakil
+            // Ketua/Staff berubah-ubah (kehilangan menu kelola) begitu pindah
+            // halaman dari Dashboard.
+            'activeCommunity' => $this->resolveActiveCommunity($request),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+        ];
+    }
+
+    /**
+     * @return array{communities_id: int, community_name: string, role: ?string}|null
+     */
+    protected function resolveActiveCommunity(Request $request): ?array
+    {
+        $user = $request->user();
+
+        if (! $user) {
+            return null;
+        }
+
+        $membership = CommunityMember::with(['community', 'role'])
+            ->where('user_id', $user->users_id)
+            ->where('status', 'Active')
+            ->latest('join_date')
+            ->first();
+
+        if (! $membership || ! $membership->community) {
+            return null;
+        }
+
+        return [
+            'communities_id' => $membership->community->communities_id,
+            'community_name' => $membership->community->community_name,
+            'role' => $membership->role?->role_name,
         ];
     }
 }

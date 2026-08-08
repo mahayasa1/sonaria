@@ -62,6 +62,7 @@ class ForumWebController extends Controller
         return Inertia::render('Forum/Show', [
             'post' => $forumPost,
             'likedByMe' => $liked,
+            'currentUserId' => $user->users_id,
         ]);
     }
 }

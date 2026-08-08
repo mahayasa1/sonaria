@@ -7,9 +7,11 @@ import { ArrowLeft, Swords, Loader2 } from 'lucide-react';
 export default function MainQuestCreate({
   community,
   existingLevels,
+  communityRole,
 }: {
   community: { communities_id: number; community_name: string };
   existingLevels: number[];
+  communityRole?: string | null;
 }) {
   const [level, setLevel] = useState(1);
   const [title, setTitle] = useState('');
@@ -26,11 +28,11 @@ export default function MainQuestCreate({
     setLoading(true);
     setError(null);
     try {
-      await apiFetch(`/api/communities/${community.communities_id}/main-quests`, {
+      const quest = await apiFetch<{ main_quests_id: number }>(`/api/communities/${community.communities_id}/main-quests`, {
         method: 'POST',
         body: JSON.stringify({ level, title, description, xp_reward: xpReward }),
       });
-      router.visit('/main-quests');
+      router.visit(`/main-quests/${quest.main_quests_id}`);
     } catch (e) {
       setError(e instanceof ApiError ? e.message : 'Gagal membuat Main Quest.');
     } finally {
@@ -39,7 +41,7 @@ export default function MainQuestCreate({
   };
 
   return (
-    <AppLayout title="Buat Main Quest" role="Member" communityRole="Ketua" communityName={community.community_name}>
+    <AppLayout title="Buat Main Quest" role="Member" communityRole={communityRole} communityName={community.community_name}>
       <Link href="/dashboard" className="flex items-center gap-1.5 font-manrope text-xs text-[#75708A] hover:text-[#F3EEE2]">
         <ArrowLeft size={14} /> Kembali
       </Link>
@@ -106,11 +108,6 @@ export default function MainQuestCreate({
             Simpan
           </button>
           {error && <p className="font-manrope text-xs text-[#C1443C]">{error}</p>}
-
-          <p className="font-manrope text-xs text-[#75708A]">
-            Catatan: penambahan Learning Material &amp; Quiz di dalam birama ini belum tersedia —
-            endpoint API untuk itu belum ada.
-          </p>
         </div>
       )}
     </AppLayout>

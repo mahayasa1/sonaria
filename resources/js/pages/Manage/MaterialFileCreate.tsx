@@ -17,7 +17,7 @@ const FILE_TYPES = [
   { value: 'Image', label: 'Gambar' },
 ] as const;
 
-export default function MaterialFileCreate({ material }: { material: Material }) {
+export default function MaterialFileCreate({ material, communityRole }: { material: Material; communityRole?: string | null }) {
   const [fileType, setFileType] = useState<(typeof FILE_TYPES)[number]['value']>('Video');
   const [title, setTitle] = useState('');
   const [fileName, setFileName] = useState('');
@@ -57,7 +57,7 @@ export default function MaterialFileCreate({ material }: { material: Material })
     <AppLayout
       title="Tambah File Materi"
       role="Member"
-      communityRole="Ketua"
+      communityRole={communityRole}
       communityName={material.main_quest.community.community_name}
     >
       <Link

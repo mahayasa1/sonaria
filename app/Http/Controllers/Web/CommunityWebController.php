@@ -61,7 +61,7 @@ class CommunityWebController extends Controller
             'challenges' => fn ($q) => $q->where('status', 'Active'),
         ]);
 
-        $membership = $community->members()->where('user_id', $user->users_id)->first();
+        $membership = $community->members()->where('user_id', $user->users_id)->with('role')->first();
         $pendingRequest = CommunityJoinRequest::where('community_id', $community->communities_id)
             ->where('user_id', $user->users_id)
             ->where('status', 'Pending')
@@ -70,6 +70,7 @@ class CommunityWebController extends Controller
         return Inertia::render('Communities/Show', [
             'community' => $community,
             'membershipStatus' => $membership?->status ?? ($pendingRequest ? 'Pending' : null),
+            'membershipRole' => $membership?->role?->role_name,
         ]);
     }
 
@@ -100,5 +101,39 @@ class CommunityWebController extends Controller
         ]);
 
         return back()->with('success', 'Permintaan bergabung terkirim, menunggu persetujuan Ketua/Wakil Ketua.');
+    }
+
+    public function leave(Request $request, Community $community): RedirectResponse
+    {
+        $user = $request->user();
+
+        $membership = $community->members()
+            ->where('user_id', $user->users_id)
+            ->where('status', 'Active')
+            ->with('role')
+            ->first();
+
+        if (! $membership) {
+            return back()->with('error', 'Kamu bukan member komunitas ini.');
+        }
+
+        $isKetua = $membership->role?->role_name === 'Ketua';
+        $otherActiveMembers = $community->members()->where('status', 'Active')
+            ->where('community_members_id', '!=', $membership->community_members_id)
+            ->exists();
+
+        if ($isKetua && $otherActiveMembers) {
+            return back()->with('error', 'Sebagai Ketua, kamu harus menunjuk Ketua baru dulu sebelum keluar komunitas.');
+        }
+
+        $membership->update(['status' => 'Removed']);
+        $community->decrement('total_member');
+
+        if ($isKetua && ! $otherActiveMembers) {
+            $community->update(['status' => 'Inactive']);
+        }
+
+        return redirect()->route('communities.index')
+            ->with('success', 'Kamu telah keluar dari komunitas. Sekarang kamu bisa bergabung atau membuat komunitas baru.');
     }
 }

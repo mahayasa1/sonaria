@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/communities', [CommunityWebController::class, 'index'])->name('communities.index');
     Route::get('/communities/{community:communities_id}', [CommunityWebController::class, 'show'])->name('communities.show');
     Route::post('/communities/{community:communities_id}/join', [CommunityWebController::class, 'join'])->name('communities.join');
+    Route::post('/communities/{community:communities_id}/leave', [CommunityWebController::class, 'leave'])->name('communities.leave');
 
     // ==== Dashboard komunitas: Main Quest, Daily Mission, Challenge, Forum, Leaderboard (alur no. 5) ====
     Route::get('/main-quests', [MainQuestWebController::class, 'index'])->name('main-quests.index');
@@ -71,7 +72,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/manage/materials/{material:materials_id}/practices/create', [ManageWebController::class, 'practiceCreate'])->name('manage.practices.create');
     Route::get('/manage/materials/{material:materials_id}/files/create', [ManageWebController::class, 'materialFileCreate'])->name('manage.material-files.create');
     Route::get('/manage/daily-missions/create', [ManageWebController::class, 'dailyMissionCreate'])->name('manage.daily-missions.create');
+    Route::get('/manage/daily-missions', [ManageWebController::class, 'dailyMissions'])->name('manage.daily-missions.index');
     Route::get('/manage/challenge/create', [ManageWebController::class, 'challengeCreate'])->name('manage.challenge.create');
+    Route::get('/manage/challenges', [ManageWebController::class, 'challenges'])->name('manage.challenges.index');
     Route::get('/manage/practice-submissions/{submission:practice_submissions_id}', [ManageWebController::class, 'reviewPractice'])->name('manage.practice-submissions.show');
     Route::get('/manage/challenge-submissions/{submission:challenge_submissions_id}', [ManageWebController::class, 'reviewChallenge'])->name('manage.challenge-submissions.show');
 

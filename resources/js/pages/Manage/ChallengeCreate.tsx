@@ -13,10 +13,12 @@ export default function ChallengeCreate({
   community,
   instruments,
   hasActiveChallenge,
+  communityRole,
 }: {
   community: { communities_id: number; community_name: string };
   instruments: Instrument[];
   hasActiveChallenge: boolean;
+  communityRole?: string | null;
 }) {
   const [instrumentId, setInstrumentId] = useState<number | string>(instruments[0]?.intruments_id ?? '');
   const [title, setTitle] = useState('');
@@ -51,21 +53,30 @@ export default function ChallengeCreate({
   };
 
   return (
-    <AppLayout title="Buat Challenge" role="Member" communityRole="Ketua" communityName={community.community_name}>
+    <AppLayout title="Buat Challenge" role="Member" communityRole={communityRole} communityName={community.community_name}>
       <Link href="/dashboard" className="flex items-center gap-1.5 font-manrope text-xs text-[#75708A] hover:text-[#F3EEE2]">
         <ArrowLeft size={14} /> Kembali
       </Link>
 
-      <header className="mt-3">
+      <header className="mt-3 flex items-center justify-between gap-3">
         <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
           <Trophy size={24} className="text-[#D9A441]" /> Challenge Baru
         </h1>
+        <Link
+          href="/manage/challenges"
+          className="rounded-full border border-[#2A2333] px-4 py-2 font-manrope text-xs text-[#B7AFC2] hover:border-[#D9A441]/40 hover:text-[#D9A441]"
+        >
+          Kelola Challenge
+        </Link>
       </header>
 
       {hasActiveChallenge ? (
         <p className="mt-6 font-manrope text-sm text-[#B7AFC2]">
-          Komunitas ini sudah punya challenge yang sedang aktif. Tunggu sampai selesai sebelum
-          membuat yang baru.
+          Komunitas ini sudah punya challenge yang sedang aktif. Tutup dulu di{' '}
+          <Link href="/manage/challenges" className="text-[#D9A441] underline">
+            halaman Kelola Challenge
+          </Link>{' '}
+          sebelum membuat yang baru.
         </p>
       ) : (
         <div className="mt-6 max-w-lg space-y-4">

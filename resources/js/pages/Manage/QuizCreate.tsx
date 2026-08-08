@@ -32,7 +32,7 @@ function emptyQuestion(): QuestionForm {
   };
 }
 
-export default function QuizCreate({ material }: { material: Material }) {
+export default function QuizCreate({ material, communityRole }: { material: Material; communityRole?: string | null }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [xpReward, setXpReward] = useState(50);
@@ -122,7 +122,7 @@ export default function QuizCreate({ material }: { material: Material }) {
     <AppLayout
       title="Tambah Quiz"
       role="Member"
-      communityRole="Ketua"
+      communityRole={communityRole}
       communityName={material.main_quest.community.community_name}
     >
       <Link

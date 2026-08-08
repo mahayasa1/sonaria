@@ -403,11 +403,20 @@ function MaterialCard({ material, canManage }: { material: Material; canManage: 
   );
 }
 
-export default function Show({ mainQuest, canManage }: { mainQuest: MainQuest; canManage: boolean }) {
+export default function Show({
+  mainQuest,
+  canManage,
+  communityRole = null,
+}: {
+  mainQuest: MainQuest;
+  canManage: boolean;
+  communityRole?: string | null;
+}) {
   return (
     <AppLayout
       title={mainQuest.title}
       role="Member"
+      communityRole={communityRole}
       communityName={mainQuest.community.community_name}
     >
       <Link

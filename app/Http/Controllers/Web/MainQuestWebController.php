@@ -43,6 +43,8 @@ class MainQuestWebController extends Controller
         return Inertia::render('MainQuest/Index', [
             'community' => $community,
             'mainQuests' => $quests,
+            'communityRole' => $membership->role?->role_name,
+            'canManage' => $user->can('manage', $community),
         ]);
     }
 
@@ -59,9 +61,12 @@ class MainQuestWebController extends Controller
             'materials.progress' => fn ($q) => $q->where('user_id', $user->users_id),
         ]);
 
+        $membership = $this->activeMembership($user);
+
         return Inertia::render('MainQuest/Show', [
             'mainQuest' => $mainQuest,
             'canManage' => $request->user()->can('manage', $mainQuest->community),
+            'communityRole' => $membership?->role?->role_name,
         ]);
     }
 

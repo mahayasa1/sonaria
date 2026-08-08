@@ -62,4 +62,18 @@ class ChallengeController extends Controller
 
         return response()->json($challenge, 201);
     }
+
+    /**
+     * Tutup challenge yang sedang aktif (khusus Ketua/Wakil Ketua), supaya
+     * komunitas bisa membuat challenge baru — hanya 1 challenge Active
+     * yang diperbolehkan per komunitas.
+     */
+    public function close(Request $request, Challenge $challenge): JsonResponse
+    {
+        $this->authorize('manage', $challenge->community);
+
+        $challenge->update(['status' => 'Closed']);
+
+        return response()->json($challenge);
+    }
 }

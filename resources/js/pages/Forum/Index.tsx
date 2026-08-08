@@ -173,7 +173,10 @@ export default function Index({
         <NewPostModal
           communityId={community.communities_id}
           onClose={() => setCreating(false)}
-          onCreated={() => router.reload()}
+          onCreated={() => {
+            setCreating(false);
+            router.reload();
+          }}
         />
       )}
     </AppLayout>

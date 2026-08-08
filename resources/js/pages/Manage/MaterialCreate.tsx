@@ -17,9 +17,11 @@ interface MainQuest {
 export default function MaterialCreate({
   mainQuest,
   instruments,
+  communityRole,
 }: {
   mainQuest: MainQuest;
   instruments: Instrument[];
+  communityRole?: string | null;
 }) {
   const [instrumentId, setInstrumentId] = useState<number | string>(instruments[0]?.intruments_id ?? '');
   const [title, setTitle] = useState('');
@@ -57,7 +59,7 @@ export default function MaterialCreate({
   };
 
   return (
-    <AppLayout title="Tambah Materi" role="Member" communityRole="Ketua" communityName={mainQuest.community.community_name}>
+    <AppLayout title="Tambah Materi" role="Member" communityRole={communityRole} communityName={mainQuest.community.community_name}>
       <Link
         href={`/main-quests/${mainQuest.main_quests_id}`}
         className="flex items-center gap-1.5 font-manrope text-xs text-[#75708A] hover:text-[#F3EEE2]"

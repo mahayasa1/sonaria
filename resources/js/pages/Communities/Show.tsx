@@ -36,12 +36,19 @@ interface Community {
 export default function Show({
   community,
   membershipStatus,
+  membershipRole,
 }: {
   community: Community;
   membershipStatus: 'Active' | 'Pending' | null;
+  membershipRole?: string | null;
 }) {
   const join = () => {
     router.post(`/communities/${community.communities_id}/join`, {}, { preserveScroll: true });
+  };
+
+  const leave = () => {
+    if (!confirm('Yakin ingin keluar dari komunitas ini?')) return;
+    router.post(`/communities/${community.communities_id}/leave`, {}, { preserveScroll: true });
   };
 
   return (
@@ -63,12 +70,26 @@ export default function Show({
         </div>
 
         {membershipStatus === 'Active' ? (
-          <a
-            href="/dashboard"
-            className="rounded-full border border-[#4C8C86]/40 bg-[#4C8C86]/12 px-6 py-3 text-center font-manrope text-sm text-[#4C8C86]"
-          >
-            Kamu sudah bergabung — buka Dashboard
-          </a>
+          <div className="flex flex-col items-stretch gap-2 sm:items-end">
+            <a
+              href="/dashboard"
+              className="rounded-full border border-[#4C8C86]/40 bg-[#4C8C86]/12 px-6 py-3 text-center font-manrope text-sm text-[#4C8C86]"
+            >
+              Kamu sudah bergabung — buka Dashboard
+            </a>
+            {membershipRole === 'Ketua' ? (
+              <p className="max-w-xs text-right font-manrope text-[11px] text-[#75708A]">
+                Sebagai Ketua, transfer kepemimpinan dulu di halaman Kelola Member sebelum bisa keluar.
+              </p>
+            ) : (
+              <button
+                onClick={leave}
+                className="rounded-full border border-[#C1443C]/40 px-6 py-2 text-center font-manrope text-xs text-[#C1443C] hover:bg-[#C1443C]/10"
+              >
+                Keluar Komunitas
+              </button>
+            )}
+          </div>
         ) : membershipStatus === 'Pending' ? (
           <span className="rounded-full border border-[#D9A441]/40 bg-[#D9A441]/12 px-6 py-3 text-center font-manrope text-sm text-[#D9A441]">
             Menunggu persetujuan bergabung

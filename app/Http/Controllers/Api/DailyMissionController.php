@@ -116,4 +116,17 @@ class DailyMissionController extends Controller
             'xp_awarded' => $rewardXp,
         ]);
     }
+
+    /**
+     * Nonaktifkan daily mission (khusus Ketua/Wakil Ketua), supaya slot-nya
+     * bisa dipakai mission baru tanpa menghapus riwayat data lama.
+     */
+    public function deactivate(Request $request, DailyMission $mission): JsonResponse
+    {
+        $this->authorize('manage', $mission->community);
+
+        $mission->update(['status' => 'Inactive']);
+
+        return response()->json($mission);
+    }
 }
