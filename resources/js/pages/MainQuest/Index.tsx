@@ -18,24 +18,15 @@ interface Quest {
 export default function Index({
   community,
   mainQuests,
-  communityRole = null,
-  canManage = false,
 }: {
   community: { community_name: string };
   mainQuests: Quest[];
-  communityRole?: string | null;
-  canManage?: boolean;
 }) {
   const completedCount = mainQuests.filter((q) => q.is_completed).length;
 
   return (
-    <AppLayout
-      title="Main Quest"
-      role="Member"
-      communityRole={communityRole}
-      communityName={community.community_name}
-    >
-      <header className="flex items-center justify-between gap-3">
+    <AppLayout title="Main Quest" role="Member" communityName={community.community_name}>
+      <header className="flex items-center justify-between">
         <div>
           <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
             {community.community_name}
@@ -44,17 +35,7 @@ export default function Index({
             <Swords size={24} className="text-[#D9A441]" /> Main Quest
           </h1>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-sm text-[#D9A441]">{completedCount} / 7 birama</span>
-          {canManage && mainQuests.length > 0 && mainQuests.length < 7 && (
-            <Link
-              href="/manage/main-quests/create"
-              className="rounded-full border border-[#D9A441]/40 px-4 py-1.5 font-manrope text-xs text-[#D9A441]"
-            >
-              + Buat Main Quest
-            </Link>
-          )}
-        </div>
+        <span className="font-mono text-sm text-[#D9A441]">{completedCount} / 7 birama</span>
       </header>
 
       <div className="mt-4">
@@ -66,21 +47,7 @@ export default function Index({
           <EmptyState
             icon={Swords}
             title="Main Quest belum tersedia"
-            description={
-              canManage
-                ? 'Kamu belum menerbitkan birama Main Quest apa pun. Buat birama pertama supaya anggota bisa mulai berlatih.'
-                : 'Pengelola komunitas belum menerbitkan birama Main Quest.'
-            }
-            action={
-              canManage ? (
-                <Link
-                  href="/manage/main-quests/create"
-                  className="rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B] transition-opacity hover:opacity-90"
-                >
-                  + Buat Main Quest Pertama
-                </Link>
-              ) : undefined
-            }
+            description="Pengelola komunitas belum menerbitkan birama Main Quest."
           />
         </div>
       ) : (

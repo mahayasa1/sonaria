@@ -7,11 +7,9 @@ import { ArrowLeft, Flame, Loader2 } from 'lucide-react';
 export default function DailyMissionCreate({
   community,
   activeCount,
-  communityRole,
 }: {
   community: { communities_id: number; community_name: string };
   activeCount: number;
-  communityRole?: string | null;
 }) {
   const [quizId, setQuizId] = useState('');
   const [missionNumber, setMissionNumber] = useState(activeCount + 1);
@@ -50,30 +48,21 @@ export default function DailyMissionCreate({
   };
 
   return (
-    <AppLayout title="Buat Daily Mission" role="Member" communityRole={communityRole} communityName={community.community_name}>
+    <AppLayout title="Buat Daily Mission" role="Member" communityRole="Ketua" communityName={community.community_name}>
       <Link href="/dashboard" className="flex items-center gap-1.5 font-manrope text-xs text-[#75708A] hover:text-[#F3EEE2]">
         <ArrowLeft size={14} /> Kembali
       </Link>
 
-      <header className="mt-3 flex items-center justify-between gap-3">
+      <header className="mt-3">
         <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
           <Flame size={24} className="text-[#C1443C]" /> Daily Mission Baru
         </h1>
-        <Link
-          href="/manage/daily-missions"
-          className="rounded-full border border-[#2A2333] px-4 py-2 font-manrope text-xs text-[#B7AFC2] hover:border-[#D9A441]/40 hover:text-[#D9A441]"
-        >
-          Kelola Daily Mission
-        </Link>
       </header>
 
       {activeCount >= 6 ? (
         <p className="mt-6 font-manrope text-sm text-[#B7AFC2]">
-          Komunitas ini sudah punya 6 daily mission aktif. Nonaktifkan salah satu dulu di{' '}
-          <Link href="/manage/daily-missions" className="text-[#D9A441] underline">
-            halaman Kelola Daily Mission
-          </Link>{' '}
-          sebelum membuat yang baru.
+          Komunitas ini sudah punya 6 daily mission aktif. Nonaktifkan salah satu dulu sebelum
+          membuat yang baru.
         </p>
       ) : (
         <div className="mt-6 max-w-lg space-y-4">

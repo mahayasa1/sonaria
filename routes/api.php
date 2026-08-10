@@ -91,13 +91,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/communities/{community:communities_id}/daily-missions', [DailyMissionController::class, 'index']);
     Route::post('/communities/{community:communities_id}/daily-missions', [DailyMissionController::class, 'store']);
     Route::post('/daily-missions/{mission:daily_missions_id}/complete', [DailyMissionController::class, 'complete']);
-    Route::post('/daily-missions/{mission:daily_missions_id}/deactivate', [DailyMissionController::class, 'deactivate']);
 
     // ==== Challenge (1 aktif, reward besar) ====
     Route::get('/communities/{community:communities_id}/challenge', [ChallengeController::class, 'index']);
     Route::post('/communities/{community:communities_id}/challenges', [ChallengeController::class, 'store']);
     Route::get('/challenges/{challenge:challenges_id}', [ChallengeController::class, 'show']);
-    Route::post('/challenges/{challenge:challenges_id}/close', [ChallengeController::class, 'close']);
     Route::post('/challenges/{challenge:challenges_id}/submissions', [ChallengeSubmissionController::class, 'store']);
     Route::get('/challenges/{challenge:challenges_id}/submissions', [ChallengeSubmissionController::class, 'index']);
     Route::post('/challenge-submissions/{submission:challenge_submissions_id}/review', [ChallengeSubmissionController::class, 'review']);

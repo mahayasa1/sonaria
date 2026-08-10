@@ -40,7 +40,6 @@ class ManageWebController extends Controller
                 ->get(),
             'canManageMembers' => $request->user()->can('manage', $community),
             'currentUserId' => $request->user()->users_id,
-            'communityRole' => $membership->role->role_name,
         ]);
     }
 
@@ -54,7 +53,6 @@ class ManageWebController extends Controller
         return Inertia::render('Manage/MainQuestCreate', [
             'community' => $membership->community,
             'existingLevels' => $membership->community->mainQuests()->pluck('level'),
-            'communityRole' => $membership->role->role_name,
         ]);
     }
 
@@ -68,28 +66,6 @@ class ManageWebController extends Controller
         return Inertia::render('Manage/DailyMissionCreate', [
             'community' => $membership->community,
             'activeCount' => $membership->community->dailyMissions()->where('status', 'Active')->count(),
-            'communityRole' => $membership->role->role_name,
-        ]);
-    }
-
-    public function dailyMissions(Request $request): Response|RedirectResponse
-    {
-        $membership = $this->requireManagingMembership($request);
-        if ($membership instanceof RedirectResponse) {
-            return $membership;
-        }
-
-        $community = $membership->community;
-
-        return Inertia::render('Manage/DailyMissions', [
-            'community' => $community,
-            'missions' => $community->dailyMissions()
-                ->with('quiz')
-                ->orderByDesc('status')
-                ->orderBy('mission_number')
-                ->get(),
-            'canManage' => $request->user()->can('manage', $community),
-            'communityRole' => $membership->role->role_name,
         ]);
     }
 
@@ -104,28 +80,6 @@ class ManageWebController extends Controller
             'community' => $membership->community,
             'instruments' => Instrument::orderBy('name')->get(),
             'hasActiveChallenge' => $membership->community->challenges()->where('status', 'Active')->exists(),
-            'communityRole' => $membership->role->role_name,
-        ]);
-    }
-
-    public function challenges(Request $request): Response|RedirectResponse
-    {
-        $membership = $this->requireManagingMembership($request);
-        if ($membership instanceof RedirectResponse) {
-            return $membership;
-        }
-
-        $community = $membership->community;
-
-        return Inertia::render('Manage/Challenges', [
-            'community' => $community,
-            'challenges' => $community->challenges()
-                ->with('instrument')
-                ->withCount('submissions')
-                ->latest('start_date')
-                ->get(),
-            'canManage' => $request->user()->can('manage', $community),
-            'communityRole' => $membership->role->role_name,
         ]);
     }
 
@@ -154,7 +108,6 @@ class ManageWebController extends Controller
             'community' => $community,
             'practiceSubmissions' => $practiceSubmissions,
             'challengeSubmissions' => $challengeSubmissions,
-            'communityRole' => $membership->role->role_name,
         ]);
     }
 
@@ -166,7 +119,6 @@ class ManageWebController extends Controller
         return Inertia::render('Manage/MaterialCreate', [
             'mainQuest' => $mainQuest,
             'instruments' => Instrument::orderBy('name')->get(),
-            'communityRole' => $this->communityRoleName($request, $mainQuest->community),
         ]);
     }
 
@@ -177,7 +129,6 @@ class ManageWebController extends Controller
 
         return Inertia::render('Manage/QuizCreate', [
             'material' => $material,
-            'communityRole' => $this->communityRoleName($request, $material->mainQuest->community),
         ]);
     }
 
@@ -188,7 +139,6 @@ class ManageWebController extends Controller
 
         return Inertia::render('Manage/PracticeCreate', [
             'material' => $material,
-            'communityRole' => $this->communityRoleName($request, $material->mainQuest->community),
         ]);
     }
 
@@ -199,19 +149,16 @@ class ManageWebController extends Controller
 
         return Inertia::render('Manage/MaterialFileCreate', [
             'material' => $material,
-            'communityRole' => $this->communityRoleName($request, $material->mainQuest->community),
         ]);
     }
 
     public function reviewPractice(Request $request, PracticeSubmission $submission): Response
     {
         $submission->load(['user', 'practice.material.mainQuest.community']);
-        $community = $submission->practice->material->mainQuest->community;
-        $this->authorize('review', $community);
+        $this->authorize('review', $submission->practice->material->mainQuest->community);
 
         return Inertia::render('Manage/ReviewPractice', [
             'submission' => $submission,
-            'communityRole' => $this->communityRoleName($request, $community),
         ]);
     }
 
@@ -222,25 +169,7 @@ class ManageWebController extends Controller
 
         return Inertia::render('Manage/ReviewChallenge', [
             'submission' => $submission,
-            'communityRole' => $this->communityRoleName($request, $submission->challenge->community),
         ]);
-    }
-
-    /**
-     * Nama role user di komunitas terkait (Ketua/Wakil Ketua/Staff), untuk
-     * ditampilkan di Sidebar. Null kalau bukan member (mis. Admin yang
-     * me-review lewat hak akses lain — walau saat ini semua route Manage
-     * mensyaratkan membership aktif).
-     */
-    protected function communityRoleName(Request $request, \App\Models\Community $community): ?string
-    {
-        $member = $community->members()
-            ->where('user_id', $request->user()->users_id)
-            ->where('status', 'Active')
-            ->with('role')
-            ->first();
-
-        return $member?->role?->role_name;
     }
 
     /**

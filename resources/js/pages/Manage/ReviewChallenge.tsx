@@ -12,13 +12,7 @@ interface Submission {
   challenge: { title: string; xp_reward: number; community: { community_name: string } };
 }
 
-export default function ReviewChallenge({
-  submission,
-  communityRole,
-}: {
-  submission: Submission;
-  communityRole?: string | null;
-}) {
+export default function ReviewChallenge({ submission }: { submission: Submission }) {
   const [score, setScore] = useState(80);
   const [feedback, setFeedback] = useState('');
   const [loading, setLoading] = useState(false);
@@ -42,7 +36,7 @@ export default function ReviewChallenge({
   };
 
   return (
-    <AppLayout title="Review Challenge" role="Member" communityRole={communityRole} communityName={submission.challenge.community.community_name}>
+    <AppLayout title="Review Challenge" role="Member" communityName={submission.challenge.community.community_name}>
       <Link href="/dashboard" className="flex items-center gap-1.5 font-manrope text-xs text-[#75708A] hover:text-[#F3EEE2]">
         <ArrowLeft size={14} /> Kembali ke Dashboard
       </Link>

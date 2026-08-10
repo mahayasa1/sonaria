@@ -2,7 +2,6 @@ import React from 'react';
 import type { ReactNode } from 'react';
 import { Head } from '@inertiajs/react';
 import Sidebar from '@/components/Sidebar';
-import NotificationBell from '@/components/NotificationBell';
 
 interface AppLayoutProps {
   title?: string;
@@ -35,9 +34,6 @@ export default function AppLayout({
       )}
       <div className="flex-1 overflow-y-auto">
         <div className={`mx-auto px-8 py-8 ${hideSidebar ? 'max-w-3xl' : 'max-w-5xl'}`}>
-          <div className="mb-4 flex justify-end">
-            <NotificationBell />
-          </div>
           {children}
         </div>
       </div>

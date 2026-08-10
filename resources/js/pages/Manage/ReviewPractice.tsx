@@ -14,13 +14,7 @@ interface Submission {
   practice: { title: string; minimum_score: number; material: { main_quest: { community: { community_name: string } } } };
 }
 
-export default function ReviewPractice({
-  submission,
-  communityRole,
-}: {
-  submission: Submission;
-  communityRole?: string | null;
-}) {
+export default function ReviewPractice({ submission }: { submission: Submission }) {
   const [score, setScore] = useState(submission.practice.minimum_score);
   const [feedback, setFeedback] = useState('');
   const [loading, setLoading] = useState(false);
@@ -46,7 +40,7 @@ export default function ReviewPractice({
   };
 
   return (
-    <AppLayout title="Review Practice" role="Member" communityRole={communityRole} communityName={communityName}>
+    <AppLayout title="Review Practice" role="Member" communityName={communityName}>
       <Link href="/dashboard" className="flex items-center gap-1.5 font-manrope text-xs text-[#75708A] hover:text-[#F3EEE2]">
         <ArrowLeft size={14} /> Kembali ke Dashboard
       </Link>

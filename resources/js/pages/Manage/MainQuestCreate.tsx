@@ -7,11 +7,9 @@ import { ArrowLeft, Swords, Loader2 } from 'lucide-react';
 export default function MainQuestCreate({
   community,
   existingLevels,
-  communityRole,
 }: {
   community: { communities_id: number; community_name: string };
   existingLevels: number[];
-  communityRole?: string | null;
 }) {
   const [level, setLevel] = useState(1);
   const [title, setTitle] = useState('');
@@ -41,7 +39,7 @@ export default function MainQuestCreate({
   };
 
   return (
-    <AppLayout title="Buat Main Quest" role="Member" communityRole={communityRole} communityName={community.community_name}>
+    <AppLayout title="Buat Main Quest" role="Member" communityRole="Ketua" communityName={community.community_name}>
       <Link href="/dashboard" className="flex items-center gap-1.5 font-manrope text-xs text-[#75708A] hover:text-[#F3EEE2]">
         <ArrowLeft size={14} /> Kembali
       </Link>

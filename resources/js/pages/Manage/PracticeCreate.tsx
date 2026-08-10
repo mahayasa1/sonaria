@@ -10,7 +10,7 @@ interface Material {
   main_quest: { main_quests_id: number; community: { community_name: string } };
 }
 
-export default function PracticeCreate({ material, communityRole }: { material: Material; communityRole?: string | null }) {
+export default function PracticeCreate({ material }: { material: Material }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [minimumScore, setMinimumScore] = useState(70);
@@ -46,7 +46,7 @@ export default function PracticeCreate({ material, communityRole }: { material: 
     <AppLayout
       title="Tambah Practice"
       role="Member"
-      communityRole={communityRole}
+      communityRole="Ketua"
       communityName={material.main_quest.community.community_name}
     >
       <Link
