@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import React, {useState} from 'react';
+import { Link, router, usePage } from '@inertiajs/react';
 import {
   Music2,
   LayoutGrid,
@@ -15,6 +15,8 @@ import {
   BadgeCheck,
   Settings,
   LogOut,
+  Loader2,
+  DoorOpen,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -23,14 +25,42 @@ interface SidebarProps {
   communityName?: string | null;
 }
 
+interface ActiveCommunityShared {
+  communities_id: number;
+  community_name: string;
+  role: string | null;
+}
+
 /**
  * Navigasi role-aware. `role` = role global (Admin/Member), `communityRole`
  * = role di dalam komunitas aktif (Ketua/Wakil Ketua/Staff/null).
  */
 export default function Sidebar({ role = 'Member', communityRole = null, communityName }: SidebarProps) {
-  const { url } = usePage();
+  const { url, props } = usePage<{ activeCommunity: ActiveCommunityShared | null }>();
+  const activeCommunity = props.activeCommunity ?? null;
+
+  const effectiveCommunityName = communityName ?? activeCommunity?.community_name ?? null;
+  const effectiveCommunityRole = communityRole ?? activeCommunity?.role ?? null;
+  const effectiveCommunityId = activeCommunity?.communities_id ?? null;
+
+  const [leaving, setLeaving] = useState(false);
 
   const isActive = (href: string) => url.startsWith(href);
+
+  const leaveCommunity = () => {
+    if (!effectiveCommunityId || leaving) return;
+    if (!confirm('Yakin ingin keluar dari komunitas ini?')) return;
+
+    setLeaving(true);
+    router.post(
+      `/communities/${effectiveCommunityId}/leave`,
+      {},
+      {
+        preserveScroll: true,
+        onFinish: () => setLeaving(false),
+      },
+    );
+  };
 
   const itemClass = (href: string) =>
     `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
@@ -122,31 +152,47 @@ export default function Sidebar({ role = 'Member', communityRole = null, communi
         <span className="font-fraunces text-lg text-[#F3EEE2]">Sonaria</span>
       </Link>
 
-      {communityName && role !== 'Admin' && (
+      {effectiveCommunityName && role !== 'Admin' && (
         <div className="mb-4 rounded-lg bg-white/5 px-3 py-2">
           <div className="font-manrope text-[10px] uppercase tracking-[0.14em] text-[#75708A]">
             Komunitas aktif
           </div>
-          <div className="truncate text-sm text-[#F3EEE2]">{communityName}</div>
-          {communityRole && (
-            <div className="mt-0.5 text-xs text-[#D9A441]">{communityRole}</div>
+          <div className="truncate text-sm text-[#F3EEE2]">{effectiveCommunityName}</div>
+          {effectiveCommunityRole && (
+            <div className="mt-0.5 text-xs text-[#D9A441]">{effectiveCommunityRole}</div>
           )}
         </div>
       )}
 
       <nav className="flex-1 space-y-1">
         {role === 'Admin' ? adminNav : memberNav}
-        {role !== 'Admin' && communityRole && managerNav}
+        {role !== 'Admin' && effectiveCommunityRole && managerNav}
       </nav>
 
-      <Link
-        href="/logout"
-        method="post"
-        as="button"
-        className="mt-4 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-[#B7AFC2] hover:bg-white/5 hover:text-[#C1443C]"
-      >
-        <LogOut size={18} /> Keluar
-      </Link>
+      <div className="mt-4 space-y-1 border-t border-[#2A2333] pt-3">
+        {/* Ketua tetap bisa coba keluar — backend akan menolak dan
+            menampilkan pesan kalau dia harus menunjuk Ketua baru dulu. */}
+        {effectiveCommunityId && role !== 'Admin' && (
+          <button
+            type="button"
+            onClick={leaveCommunity}
+            disabled={leaving}
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-[#B7AFC2] transition-colors hover:bg-[#C1443C]/10 hover:text-[#C1443C] disabled:opacity-50"
+          >
+            {leaving ? <Loader2 size={18} className="animate-spin" /> : <DoorOpen size={18} />}
+            Keluar Komunitas
+          </button>
+        )}
+
+        <Link
+          href="/logout"
+          method="post"
+          as="button"
+          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-[#B7AFC2] hover:bg-white/5 hover:text-[#C1443C]"
+        >
+          <LogOut size={18} /> Keluar Akun
+        </Link>
+      </div>
     </aside>
   );
 }
