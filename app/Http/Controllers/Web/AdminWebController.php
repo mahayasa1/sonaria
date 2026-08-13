@@ -62,18 +62,51 @@ class AdminWebController extends Controller
             ->with('success', "Status {$user->name} diperbarui menjadi {$user->status}.");
     }
 
-    public function communities(Request $request): Response
+    public function updateUser(Request $request, User $user): RedirectResponse
     {
         $this->ensureAdmin($request);
 
-        $query = Community::query()->with(['category', 'owner']);
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:150'],
+            'email' => ['required', 'email', 'max:150', 'unique:users,email,'.$user->users_id.',users_id'],
+            'username' => ['required', 'string', 'max:100', 'unique:users,username,'.$user->users_id.',users_id'],
+        ]);
 
+        $user->update($data);
+
+        return redirect()->route('admin.users', $request->only('search'))
+            ->with('success', "Data {$user->name} diperbarui.");
+    }
+
+    public function destroyUser(Request $request, User $user): RedirectResponse
+    {
+        $this->ensureAdmin($request);
+
+        if ($user->users_id === $request->user()->users_id) {
+            return redirect()->route('admin.users')
+                ->with('error', 'Tidak bisa menghapus akun sendiri.');
+        }
+
+        $name = $user->name;
+        $user->delete();
+
+        return redirect()->route('admin.users', $request->only('search'))
+            ->with('success', "Akun {$name} dihapus.");
+    }
+
+    public function communities(Request $request): Response
+    {
+        $this->ensureAdmin($request);
+    
+        $query = Community::query()->with(['category', 'owner']);
+    
         if ($request->filled('search')) {
             $query->where('community_name', 'like', '%'.$request->string('search').'%');
         }
-
+    
         return Inertia::render('Admin/Communities', [
             'communities' => $query->orderByDesc('total_member')->paginate(15)->withQueryString(),
+            'categories' => MusicCategory::orderBy('name')->get(['music_categories_id', 'name']),
             'filters' => $request->only('search'),
         ]);
     }
@@ -98,6 +131,32 @@ class AdminWebController extends Controller
                 ->orderBy('name')
                 ->get(),
         ]);
+    }
+    public function updateCommunity(Request $request, Community $community): RedirectResponse
+    {
+        $this->ensureAdmin($request);
+    
+        $data = $request->validate([
+            'community_name' => ['required', 'string', 'max:150'],
+            'description' => ['nullable', 'string', 'max:255'],
+            'music_category_id' => ['nullable', 'exists:music_categories,music_categories_id'],
+        ]);
+    
+        $community->update($data);
+    
+        return redirect()->route('admin.communities', $request->only('search'))
+            ->with('success', "Data {$community->community_name} diperbarui.");
+    }
+    
+    public function destroyCommunity(Request $request, Community $community): RedirectResponse
+    {
+        $this->ensureAdmin($request);
+    
+        $name = $community->community_name;
+        $community->delete();
+    
+        return redirect()->route('admin.communities', $request->only('search'))
+            ->with('success', "Komunitas {$name} dihapus.");
     }
 
     public function storeCategory(Request $request): RedirectResponse

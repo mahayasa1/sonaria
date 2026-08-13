@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { router } from '@inertiajs/react';
 import AppLayout from '@/layouts/AppLayout';
-import { Search, ShieldBan, ShieldCheck, Loader2 } from 'lucide-react';
+import { Search, ShieldBan, ShieldCheck, Loader2, Pencil, Trash2, X } from 'lucide-react';
 
 interface UserRow {
   users_id: number;
@@ -28,6 +28,9 @@ export default function Users({
   const [search, setSearch] = useState(filters.search ?? '');
   const [pendingId, setPendingId] = useState<number | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [editingUser, setEditingUser] = useState<UserRow | null>(null);
+  const [editForm, setEditForm] = useState({ name: '', email: '', username: '' });
+  const [saving, setSaving] = useState(false);
 
   const toggleStatus = (user: UserRow) => {
     if (!confirm(`${user.status === 'Active' ? 'Blokir' : 'Aktifkan kembali'} akun ${user.name}?`)) return;
@@ -42,6 +45,34 @@ export default function Users({
         onFinish: () => setPendingId(null),
       },
     );
+  };
+
+  const openEdit = (user: UserRow) => {
+    setEditingUser(user);
+    setEditForm({ name: user.name, email: user.email, username: user.username });
+  };
+
+  const submitEdit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+    setSaving(true);
+    router.put(`/admin/users/${editingUser.users_id}`, editForm, {
+      preserveScroll: true,
+      onSuccess: () => setEditingUser(null),
+      onError: () => setActionError('Gagal menyimpan perubahan.'),
+      onFinish: () => setSaving(false),
+    });
+  };
+
+  const deleteUser = (user: UserRow) => {
+    if (!confirm(`Hapus akun ${user.name}? Tindakan ini tidak bisa dibatalkan.`)) return;
+    setActionError(null);
+    setPendingId(user.users_id);
+    router.delete(`/admin/users/${user.users_id}`, {
+      preserveScroll: true,
+      onError: () => setActionError('Gagal menghapus akun.'),
+      onFinish: () => setPendingId(null),
+    });
   };
 
   return (
@@ -103,25 +134,42 @@ export default function Users({
                     {user.status}
                   </span>
                 </td>
-                <td className="px-5 py-3.5 text-right">
-                  <button
-                    onClick={() => toggleStatus(user)}
-                    disabled={pendingId === user.users_id}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10 disabled:opacity-50"
-                  >
-                    {pendingId === user.users_id ? (
-                      <Loader2 size={13} className="animate-spin" />
-                    ) : user.status === 'Active' ? (
-                      <ShieldBan size={13} />
-                    ) : (
-                      <ShieldCheck size={13} />
-                    )}
-                    {pendingId === user.users_id
-                      ? 'Memproses...'
-                      : user.status === 'Active'
-                        ? 'Blokir'
-                        : 'Aktifkan'}
-                  </button>
+                <td className="px-5 py-3.5">
+                  <div className="flex items-center justify-end gap-2">
+                    <button
+                      onClick={() => openEdit(user)}
+                      className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10"
+                    >
+                      <Pencil size={13} />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => toggleStatus(user)}
+                      disabled={pendingId === user.users_id}
+                      className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10 disabled:opacity-50"
+                    >
+                      {pendingId === user.users_id ? (
+                        <Loader2 size={13} className="animate-spin" />
+                      ) : user.status === 'Active' ? (
+                        <ShieldBan size={13} />
+                      ) : (
+                        <ShieldCheck size={13} />
+                      )}
+                      {pendingId === user.users_id
+                        ? 'Memproses...'
+                        : user.status === 'Active'
+                          ? 'Blokir'
+                          : 'Aktifkan'}
+                    </button>
+                    <button
+                      onClick={() => deleteUser(user)}
+                      disabled={pendingId === user.users_id}
+                      className="inline-flex items-center gap-1.5 rounded-full bg-[#C1443C]/12 px-3 py-1.5 font-manrope text-xs text-[#C1443C] hover:bg-[#C1443C]/20 disabled:opacity-50"
+                    >
+                      <Trash2 size={13} />
+                      Hapus
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -142,6 +190,65 @@ export default function Users({
               dangerouslySetInnerHTML={{ __html: link.label }}
             />
           ))}
+        </div>
+      )}
+
+      {editingUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-sm rounded-xl border border-[#2A2333] bg-[#1E1826] p-6">
+            <div className="flex items-center justify-between">
+              <h2 className="font-fraunces text-xl text-[#F3EEE2]">Edit Pengguna</h2>
+              <button onClick={() => setEditingUser(null)} className="text-[#75708A] hover:text-[#F3EEE2]">
+                <X size={18} />
+              </button>
+            </div>
+            <form onSubmit={submitEdit} className="mt-5 space-y-4">
+              <div>
+                <label className="font-manrope text-xs text-[#75708A]">Nama</label>
+                <input
+                  value={editForm.name}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  required
+                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="font-manrope text-xs text-[#75708A]">Email</label>
+                <input
+                  type="email"
+                  value={editForm.email}
+                  onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                  required
+                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="font-manrope text-xs text-[#75708A]">Username</label>
+                <input
+                  value={editForm.username}
+                  onChange={(e) => setEditForm({ ...editForm, username: e.target.value })}
+                  required
+                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingUser(null)}
+                  className="rounded-full bg-white/5 px-4 py-2 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="rounded-full bg-[#D9A441] px-4 py-2 font-manrope text-xs text-[#14101B] disabled:opacity-50"
+                >
+                  {saving ? 'Menyimpan...' : 'Simpan'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </AppLayout>

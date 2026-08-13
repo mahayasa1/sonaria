@@ -81,8 +81,12 @@ Route::middleware('auth')->group(function () {
     // ==== Admin ====
     Route::get('/admin/users', [AdminWebController::class, 'users'])->name('admin.users');
     Route::post('/admin/users/{user:users_id}/toggle-status', [AdminWebController::class, 'toggleUserStatus'])->name('admin.users.toggle-status');
+    Route::put('/admin/users/{user}', [AdminWebController::class, 'updateUser'])->name('admin.users.update');
+    Route::delete('/admin/users/{user}', [AdminWebController::class, 'destroyUser'])->name('admin.users.destroy');
     Route::get('/admin/communities', [AdminWebController::class, 'communities'])->name('admin.communities');
     Route::post('/admin/communities/{community:communities_id}/toggle-status', [AdminWebController::class, 'toggleCommunityStatus'])->name('admin.communities.toggle-status');
+    Route::put('/admin/communities/{community}', [AdminWebController::class, 'updateCommunity'])->name('admin.communities.update');
+    Route::delete('/admin/communities/{community}', [AdminWebController::class, 'destroyCommunity'])->name('admin.communities.destroy');
     Route::get('/admin/categories', [AdminWebController::class, 'categories'])->name('admin.categories');
     Route::post('/admin/categories', [AdminWebController::class, 'storeCategory'])->name('admin.categories.store');
     Route::delete('/admin/categories/{category:music_categories_id}', [AdminWebController::class, 'destroyCategory'])->name('admin.categories.destroy');

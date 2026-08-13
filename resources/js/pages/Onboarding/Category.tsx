@@ -42,6 +42,8 @@ export default function Category({
     );
   };
 
+  const isEditing = currentInstrumentId !== null;
+
   return (
     <AppLayout title="Pilih Kategori Alat Musik" role="Member" hideSidebar>
       <header>

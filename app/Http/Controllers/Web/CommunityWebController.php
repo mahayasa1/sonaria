@@ -42,6 +42,7 @@ class CommunityWebController extends Controller
             'communities' => $query->orderByDesc('total_member')->paginate(12)->withQueryString(),
             'categories' => MusicCategory::orderBy('name')->get(),
             'filters' => $request->only('search', 'category_id'),
+            'currentInstrument' => $request->user()->instrument()->select('intruments_id', 'name')->first(),
         ]);
     }
 
@@ -126,14 +127,17 @@ class CommunityWebController extends Controller
             return back()->with('error', 'Sebagai Ketua, kamu harus menunjuk Ketua baru dulu sebelum keluar komunitas.');
         }
 
-        $membership->update(['status' => 'Removed']);
+        $community->members()
+            ->where('community_members_id', $membership->community_members_id)
+            ->update(['status' => 'Removed']);
         $community->decrement('total_member');
 
         if ($isKetua && ! $otherActiveMembers) {
             $community->update(['status' => 'Inactive']);
         }
 
-        return redirect()->route('communities.index')
-            ->with('success', 'Kamu telah keluar dari komunitas. Sekarang kamu bisa bergabung atau membuat komunitas baru.');
+        return redirect()
+        ->route('communities.index')
+        ->with('info', 'Kamu sudah keluar dari komunitas. Ingin ganti alat musik? Klik "Ganti instrument" di atas.');
     }
 }

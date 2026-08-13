@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Instrument;
 use App\Models\MusicCategory;
+use App\Models\Instrument;
+use App\Models\Community;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -31,19 +32,26 @@ class OnboardingController extends Controller
     /**
      * Simpan pilihan instrument user (menandai onboarding selesai).
      */
-    public function selectInstrument(Request $request): JsonResponse
+    public function selectInstrument(Request $request)
     {
-        $data = $request->validate([
-            'instrument_id' => ['required', 'exists:instruments,intruments_id'],
+        $validated = $request->validate([
+            'instrument_id' => ['required', 'integer', 'exists:instruments,intruments_id'],
         ]);
 
-        $user = $request->user();
-        $user->instrument_id = $data['instrument_id'];
-        $user->save();
+        $instrument = Instrument::findOrFail($validated['instrument_id']);
+
+        $request->user()->update(['instrument_id' => $instrument->intruments_id]);
+
+        $matchingCommunities = Community::where('music_categories_id', $instrument->music_categories_id)
+            ->where('is_active', true)
+            ->get(['communities_id', 'community_name']);
 
         return response()->json([
-            'user' => $user->fresh()->load('instrument.category'),
-            'next_step' => 'browse-community',
+            'message' => 'Instrument berhasil disimpan.',
+            'instrument' => $instrument,
+            'redirect' => $matchingCommunities->count() === 1
+                ? route('communities.show', $matchingCommunities->first())
+                : route('communities.index', ['category_id' => $instrument->music_categories_id]),
         ]);
     }
 }
