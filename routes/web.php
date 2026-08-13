@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Web\AdminWebController;
-use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\ChallengeWebController;
 use App\Http\Controllers\Web\CommunityWebController;
 use App\Http\Controllers\Web\DailyMissionWebController;
@@ -29,17 +28,16 @@ use Inertia\Inertia;
 // ==== Publik ====
 Route::get('/', fn () => Inertia::render('Landing'))->name('landing');
 
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
-});
+// Login, Register, Logout, Reset/Verifikasi Email, 2FA, Passkey, Confirm
+// Password: semua ditangani oleh Laravel Fortify (lihat
+// app/Providers/FortifyServiceProvider.php untuk view & action-nya, serta
+// config/fortify.php untuk fitur mana yang aktif). Dulu ada AuthController
+// custom yang mendaftarkan /login & /register secara terpisah — itu
+// menyebabkan fitur Fortify seperti reset password, verifikasi email, dan
+// rate limiting login jadi tidak pernah benar-benar terpakai. Sekarang
+// Fortify adalah satu-satunya sumber untuk route-route auth tersebut.
 
 Route::middleware('auth')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
     // Satu pintu masuk dashboard — otomatis dialihkan ke tampilan yang
     // sesuai role (Admin/Ketua/Wakil Ketua/Staff/Member) di DashboardController.
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -55,26 +53,30 @@ Route::middleware('auth')->group(function () {
     Route::post('/communities/{community:communities_id}/leave', [CommunityWebController::class, 'leave'])->name('communities.leave');
 
     // ==== Dashboard komunitas: Main Quest, Daily Mission, Challenge, Forum, Leaderboard (alur no. 5) ====
-    Route::get('/main-quests', [MainQuestWebController::class, 'index'])->name('main-quests.index');
-    Route::get('/main-quests/{mainQuest:main_quests_id}', [MainQuestWebController::class, 'show'])->name('main-quests.show');
-    Route::get('/daily-missions', [DailyMissionWebController::class, 'index'])->name('daily-missions.index');
-    Route::get('/challenge', [ChallengeWebController::class, 'index'])->name('challenge.index');
-    Route::get('/forum', [ForumWebController::class, 'index'])->name('forum.index');
-    Route::get('/forum/{forumPost:forum_posts_id}', [ForumWebController::class, 'show'])->name('forum.show');
-    Route::get('/leaderboard', [LeaderboardWebController::class, 'index'])->name('leaderboard.index');
+    // 'community.active' menolak akses kalau komunitas aktif user sedang
+    // di-nonaktifkan Admin (TC-ADC-002) — lihat App\Http\Middleware\EnsureCommunityIsActive.
+    Route::middleware('community.active')->group(function () {
+        Route::get('/main-quests', [MainQuestWebController::class, 'index'])->name('main-quests.index');
+        Route::get('/main-quests/{mainQuest:main_quests_id}', [MainQuestWebController::class, 'show'])->name('main-quests.show');
+        Route::get('/daily-missions', [DailyMissionWebController::class, 'index'])->name('daily-missions.index');
+        Route::get('/challenge', [ChallengeWebController::class, 'index'])->name('challenge.index');
+        Route::get('/forum', [ForumWebController::class, 'index'])->name('forum.index');
+        Route::get('/forum/{forumPost:forum_posts_id}', [ForumWebController::class, 'show'])->name('forum.show');
+        Route::get('/leaderboard', [LeaderboardWebController::class, 'index'])->name('leaderboard.index');
 
-    // ==== Manage: khusus Ketua/Wakil Ketua (buat konten) & +Staff (review) ====
-    Route::get('/manage/members', [ManageWebController::class, 'members'])->name('manage.members');
-    Route::get('/manage/reviews', [ManageWebController::class, 'reviews'])->name('manage.reviews');
-    Route::get('/manage/main-quests/create', [ManageWebController::class, 'mainQuestCreate'])->name('manage.main-quests.create');
-    Route::get('/manage/main-quests/{mainQuest:main_quests_id}/materials/create', [ManageWebController::class, 'materialCreate'])->name('manage.materials.create');
-    Route::get('/manage/materials/{material:materials_id}/quizzes/create', [ManageWebController::class, 'quizCreate'])->name('manage.quizzes.create');
-    Route::get('/manage/materials/{material:materials_id}/practices/create', [ManageWebController::class, 'practiceCreate'])->name('manage.practices.create');
-    Route::get('/manage/materials/{material:materials_id}/files/create', [ManageWebController::class, 'materialFileCreate'])->name('manage.material-files.create');
-    Route::get('/manage/daily-missions/create', [ManageWebController::class, 'dailyMissionCreate'])->name('manage.daily-missions.create');
-    Route::get('/manage/challenge/create', [ManageWebController::class, 'challengeCreate'])->name('manage.challenge.create');
-    Route::get('/manage/practice-submissions/{submission:practice_submissions_id}', [ManageWebController::class, 'reviewPractice'])->name('manage.practice-submissions.show');
-    Route::get('/manage/challenge-submissions/{submission:challenge_submissions_id}', [ManageWebController::class, 'reviewChallenge'])->name('manage.challenge-submissions.show');
+        // ==== Manage: khusus Ketua/Wakil Ketua (buat konten) & +Staff (review) ====
+        Route::get('/manage/members', [ManageWebController::class, 'members'])->name('manage.members');
+        Route::get('/manage/reviews', [ManageWebController::class, 'reviews'])->name('manage.reviews');
+        Route::get('/manage/main-quests/create', [ManageWebController::class, 'mainQuestCreate'])->name('manage.main-quests.create');
+        Route::get('/manage/main-quests/{mainQuest:main_quests_id}/materials/create', [ManageWebController::class, 'materialCreate'])->name('manage.materials.create');
+        Route::get('/manage/materials/{material:materials_id}/quizzes/create', [ManageWebController::class, 'quizCreate'])->name('manage.quizzes.create');
+        Route::get('/manage/materials/{material:materials_id}/practices/create', [ManageWebController::class, 'practiceCreate'])->name('manage.practices.create');
+        Route::get('/manage/materials/{material:materials_id}/files/create', [ManageWebController::class, 'materialFileCreate'])->name('manage.material-files.create');
+        Route::get('/manage/daily-missions/create', [ManageWebController::class, 'dailyMissionCreate'])->name('manage.daily-missions.create');
+        Route::get('/manage/challenge/create', [ManageWebController::class, 'challengeCreate'])->name('manage.challenge.create');
+        Route::get('/manage/practice-submissions/{submission:practice_submissions_id}', [ManageWebController::class, 'reviewPractice'])->name('manage.practice-submissions.show');
+        Route::get('/manage/challenge-submissions/{submission:challenge_submissions_id}', [ManageWebController::class, 'reviewChallenge'])->name('manage.challenge-submissions.show');
+    });
 
     // ==== Admin ====
     Route::get('/admin/users', [AdminWebController::class, 'users'])->name('admin.users');

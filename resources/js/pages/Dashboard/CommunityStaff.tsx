@@ -2,6 +2,7 @@ import React from 'react';
 import AppLayout from '@/layouts/AppLayout';
 import ManagerPanel from '@/components/ManagerPanel';
 import { Headset } from 'lucide-react';
+import NotificationBell from '@/components/NotificationBell';
 
 /**
  * Dashboard Staff Komunitas — peran bantuan moderasi: menyetujui member
@@ -35,6 +36,9 @@ export default function CommunityStaff({
             Staff Komunitas
           </p>
           <h1 className="font-fraunces text-2xl text-[#F3EEE2]">{community.community_name}</h1>
+        </div>
+        <div className="fixed top-6 right-8 z-50">
+          <NotificationBell />
         </div>
       </header>
 

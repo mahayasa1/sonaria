@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout';
 import StaffProgress from '@/components/StaffProgress';
 import ManagerPanel from '@/components/ManagerPanel';
 import { Crown } from 'lucide-react';
+import NotificationBell from '@/components/NotificationBell';
 
 /**
  * Dashboard Ketua Komunitas — kewenangan penuh: membuat Main Quest, Daily
@@ -37,6 +38,9 @@ export default function CommunityLeader({
           </p>
           <h1 className="font-fraunces text-2xl text-[#F3EEE2]">{community.community_name}</h1>
         </div>
+      <div className="fixed top-6 right-8 z-50">
+        <NotificationBell />
+      </div>
       </header>
 
       <section className="mt-6 rounded-xl border border-[#2A2333] bg-[#1E1826] p-6">

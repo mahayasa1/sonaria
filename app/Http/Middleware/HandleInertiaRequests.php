@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\CommunityMember;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -42,6 +43,37 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            // Dibagikan secara global (bukan per-controller) supaya elemen UI
+            // yang bergantung pada komunitas aktif user — tombol "Keluar
+            // Komunitas" di Sidebar, dsb. — selalu muncul di halaman manapun,
+            // bukan cuma di halaman yang kebetulan mengirim prop ini secara
+            // manual.
+            'activeCommunity' => $this->resolveActiveCommunity($request),
+        ];
+    }
+
+    protected function resolveActiveCommunity(Request $request): ?array
+    {
+        $user = $request->user();
+
+        if (! $user) {
+            return null;
+        }
+
+        $membership = CommunityMember::with(['community', 'role'])
+            ->where('user_id', $user->users_id)
+            ->where('status', 'Active')
+            ->latest('join_date')
+            ->first();
+
+        if (! $membership || ! $membership->community) {
+            return null;
+        }
+
+        return [
+            'communities_id' => $membership->community->communities_id,
+            'community_name' => $membership->community->community_name,
+            'role' => $membership->role?->role_name,
         ];
     }
 }

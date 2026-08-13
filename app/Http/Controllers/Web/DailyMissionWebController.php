@@ -36,13 +36,14 @@ class DailyMissionWebController extends Controller
             ->whereDate('start_date', '<=', $today)
             ->whereDate('end_date', '>=', $today)
             ->orderBy('mission_number')
-            ->with('quiz')
+            ->withCount('questions')
             ->get()
-            ->map(function (DailyMission $mission) use ($user) {
+            ->map(function (DailyMission $mission) use ($user, $today) {
                 $mission->setRelation(
                     'my_progress',
                     UserDailyMission::where('mission_id', $mission->daily_missions_id)
                         ->where('user_id', $user->users_id)
+                        ->whereDate('mission_date', $today)
                         ->first()
                 );
 

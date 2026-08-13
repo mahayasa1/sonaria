@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,9 +12,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmailContract
 {
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    // MustVerifyEmail diaktifkan supaya middleware 'verified' (dipakai
+    // settings/security & settings/appearance) benar-benar berfungsi, dan
+    // Fortify::emailVerification() tidak lagi jadi fitur "mati" — sebelumnya
+    // User tidak implement interface ini sehingga middleware 'verified'
+    // selalu lolos begitu saja tanpa mengecek apapun.
+    use HasFactory, MustVerifyEmail, Notifiable, TwoFactorAuthenticatable;
 
     protected $table = 'users';
     protected $primaryKey = 'users_id';

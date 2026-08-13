@@ -21,15 +21,17 @@ export default function Reviews({
   community,
   practiceSubmissions,
   challengeSubmissions,
+  communityRole,
 }: {
   community: { community_name: string };
   practiceSubmissions: PracticeSubmission[];
   challengeSubmissions: ChallengeSubmission[];
+  communityRole: string;
 }) {
   const total = practiceSubmissions.length + challengeSubmissions.length;
 
   return (
-    <AppLayout title="Review Submission" role="Member" communityName={community.community_name}>
+    <AppLayout title="Review Submission" role="Member" communityRole={communityRole} communityName={community.community_name}>
       <header>
         <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
           {community.community_name}

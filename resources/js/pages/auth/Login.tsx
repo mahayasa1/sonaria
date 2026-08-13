@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useForm } from '@inertiajs/react';
 import GuestLayout from '@/layouts/GuestLayout';
 
-export default function Login() {
+export default function Login({ status, canResetPassword }: { status?: string; canResetPassword?: boolean }) {
   const { data, setData, post, processing, errors } = useForm({
     email: '',
     password: '',
@@ -26,6 +26,12 @@ export default function Login() {
             Lanjutkan latihan dan kejar level berikutnya.
           </p>
 
+          {status && (
+            <p className="mt-4 rounded-lg bg-[#4C8C86]/12 px-3 py-2 font-manrope text-sm text-[#4C8C86]">
+              {status}
+            </p>
+          )}
+
           <form onSubmit={submit} className="mt-8 space-y-5">
             <div>
               <label className="mb-1.5 block font-manrope text-xs uppercase tracking-[0.1em] text-[#9C93A8]">
@@ -42,9 +48,16 @@ export default function Login() {
             </div>
 
             <div>
-              <label className="mb-1.5 block font-manrope text-xs uppercase tracking-[0.1em] text-[#9C93A8]">
-                Password
-              </label>
+              <div className="mb-1.5 flex items-center justify-between">
+                <label className="block font-manrope text-xs uppercase tracking-[0.1em] text-[#9C93A8]">
+                  Password
+                </label>
+                {canResetPassword !== false && (
+                  <Link href="/forgot-password" className="font-manrope text-xs text-[#D9A441] hover:underline">
+                    Lupa password?
+                  </Link>
+                )}
+              </div>
               <input
                 type="password"
                 value={data.password}

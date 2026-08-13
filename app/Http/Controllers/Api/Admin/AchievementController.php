@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Achievement;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AchievementController extends Controller
 {
@@ -26,6 +27,7 @@ class AchievementController extends Controller
 
         $data = $request->validate([
             'title' => ['required', 'string', 'max:150'],
+            'trigger_key' => ['nullable', 'string', Rule::in(array_keys(Achievement::TRIGGERS))],
             'description' => ['nullable', 'string', 'max:255'],
             'icon' => ['nullable', 'string', 'max:100'],
             'xp_reward' => ['required', 'integer', 'min:0'],
@@ -43,6 +45,7 @@ class AchievementController extends Controller
 
         $data = $request->validate([
             'title' => ['sometimes', 'string', 'max:150'],
+            'trigger_key' => ['nullable', 'string', Rule::in(array_keys(Achievement::TRIGGERS))],
             'description' => ['nullable', 'string', 'max:255'],
             'icon' => ['nullable', 'string', 'max:100'],
             'xp_reward' => ['sometimes', 'integer', 'min:0'],

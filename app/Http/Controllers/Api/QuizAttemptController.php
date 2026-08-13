@@ -85,7 +85,8 @@ class QuizAttemptController extends Controller
             $categoryId = $quiz->material?->instrument?->category_id;
 
             $this->gamification->addXp($user, (int) $quiz->xp_reward, $categoryId, "Quiz: {$quiz->title}");
-            $this->gamification->addPoint($user, (int) $quiz->point_reward, 'Quiz Passed', Quiz::class, $quiz->quizzes_id);
+            $this->gamification->addPoint($user, (int) $quiz->point_reward, 'Quiz Passed', Quiz::class, $quiz->quizzes_id, categoryId: $categoryId);
+            $this->gamification->unlockAchievement($user, 'first_quiz_passed');
         }
 
         return response()->json($attempt->fresh('answers'));

@@ -47,9 +47,19 @@ class AdminWebController extends Controller
     {
         $this->ensureAdmin($request);
 
+        if ($user->users_id === $request->user()->users_id) {
+            return redirect()->route('admin.users')
+                ->with('error', 'Tidak bisa mengubah status akun sendiri.');
+        }
+
         $user->update(['status' => $user->status === 'Active' ? 'Blocked' : 'Active']);
 
-        return back()->with('success', "Status {$user->name} diperbarui menjadi {$user->status}.");
+        // Pakai redirect eksplisit ke route, bukan back(), supaya tidak
+        // bergantung pada header Referer (yang kadang tidak terkirim,
+        // menyebabkan toggle "kelihatan" tidak ngapa-ngapain / stuck di sisi
+        // klien meski data di database sebenarnya sudah berubah).
+        return redirect()->route('admin.users', $request->only('search'))
+            ->with('success', "Status {$user->name} diperbarui menjadi {$user->status}.");
     }
 
     public function communities(Request $request): Response
@@ -74,7 +84,8 @@ class AdminWebController extends Controller
 
         $community->update(['status' => $community->status === 'Active' ? 'Inactive' : 'Active']);
 
-        return back()->with('success', "Status {$community->community_name} diperbarui.");
+        return redirect()->route('admin.communities', $request->only('search'))
+            ->with('success', "Status {$community->community_name} diperbarui.");
     }
 
     public function categories(Request $request): Response

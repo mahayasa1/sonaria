@@ -17,9 +17,9 @@ class DailyMission extends Model
     protected $fillable = [
         'community_id',
         'created_by',
-        'quiz_id',
         'title',
         'description',
+        'passing_score',
         'mission_number',
         'xp_reward_min',
         'xp_reward_max',
@@ -43,9 +43,12 @@ class DailyMission extends Model
         return $this->belongsTo(User::class, 'created_by', 'users_id');
     }
 
-    public function quiz(): BelongsTo
+    /**
+     * Soal milik Daily Mission ini sendiri — bukan Quiz Main Quest.
+     */
+    public function questions(): HasMany
     {
-        return $this->belongsTo(Quiz::class, 'quiz_id', 'quizzes_id');
+        return $this->hasMany(DailyMissionQuestion::class, 'daily_mission_id', 'daily_missions_id');
     }
 
     public function userMissions(): HasMany

@@ -32,7 +32,7 @@ interface Quiz {
   title: string;
   passing_score: number;
   xp_reward: number;
-  questions: QuizQuestion[];
+  questions?: QuizQuestion[];
 }
 interface Practice {
   practices_id: number;
@@ -73,6 +73,10 @@ interface MainQuest {
 }
 
 function QuizPanel({ quiz }: { quiz: Quiz }) {
+  // Guard defensif: kalau backend suatu saat lupa eager-load relasi
+  // questions/options lagi, jangan crash seluruh halaman (undefined.map),
+  // cukup tampilkan pesan error di panel quiz ini saja.
+  const questions = quiz.questions ?? [];
   const [attemptId, setAttemptId] = useState<number | null>(null);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [loading, setLoading] = useState(false);
@@ -100,7 +104,7 @@ function QuizPanel({ quiz }: { quiz: Quiz }) {
     setError(null);
     try {
       const payload = {
-        answers: quiz.questions.map((q) => ({
+        answers: questions.map((q) => ({
           question_id: q.quiz_questions_id,
           option_id: answers[q.quiz_questions_id] ?? null,
         })),
@@ -131,6 +135,12 @@ function QuizPanel({ quiz }: { quiz: Quiz }) {
     );
   }
 
+  if (questions.length === 0) {
+    return (
+      <p className="font-manrope text-xs text-[#75708A]">Quiz ini belum punya soal.</p>
+    );
+  }
+
   if (!attemptId) {
     return (
       <div>
@@ -140,7 +150,7 @@ function QuizPanel({ quiz }: { quiz: Quiz }) {
           className="flex items-center gap-2 rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B] disabled:opacity-50"
         >
           {loading && <Loader2 size={14} className="animate-spin" />}
-          Mulai Kuis ({quiz.questions.length} soal)
+          Mulai Kuis ({questions.length} soal)
         </button>
         {error && <p className="mt-2 font-manrope text-xs text-[#C1443C]">{error}</p>}
       </div>
@@ -149,7 +159,7 @@ function QuizPanel({ quiz }: { quiz: Quiz }) {
 
   return (
     <div className="space-y-4">
-      {quiz.questions.map((q, i) => (
+      {questions.map((q, i) => (
         <div key={q.quiz_questions_id}>
           <p className="font-manrope text-sm text-[#F3EEE2]">
             {i + 1}. {q.question}
@@ -180,7 +190,7 @@ function QuizPanel({ quiz }: { quiz: Quiz }) {
       ))}
       <button
         onClick={submit}
-        disabled={loading || Object.keys(answers).length < quiz.questions.length}
+        disabled={loading || Object.keys(answers).length < questions.length}
         className="flex items-center gap-2 rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B] disabled:opacity-40"
       >
         {loading && <Loader2 size={14} className="animate-spin" />}

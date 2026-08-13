@@ -57,6 +57,16 @@ class FortifyServiceProvider extends ServiceProvider
                 return redirect()->route('landing');
             }
         });
+
+        // Default RegisterResponse Fortify mengarahkan ke fortify.home
+        // ('/dashboard'). Alur Sonaria butuh user baru diarahkan dulu ke
+        // pemilihan kategori & instrumen (onboarding) sebelum ke dashboard.
+        $this->app->instance(\Laravel\Fortify\Contracts\RegisterResponse::class, new class implements \Laravel\Fortify\Contracts\RegisterResponse {
+            public function toResponse($request)
+            {
+                return redirect()->route('onboarding.category');
+            }
+        });
     }
 
     /**

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { router } from '@inertiajs/react';
 import AppLayout from '@/layouts/AppLayout';
-import { Search, ShieldBan, ShieldCheck } from 'lucide-react';
+import { Search, ShieldBan, ShieldCheck, Loader2 } from 'lucide-react';
 
 interface UserRow {
   users_id: number;
@@ -26,10 +26,22 @@ export default function Users({
   filters: { search?: string };
 }) {
   const [search, setSearch] = useState(filters.search ?? '');
+  const [pendingId, setPendingId] = useState<number | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const toggleStatus = (user: UserRow) => {
     if (!confirm(`${user.status === 'Active' ? 'Blokir' : 'Aktifkan kembali'} akun ${user.name}?`)) return;
-    router.post(`/admin/users/${user.users_id}/toggle-status`, {}, { preserveScroll: true });
+    setActionError(null);
+    setPendingId(user.users_id);
+    router.post(
+      `/admin/users/${user.users_id}/toggle-status`,
+      {},
+      {
+        preserveScroll: true,
+        onError: () => setActionError('Gagal mengubah status. Coba lagi.'),
+        onFinish: () => setPendingId(null),
+      },
+    );
   };
 
   return (
@@ -38,6 +50,12 @@ export default function Users({
         <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">Admin</p>
         <h1 className="font-fraunces text-3xl text-[#F3EEE2]">Pengguna</h1>
       </header>
+
+      {actionError && (
+        <p className="mt-4 rounded-lg bg-[#C1443C]/12 px-3 py-2 font-manrope text-sm text-[#C1443C]">
+          {actionError}
+        </p>
+      )}
 
       <div className="relative mt-6 max-w-sm">
         <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#75708A]" />
@@ -88,10 +106,21 @@ export default function Users({
                 <td className="px-5 py-3.5 text-right">
                   <button
                     onClick={() => toggleStatus(user)}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10"
+                    disabled={pendingId === user.users_id}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10 disabled:opacity-50"
                   >
-                    {user.status === 'Active' ? <ShieldBan size={13} /> : <ShieldCheck size={13} />}
-                    {user.status === 'Active' ? 'Blokir' : 'Aktifkan'}
+                    {pendingId === user.users_id ? (
+                      <Loader2 size={13} className="animate-spin" />
+                    ) : user.status === 'Active' ? (
+                      <ShieldBan size={13} />
+                    ) : (
+                      <ShieldCheck size={13} />
+                    )}
+                    {pendingId === user.users_id
+                      ? 'Memproses...'
+                      : user.status === 'Active'
+                        ? 'Blokir'
+                        : 'Aktifkan'}
                   </button>
                 </td>
               </tr>

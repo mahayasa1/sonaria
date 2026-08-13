@@ -7,6 +7,7 @@ use App\Models\Practice;
 use App\Models\PracticeReview;
 use App\Models\PracticeSubmission;
 use App\Services\GamificationService;
+use App\Support\UploadLimits;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -33,7 +34,11 @@ class PracticeSubmissionController extends Controller
             'video_path' => ['required', 'string', 'max:255'],
             'thumbnail' => ['nullable', 'string', 'max:255'],
             'duration' => ['nullable', 'string', 'max:11'],
-            'file_size' => ['nullable', 'integer'],
+            // file_size dikirim dalam byte oleh frontend (dari File.size hasil
+            // pilih file, karena video-nya sendiri di-hosting eksternal — lihat
+            // catatan TC-FILE-001). Divalidasi di sini supaya upload > 100MB
+            // tetap ditolak walau tidak lewat form-data multipart biasa.
+            'file_size' => ['nullable', 'integer', 'min:1', 'max:'.UploadLimits::MAX_BYTES],
         ]);
 
         $submission = $practice->submissions()->create([
@@ -91,7 +96,8 @@ class PracticeSubmissionController extends Controller
             $categoryId = $practice->material->instrument->category_id ?? null;
 
             $this->gamification->addXp($user, (int) $practice->xp_reward, $categoryId, "Practice: {$practice->title}");
-            $this->gamification->addPoint($user, (int) $practice->point_reward, 'Practice Approved', PracticeSubmission::class, $submission->practice_submissions_id);
+            $this->gamification->addPoint($user, (int) $practice->point_reward, 'Practice Approved', PracticeSubmission::class, $submission->practice_submissions_id, categoryId: $categoryId);
+            $this->gamification->unlockAchievement($user, 'first_practice_approved');
         }
 
         return response()->json($review, 201);

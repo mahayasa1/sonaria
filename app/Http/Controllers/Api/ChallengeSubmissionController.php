@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Challenge;
 use App\Models\ChallengeSubmission;
 use App\Services\GamificationService;
+use App\Support\UploadLimits;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -29,7 +30,7 @@ class ChallengeSubmissionController extends Controller
             'video_path' => ['required', 'string', 'max:255'],
             'thumbnail' => ['nullable', 'string', 'max:255'],
             'duration' => ['nullable', 'string', 'max:11'],
-            'file_size' => ['nullable', 'integer'],
+            'file_size' => ['nullable', 'integer', 'min:1', 'max:'.UploadLimits::MAX_BYTES],
         ]);
 
         $submission = $challenge->submissions()->create([
@@ -76,7 +77,8 @@ class ChallengeSubmissionController extends Controller
             $categoryId = $challenge->instrument->category_id ?? null;
 
             $this->gamification->addXp($user, (int) $challenge->xp_reward, $categoryId, "Challenge: {$challenge->title}");
-            $this->gamification->addPoint($user, (int) $challenge->point_reward, 'Challenge Approved', ChallengeSubmission::class, $submission->challenge_submissions_id);
+            $this->gamification->addPoint($user, (int) $challenge->point_reward, 'Challenge Approved', ChallengeSubmission::class, $submission->challenge_submissions_id, categoryId: $categoryId);
+            $this->gamification->unlockAchievement($user, 'first_challenge_won');
         }
 
         return response()->json($submission->fresh());

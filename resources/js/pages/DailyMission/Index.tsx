@@ -4,20 +4,20 @@ import EmptyState from '@/components/EmptyState';
 import { apiFetch, ApiError } from '@/lib/api';
 import { Flame, X, Loader2, CheckCircle2 } from 'lucide-react';
 
-interface QuizOption {
-  quiz_options_id: number;
+interface MissionOption {
+  daily_mission_options_id: number;
   option_label: string;
   option_text: string;
 }
-interface QuizQuestion {
-  quiz_questions_id: number;
+interface MissionQuestion {
+  daily_mission_questions_id: number;
   question: string;
-  options: QuizOption[];
+  options: MissionOption[];
 }
-interface QuizDetail {
-  quizzes_id: number;
+interface MissionDetail {
+  daily_missions_id: number;
   title: string;
-  questions: QuizQuestion[];
+  questions: MissionQuestion[];
 }
 interface Mission {
   daily_missions_id: number;
@@ -27,7 +27,7 @@ interface Mission {
   xp_reward_min: number;
   xp_reward_max: number;
   end_date: string;
-  quiz: { quizzes_id: number };
+  questions_count: number;
   my_progress?: { is_completed: boolean } | null;
 }
 
@@ -36,8 +36,7 @@ function MissionModal({ mission, onClose, onCompleted }: {
   onClose: () => void;
   onCompleted: (xp: number) => void;
 }) {
-  const [quiz, setQuiz] = useState<QuizDetail | null>(null);
-  const [attemptId, setAttemptId] = useState<number | null>(null);
+  const [detail, setDetail] = useState<MissionDetail | null>(null);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,15 +45,10 @@ function MissionModal({ mission, onClose, onCompleted }: {
     (async () => {
       setLoading(true);
       try {
-        const q = await apiFetch<QuizDetail>(`/api/quizzes/${mission.quiz.quizzes_id}`);
-        setQuiz(q);
-        const attempt = await apiFetch<{ quiz_attempts_id: number }>(
-          `/api/quizzes/${mission.quiz.quizzes_id}/attempts`,
-          { method: 'POST' },
-        );
-        setAttemptId(attempt.quiz_attempts_id);
+        const m = await apiFetch<MissionDetail>(`/api/daily-missions/${mission.daily_missions_id}`);
+        setDetail(m);
       } catch (e) {
-        setError(e instanceof ApiError ? e.message : 'Gagal memuat kuis.');
+        setError(e instanceof ApiError ? e.message : 'Gagal memuat misi.');
       } finally {
         setLoading(false);
       }
@@ -63,23 +57,26 @@ function MissionModal({ mission, onClose, onCompleted }: {
   }, []);
 
   const submit = async () => {
-    if (!quiz || !attemptId) return;
+    if (!detail) return;
     setLoading(true);
     setError(null);
     try {
-      await apiFetch(`/api/quiz-attempts/${attemptId}/submit`, {
-        method: 'POST',
-        body: JSON.stringify({
-          answers: quiz.questions.map((q) => ({
-            question_id: q.quiz_questions_id,
-            option_id: answers[q.quiz_questions_id] ?? null,
-          })),
-        }),
-      });
-      const result = await apiFetch<{ xp_awarded: number }>(
+      const result = await apiFetch<{ xp_awarded: number; passed: boolean; message?: string }>(
         `/api/daily-missions/${mission.daily_missions_id}/complete`,
-        { method: 'POST' },
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            answers: detail.questions.map((q) => ({
+              question_id: q.daily_mission_questions_id,
+              option_id: answers[q.daily_mission_questions_id] ?? null,
+            })),
+          }),
+        },
       );
+      if (!result.passed) {
+        setError(result.message ?? 'Belum lulus, coba lagi.');
+        return;
+      }
       onCompleted(result.xp_awarded);
     } catch (e) {
       setError(e instanceof ApiError ? e.message : 'Gagal menyelesaikan misi.');
@@ -98,25 +95,25 @@ function MissionModal({ mission, onClose, onCompleted }: {
           </button>
         </div>
 
-        {loading && !quiz && (
+        {loading && !detail && (
           <div className="mt-6 flex items-center gap-2 font-manrope text-sm text-[#75708A]">
-            <Loader2 size={16} className="animate-spin" /> Memuat kuis...
+            <Loader2 size={16} className="animate-spin" /> Memuat misi...
           </div>
         )}
 
-        {quiz && (
+        {detail && (
           <div className="mt-4 space-y-4">
-            {quiz.questions.map((q, i) => (
-              <div key={q.quiz_questions_id}>
+            {detail.questions.map((q, i) => (
+              <div key={q.daily_mission_questions_id}>
                 <p className="font-manrope text-sm text-[#F3EEE2]">
                   {i + 1}. {q.question}
                 </p>
                 <div className="mt-2 space-y-1.5">
                   {q.options.map((opt) => (
                     <label
-                      key={opt.quiz_options_id}
+                      key={opt.daily_mission_options_id}
                       className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 font-manrope text-xs ${
-                        answers[q.quiz_questions_id] === opt.quiz_options_id
+                        answers[q.daily_mission_questions_id] === opt.daily_mission_options_id
                           ? 'border-[#D9A441] bg-[#D9A441]/8 text-[#F3EEE2]'
                           : 'border-[#2A2333] text-[#B7AFC2] hover:border-[#D9A441]/30'
                       }`}
@@ -124,9 +121,9 @@ function MissionModal({ mission, onClose, onCompleted }: {
                       <input
                         type="radio"
                         className="hidden"
-                        checked={answers[q.quiz_questions_id] === opt.quiz_options_id}
+                        checked={answers[q.daily_mission_questions_id] === opt.daily_mission_options_id}
                         onChange={() =>
-                          setAnswers((prev) => ({ ...prev, [q.quiz_questions_id]: opt.quiz_options_id }))
+                          setAnswers((prev) => ({ ...prev, [q.daily_mission_questions_id]: opt.daily_mission_options_id }))
                         }
                       />
                       <span className="font-mono text-[#D9A441]">{opt.option_label}.</span>{' '}
@@ -139,7 +136,7 @@ function MissionModal({ mission, onClose, onCompleted }: {
 
             <button
               onClick={submit}
-              disabled={loading || Object.keys(answers).length < quiz.questions.length}
+              disabled={loading || Object.keys(answers).length < detail.questions.length}
               className="flex w-full items-center justify-center gap-2 rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B] disabled:opacity-40"
             >
               {loading && <Loader2 size={14} className="animate-spin" />}

@@ -4,6 +4,7 @@ import AppLayout from '@/layouts/AppLayout';
 import StaffProgress from '@/components/StaffProgress';
 import EmptyState from '@/components/EmptyState';
 import { Swords, Flame, Trophy, MessageSquare, ChevronRight, Compass } from 'lucide-react';
+import NotificationBell from '@/components/NotificationBell';
 
 /**
  * Dashboard untuk role Member biasa di dalam sebuah komunitas.
@@ -51,6 +52,9 @@ export default function Member({
             Selamat berlatih,
           </p>
           <h1 className="font-fraunces text-3xl text-[#F3EEE2]">{user.name}</h1>
+          <div className="fixed top-6 right-8 z-50">
+            <NotificationBell />
+          </div>
         </header>
 
         <div className="mt-6">
@@ -79,6 +83,9 @@ export default function Member({
           Selamat berlatih,
         </p>
         <h1 className="font-fraunces text-3xl text-[#F3EEE2]">{user.name}</h1>
+        <div className="fixed top-6 right-8 z-50">
+            <NotificationBell />
+          </div>
       </header>
 
       {/* Kartu level */}

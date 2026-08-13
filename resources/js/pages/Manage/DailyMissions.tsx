@@ -15,7 +15,8 @@ interface Mission {
   start_date: string;
   end_date: string;
   status: 'Draft' | 'Active' | 'Inactive';
-  quiz?: { title: string };
+  passing_score?: string;
+  questions_count?: number;
 }
 
 const STATUS_STYLE: Record<Mission['status'], string> = {
@@ -65,7 +66,9 @@ function MissionRow({
             <p className="mt-1 font-manrope text-sm text-[#B7AFC2]">{mission.description}</p>
           )}
           <div className="mt-2 flex flex-wrap gap-4 font-manrope text-xs text-[#75708A]">
-            {mission.quiz && <span>Quiz: {mission.quiz.title}</span>}
+            {typeof mission.questions_count === 'number' && (
+              <span>{mission.questions_count} soal</span>
+            )}
             <span>
               +{mission.xp_reward_min}–{mission.xp_reward_max} XP
             </span>

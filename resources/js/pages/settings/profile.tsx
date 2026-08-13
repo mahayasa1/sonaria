@@ -47,6 +47,32 @@ export default function Profile({
                     {({ processing, errors }) => (
                         <>
                             <div className="grid gap-2">
+                                <Label htmlFor="photo">Foto profil</Label>
+
+                                <div className="flex items-center gap-4">
+                                    {auth.user.photo && (
+                                        <img
+                                            src={`/storage/${auth.user.photo}`}
+                                            alt={auth.user.name}
+                                            className="h-14 w-14 rounded-full object-cover"
+                                        />
+                                    )}
+                                    <Input
+                                        id="photo"
+                                        type="file"
+                                        name="photo"
+                                        accept="image/png,image/jpeg,image/webp"
+                                        className="mt-1 block w-full"
+                                    />
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                    JPG, PNG, atau WEBP. Maksimal 100MB.
+                                </p>
+
+                                <InputError className="mt-2" message={errors.photo} />
+                            </div>
+
+                            <div className="grid gap-2">
                                 <Label htmlFor="name">Name</Label>
 
                                 <Input

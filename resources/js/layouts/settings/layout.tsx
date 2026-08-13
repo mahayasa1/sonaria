@@ -1,10 +1,12 @@
 import { Link } from '@inertiajs/react';
+import { ArrowLeft } from 'lucide-react';
 import type { PropsWithChildren } from 'react';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { cn, toUrl } from '@/lib/utils';
+import { dashboard } from '@/routes';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit } from '@/routes/profile';
 import { edit as editSecurity } from '@/routes/security';
@@ -72,6 +74,17 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                         {children}
                     </section>
                 </div>
+            </div>
+
+            <Separator className="my-6" />
+
+            <div className="flex justify-start">
+                <Button variant="outline" size="sm" asChild>
+                    <Link href={dashboard()}>
+                        <ArrowLeft className="h-4 w-4" />
+                        Kembali ke Dashboard
+                    </Link>
+                </Button>
             </div>
         </div>
     );

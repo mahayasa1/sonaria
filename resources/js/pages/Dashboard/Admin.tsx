@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/AppLayout';
 import { Users, Layers, Music2, ShieldAlert } from 'lucide-react';
+import NotificationBell from '@/components/NotificationBell';
 
 /**
  * Dashboard Admin — mengelola sistem secara keseluruhan: pengguna, semua
@@ -34,6 +35,9 @@ export default function Admin({
           Panel Administrasi
         </p>
         <h1 className="font-fraunces text-3xl text-[#F3EEE2]">Ringkasan Platform</h1>
+ <div className="fixed top-6 right-8 z-50">
+        <NotificationBell />
+      </div>
       </header>
 
       <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

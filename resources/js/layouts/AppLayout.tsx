@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { Head } from '@inertiajs/react';
 import Sidebar from '@/components/Sidebar';
 
+
 interface AppLayoutProps {
   title?: string;
   role?: string;
@@ -12,12 +13,6 @@ interface AppLayoutProps {
   children: ReactNode;
 }
 
-/**
- * Layout dashboard untuk user yang sudah login (Member, Ketua, Wakil Ketua,
- * Staff, Admin). Sidebar menyesuaikan berdasarkan role & communityRole.
- * Set `hideSidebar` untuk halaman seperti onboarding yang tetap pakai
- * layout (background, Head, container) tapi tanpa sidebar.
- */
 export default function AppLayout({
   title,
   role = 'Member',
@@ -27,13 +22,17 @@ export default function AppLayout({
   children,
 }: AppLayoutProps) {
   return (
-    <div className="flex min-h-screen bg-[#14101B] text-[#F3EEE2]">
+    <div className="flex h-screen overflow-hidden bg-[#14101B] text-[#F3EEE2]">
       <Head title={title} />
       {!hideSidebar && (
         <Sidebar role={role} communityRole={communityRole} communityName={communityName} />
       )}
       <div className="flex-1 overflow-y-auto">
-        <div className={`mx-auto px-8 py-8 ${hideSidebar ? 'max-w-3xl' : 'max-w-5xl'}`}>
+        <div
+          className={`mx-auto px-8 py-8 ${hideSidebar ? 'max-w-3xl' : 'max-w-5xl'} ${
+            hideSidebar ? '' : 'pt-16 lg:pt-8'
+          }`}
+        >
           {children}
         </div>
       </div>

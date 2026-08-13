@@ -54,7 +54,16 @@ class MainQuestWebController extends Controller
             'community',
             'materials' => fn ($q) => $q->orderBy('order_number'),
             'materials.files',
-            'materials.quizzes',
+            // Wajib load sampai questions.options — QuizPanel di frontend
+            // memanggil quiz.questions.map(...) langsung. Kalau relasi ini
+            // tidak di-load, `questions` hilang dari JSON dan React crash
+            // (undefined.map), yang di app bertema gelap ini terlihat
+            // seperti "blackscreen".
+            'materials.quizzes.questions' => fn ($q) => $q->orderBy('order_number'),
+            'materials.quizzes.questions.options' => function ($q) {
+                // Jangan bocorkan is_correct ke user yang belum submit.
+                $q->select('quiz_options_id', 'question_id', 'option_label', 'option_text');
+            },
             'materials.practices',
             'materials.progress' => fn ($q) => $q->where('user_id', $user->users_id),
         ]);

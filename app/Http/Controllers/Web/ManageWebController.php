@@ -40,6 +40,7 @@ class ManageWebController extends Controller
                 ->get(),
             'canManageMembers' => $request->user()->can('manage', $community),
             'currentUserId' => $request->user()->users_id,
+            'communityRole' => $membership->role->role_name,
         ]);
     }
 
@@ -108,6 +109,7 @@ class ManageWebController extends Controller
             'community' => $community,
             'practiceSubmissions' => $practiceSubmissions,
             'challengeSubmissions' => $challengeSubmissions,
+            'communityRole' => $membership->role->role_name,
         ]);
     }
 

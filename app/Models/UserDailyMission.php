@@ -16,6 +16,7 @@ class UserDailyMission extends Model
     protected $fillable = [
         'mission_id',
         'user_id',
+        'mission_date',
         'progress',
         'is_completed',
         'reward_claimed',
@@ -23,6 +24,7 @@ class UserDailyMission extends Model
     ];
 
     protected $casts = [
+        'mission_date' => 'date',
         'is_completed' => 'boolean',
         'reward_claimed' => 'boolean',
         'completed_at' => 'datetime',

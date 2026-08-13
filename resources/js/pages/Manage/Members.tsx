@@ -117,11 +117,13 @@ export default function Members({
   members,
   canManageMembers,
   currentUserId,
+  communityRole, 
 }: {
   community: { communities_id: number; community_name: string };
   members: Member[];
   canManageMembers: boolean;
   currentUserId: number;
+  communityRole: string;
 }) {
   const [list, setList] = useState(members);
 
@@ -136,7 +138,7 @@ export default function Members({
   };
 
   return (
-    <AppLayout title="Kelola Member" role="Member" communityName={community.community_name}>
+    <AppLayout title="Kelola Member" role="Member" communityRole={communityRole}  communityName={community.community_name}>
       <header>
         <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
           {community.community_name}

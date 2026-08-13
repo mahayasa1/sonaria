@@ -15,10 +15,25 @@ class Achievement extends Model
 
     protected $fillable = [
         'title',
+        'trigger_key',
         'description',
         'icon',
         'xp_reward',
         'point_reward',
+    ];
+
+    /**
+     * Kode trigger bawaan yang dikenali GamificationService::unlockAchievement().
+     * Dipakai untuk dropdown di form Admin > Achievements supaya admin tidak
+     * salah ketik kode yang tidak pernah dicocokkan sistem.
+     */
+    public const TRIGGERS = [
+        'first_quiz_passed' => 'Pertama kali lulus Quiz',
+        'first_practice_approved' => 'Pertama kali Practice disetujui',
+        'first_challenge_won' => 'Pertama kali Challenge disetujui',
+        'daily_mission_streak_7' => 'Daily Mission 7 hari beruntun',
+        'reach_level_5' => 'Mencapai Level 5',
+        'reach_level_10' => 'Mencapai Level 10',
     ];
 
     public function userAchievements(): HasMany

@@ -37,7 +37,6 @@ class DatabaseSeeder extends Seeder
             TestingMaterialSeeder::class,
             TestingPracticeSeeder::class,
             TestingQuizSeeder::class,
-            TestingDailyMissionSeeder::class,
             TestingChallengeSeeder::class,
             TestingGamificationSeeder::class,
             TestingForumSeeder::class,
