@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
     // Satu pintu masuk dashboard — otomatis dialihkan ke tampilan yang
     // sesuai role (Admin/Ketua/Wakil Ketua/Staff/Member) di DashboardController.
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
+    
     // ==== Onboarding: pilih kategori & instrument (alur no. 3) ====
     Route::get('/onboarding/category', [OnboardingWebController::class, 'category'])->name('onboarding.category');
     Route::post('/onboarding/instrument', [OnboardingWebController::class, 'storeInstrument'])->name('onboarding.instrument');
@@ -100,15 +100,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/badges/{badge:badges_id}', [AdminWebController::class, 'destroyBadge'])->name('admin.badges.destroy');
     Route::get('/admin/settings', [AdminWebController::class, 'settings'])->name('admin.settings');
 
-    /*
-    |----------------------------------------------------------------------
-    | Belum dibuat di langkah ini:
-    |
-    | - Manage: Announcements, Reports
-    | - Admin: Music Categories, Materials/Quizzes browser (list+edit), Challenges,
-    |   Leaderboards, Achievements, Badges, Reports
-    |----------------------------------------------------------------------
-    */
 });
 
 require __DIR__.'/settings.php';

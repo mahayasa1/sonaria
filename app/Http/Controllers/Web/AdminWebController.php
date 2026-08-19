@@ -52,7 +52,7 @@ class AdminWebController extends Controller
                 ->with('error', 'Tidak bisa mengubah status akun sendiri.');
         }
 
-        $user->update(['status' => $user->status === 'Active' ? 'Blocked' : 'Active']);
+        $user->update(['status' => $user->status === 'Active' ? 'Banned' : 'Active']);
 
         // Pakai redirect eksplisit ke route, bukan back(), supaya tidak
         // bergantung pada header Referer (yang kadang tidak terkirim,

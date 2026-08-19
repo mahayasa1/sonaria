@@ -5,6 +5,7 @@ import StaffProgress from '@/components/StaffProgress';
 import EmptyState from '@/components/EmptyState';
 import { Swords, Flame, Trophy, MessageSquare, ChevronRight, Compass } from 'lucide-react';
 import NotificationBell from '@/components/NotificationBell';
+import CommunityStatusAlert from '@/components/CommunityStatusAlert';
 
 /**
  * Dashboard untuk role Member biasa di dalam sebuah komunitas.
@@ -56,6 +57,7 @@ export default function Member({
             <NotificationBell />
           </div>
         </header>
+        <CommunityStatusAlert />
 
         <div className="mt-6">
           <EmptyState

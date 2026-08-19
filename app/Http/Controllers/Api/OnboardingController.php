@@ -37,21 +37,21 @@ class OnboardingController extends Controller
         $validated = $request->validate([
             'instrument_id' => ['required', 'integer', 'exists:instruments,intruments_id'],
         ]);
-
+    
         $instrument = Instrument::findOrFail($validated['instrument_id']);
-
+    
         $request->user()->update(['instrument_id' => $instrument->intruments_id]);
-
-        $matchingCommunities = Community::where('music_categories_id', $instrument->music_categories_id)
-            ->where('is_active', true)
+    
+        $matchingCommunities = Community::where('instrument_id', $instrument->intruments_id)
+            ->where('status', 'Active')
             ->get(['communities_id', 'community_name']);
-
+    
         return response()->json([
             'message' => 'Instrument berhasil disimpan.',
             'instrument' => $instrument,
             'redirect' => $matchingCommunities->count() === 1
                 ? route('communities.show', $matchingCommunities->first())
-                : route('communities.index', ['category_id' => $instrument->music_categories_id]),
+                : route('communities.index', ['instrument_id' => $instrument->intruments_id]),
         ]);
     }
 }

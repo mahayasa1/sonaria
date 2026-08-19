@@ -49,18 +49,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/communities', [CommunityController::class, 'index']);
     Route::post('/communities', [CommunityController::class, 'store']);
     Route::get('/communities/{community:communities_id}', [CommunityController::class, 'show']);
-    Route::post('/communities/{community:communities_id}/join', [CommunityController::class, 'join'])->middleware('community.active');
+    Route::post('/communities/{community:communities_id}/join', [CommunityController::class, 'join']);
     Route::post('/communities/{community:communities_id}/leave', [CommunityController::class, 'leave']);
-    Route::put('/communities/{community:communities_id}/members/{member:community_members_id}', [CommunityController::class, 'updateMemberRole']);
-    Route::delete('/communities/{community:communities_id}/members/{member:community_members_id}', [CommunityController::class, 'removeMember']);
-    Route::get('/communities/{community:communities_id}/join-requests', [CommunityController::class, 'joinRequests']);
-    Route::post('/communities/{community:communities_id}/join-requests/{joinRequest}/approve', [CommunityController::class, 'approveJoinRequest']);
-    Route::post('/communities/{community:communities_id}/join-requests/{joinRequest}/reject', [CommunityController::class, 'rejectJoinRequest']);
 
     // Konten komunitas (Main Quest, Daily Mission, Challenge, Leaderboard,
     // Forum) diblokir kalau komunitasnya sedang di-nonaktifkan Admin
     // (TC-ADC-002) — lihat App\Http\Middleware\EnsureCommunityIsActive.
     Route::middleware('community.active')->group(function () {
+        // ==== Management Community ====
+        Route::put('/communities/{community:communities_id}/members/{member:community_members_id}', [CommunityController::class, 'updateMemberRole']);
+        Route::delete('/communities/{community:communities_id}/members/{member:community_members_id}', [CommunityController::class, 'removeMember']);
+        Route::get('/communities/{community:communities_id}/join-requests', [CommunityController::class, 'joinRequests']);
+        Route::post('/communities/{community:communities_id}/join-requests/{joinRequest}/approve', [CommunityController::class, 'approveJoinRequest']);
+        Route::post('/communities/{community:communities_id}/join-requests/{joinRequest}/reject', [CommunityController::class, 'rejectJoinRequest']);
+
         // ==== Main Quest (7 level) ====
         Route::get('/communities/{community:communities_id}/main-quests', [MainQuestController::class, 'index']);
         Route::post('/communities/{community:communities_id}/main-quests', [MainQuestController::class, 'store']);

@@ -40,34 +40,28 @@ class OnboardingWebController extends Controller
         $validated = $request->validate([
             'instrument_id' => ['required', 'integer', 'exists:instruments,intruments_id'],
         ]);
-
+    
         $instrument = Instrument::findOrFail($validated['instrument_id']);
-
-        // update(), bukan create-once — supaya method ini juga jadi
-        // endpoint "ganti instrument", bukan cuma dipakai sekali saja.
-        
+    
         /** @var User $user */
         $user = Auth::user();
-
+    
         $user->update([
             'instrument_id' => $instrument->intruments_id,
         ]);
-
-        $matchingCommunities = Community::where('music_categories_id', $instrument->music_categories_id)
-            ->where('is_active', true)
+    
+        $matchingCommunities = Community::where('instrument_id', $instrument->intruments_id)
+            ->where('status', 'Active')
             ->get();
-
-        // Cuma ada satu komunitas yang cocok -> langsung antar ke sana.
+    
         if ($matchingCommunities->count() === 1) {
             return redirect()
                 ->route('communities.show', $matchingCommunities->first())
                 ->with('success', 'Instrument berhasil disimpan. Ini komunitas yang cocok untukmu!');
         }
-
-        // Lebih dari satu (atau belum ada sama sekali) -> arahkan ke
-        // daftar komunitas yang sudah difilter sesuai kategori instrument.
+    
         return redirect()
-            ->route('communities.index', ['category_id' => $instrument->music_categories_id])
+            ->route('communities.index', ['instrument_id' => $instrument->intruments_id])
             ->with('success', 'Instrument berhasil disimpan. Berikut komunitas yang sesuai untukmu.');
     }
 }

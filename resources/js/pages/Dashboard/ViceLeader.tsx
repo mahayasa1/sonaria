@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout';
 import ManagerPanel from '@/components/ManagerPanel';
 import { ShieldHalf } from 'lucide-react';
 import NotificationBell from '@/components/NotificationBell';
+import CommunityStatusAlert from '@/components/CommunityStatusAlert';
 
 /**
  * Dashboard Wakil Ketua Komunitas — kewenangan setara Ketua untuk membuat
@@ -36,6 +37,7 @@ export default function ViceLeader({
           <NotificationBell />
         </div>
       </header>
+      <CommunityStatusAlert />
 
       <p className="mt-4 max-w-lg font-manrope text-sm text-[#9C93A8]">
         Kamu mendampingi Ketua mengelola konten dan menjaga aktivitas harian komunitas

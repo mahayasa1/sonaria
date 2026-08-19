@@ -6,6 +6,7 @@ use App\Models\Community;
 use App\Models\CommunityJoinRequest;
 use App\Models\CommunityMember;
 use App\Models\CommunityRole;
+use App\Models\Instrument;
 use App\Models\MusicCategory;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -17,6 +18,11 @@ use Illuminate\Database\Seeder;
  * - Drum Warrior Indonesia & Violin Harmony: komunitas aktif ukuran sedang.
  * - Brass Academy: sengaja dibuat kecil (Empty/Low Member) untuk menguji
  *   tampilan komunitas yang baru berdiri / sepi member.
+ *
+ * Catatan: komunitas sekarang di-filter berdasarkan instrument_id (bukan
+ * cuma category_id) di halaman "Cari Komunitas", jadi setiap komunitas di
+ * seeder ini wajib diisi instrument_id yang sesuai. Nama instrument mengikuti
+ * persis InstrumentSeeder: "Gitar Akustik", "Drum Set", "Biola", "Trompet".
  */
 class TestingCommunitySeeder extends Seeder
 {
@@ -31,6 +37,19 @@ class TestingCommunitySeeder extends Seeder
         $categoryPercussion = MusicCategory::where('name', 'Percussion')->firstOrFail();
         $categoryBrass = MusicCategory::where('name', 'Brass')->firstOrFail();
 
+        $instrumentGitar = Instrument::where('name', 'Gitar Akustik')
+            ->where('category_id', $categoryString->music_categories_id)
+            ->firstOrFail();
+        $instrumentDrum = Instrument::where('name', 'Drum Set')
+            ->where('category_id', $categoryPercussion->music_categories_id)
+            ->firstOrFail();
+        $instrumentBiola = Instrument::where('name', 'Biola')
+            ->where('category_id', $categoryString->music_categories_id)
+            ->firstOrFail();
+        $instrumentTrompet = Instrument::where('name', 'Trompet')
+            ->where('category_id', $categoryBrass->music_categories_id)
+            ->firstOrFail();
+
         $users = User::whereIn('username', [
             'ketua_gitar', 'wakil_gitar', 'staff_gitar', 'member_gitar', 'user_tempo', 'user_chord', 'user_pemula',
             'ketua_drum', 'member_drum', 'user_ritme', 'member_trompet',
@@ -43,6 +62,7 @@ class TestingCommunitySeeder extends Seeder
             [
                 'owner_id' => $users['ketua_gitar']->users_id,
                 'category_id' => $categoryString->music_categories_id,
+                'instrument_id' => $instrumentGitar->intruments_id,
                 'description' => 'Wadah belajar gitar bareng, dari dasar sampai mahir.',
                 'status' => 'Active',
             ]
@@ -67,6 +87,7 @@ class TestingCommunitySeeder extends Seeder
             [
                 'owner_id' => $users['ketua_drum']->users_id,
                 'category_id' => $categoryPercussion->music_categories_id,
+                'instrument_id' => $instrumentDrum->intruments_id,
                 'description' => 'Komunitas drummer dari segala genre, latihan ketukan bareng tiap minggu.',
                 'status' => 'Active',
             ]
@@ -89,6 +110,7 @@ class TestingCommunitySeeder extends Seeder
             [
                 'owner_id' => $users['ketua_biola']->users_id,
                 'category_id' => $categoryString->music_categories_id,
+                'instrument_id' => $instrumentBiola->intruments_id,
                 'description' => 'Komunitas pecinta biola klasik & kontemporer.',
                 'status' => 'Active',
             ]
@@ -112,6 +134,7 @@ class TestingCommunitySeeder extends Seeder
             [
                 'owner_id' => $users['ketua_gitar']->users_id,
                 'category_id' => $categoryBrass->music_categories_id,
+                'instrument_id' => $instrumentTrompet->intruments_id,
                 'description' => 'Komunitas alat tiup logam yang baru berdiri, masih sedikit member.',
                 'status' => 'Active',
             ]

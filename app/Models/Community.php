@@ -17,6 +17,7 @@ class Community extends Model
     protected $fillable = [
         'owner_id',
         'category_id',
+        'instrument_id',
         'community_name',
         'logo',
         'banner',
@@ -33,6 +34,11 @@ class Community extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(MusicCategory::class, 'category_id', 'music_categories_id');
+    }
+
+    public function instrument(): BelongsTo
+    {
+        return $this->belongsTo(Instrument::class, 'instrument_id', 'intruments_id');
     }
 
     public function members(): HasMany

@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Community;
 use App\Models\CommunityJoinRequest;
 use App\Models\CommunityRole;
-use App\Models\MusicCategory;
+use App\Models\Instrument;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -22,27 +22,38 @@ class CommunityWebController extends Controller
      */
     public function index(Request $request): Response|RedirectResponse
     {
-        if (! $request->user()->instrument_id) {
+        $user = $request->user();
+    
+        if (! $user->instrument_id) {
             return redirect()->route('onboarding.category');
         }
-
+    
+        // Default: instrument yang dipilih user saat onboarding.
+        // User tetap bisa ganti lewat query param instrument_id kalau mau lihat komunitas lain.
+        $instrumentId = $request->filled('instrument_id')
+            ? $request->integer('instrument_id')
+            : $user->instrument_id;
+    
         $query = Community::query()
             ->where('status', 'Active')
-            ->with(['category', 'owner']);
-
-        if ($request->filled('category_id')) {
-            $query->where('category_id', $request->integer('category_id'));
+            ->with(['category', 'owner', 'instrument']);
+    
+        if ($instrumentId) {
+            $query->where('instrument_id', $instrumentId);
         }
-
+    
         if ($request->filled('search')) {
             $query->where('community_name', 'like', '%'.$request->string('search').'%');
         }
-
+    
         return Inertia::render('Communities/Index', [
             'communities' => $query->orderByDesc('total_member')->paginate(12)->withQueryString(),
-            'categories' => MusicCategory::orderBy('name')->get(),
-            'filters' => $request->only('search', 'category_id'),
-            'currentInstrument' => $request->user()->instrument()->select('intruments_id', 'name')->first(),
+            'instruments' => Instrument::orderBy('name')->get(['intruments_id', 'name', 'category_id']),
+            'filters' => [
+                'search' => $request->input('search'),
+                'instrument_id' => (string) $instrumentId,
+            ],
+            'currentInstrument' => $user->instrument()->select('intruments_id', 'name')->first(),
         ]);
     }
 

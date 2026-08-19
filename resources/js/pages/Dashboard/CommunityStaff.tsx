@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout';
 import ManagerPanel from '@/components/ManagerPanel';
 import { Headset } from 'lucide-react';
 import NotificationBell from '@/components/NotificationBell';
+import CommunityStatusAlert from '@/components/CommunityStatusAlert';
 
 /**
  * Dashboard Staff Komunitas — peran bantuan moderasi: menyetujui member
@@ -41,6 +42,7 @@ export default function CommunityStaff({
           <NotificationBell />
         </div>
       </header>
+      <CommunityStatusAlert />
 
       <p className="mt-4 max-w-lg font-manrope text-sm text-[#9C93A8]">
         Kamu membantu menjaga komunitas tetap rapi: menyetujui anggota baru dan

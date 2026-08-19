@@ -1,7 +1,7 @@
 import React from 'react';
-import { router } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/AppLayout';
-import { Users, Music2, Swords, Flame, Trophy, Calendar, Crown } from 'lucide-react';
+import { Users, Music2, Swords, Flame, Trophy, Calendar, Crown, ArrowLeft } from 'lucide-react';
 
 interface MainQuest {
   main_quests_id: number;
@@ -53,6 +53,15 @@ export default function Show({
 
   return (
     <AppLayout title={community.community_name} role="Member" hideSidebar>
+      {/* Tombol kembali */}
+      <Link
+        href="/communities"
+        className="inline-flex items-center gap-1.5 font-manrope text-xs text-[#B7AFC2] transition-colors hover:text-[#D9A441]"
+      >
+        <ArrowLeft size={14} />
+        Kembali ke Cari Komunitas
+      </Link>
+      
       {/* Banner + info dasar */}
       <div className="h-32 rounded-xl bg-gradient-to-br from-[#332B40] to-[#1E1826]" />
       <div className="-mt-10 flex flex-col gap-4 px-2 sm:flex-row sm:items-end sm:justify-between">
