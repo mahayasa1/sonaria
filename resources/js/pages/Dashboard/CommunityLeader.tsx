@@ -28,6 +28,7 @@ export default function CommunityLeader({
       role="Member"
       communityRole="Ketua"
       communityName={community.community_name}
+      communityId={community.communities_id}
     >
       <header className="flex items-center gap-3">
         <div className="rounded-full bg-[#D9A441]/15 p-2.5 text-[#D9A441]">

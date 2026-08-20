@@ -48,6 +48,9 @@ Route::middleware('auth')->group(function () {
 
     // ==== Cari & gabung komunitas (alur no. 4) ====
     Route::get('/communities', [CommunityWebController::class, 'index'])->name('communities.index');
+    // '/communities/create' HARUS didaftarkan sebelum '/communities/{community}'
+    // supaya "create" tidak ditangkap sebagai route model binding communities_id.
+    Route::get('/communities/create', [CommunityWebController::class, 'create'])->name('communities.create');
     Route::get('/communities/{community:communities_id}', [CommunityWebController::class, 'show'])->name('communities.show');
     Route::post('/communities/{community:communities_id}/join', [CommunityWebController::class, 'join'])->name('communities.join');
     Route::post('/communities/{community:communities_id}/leave', [CommunityWebController::class, 'leave'])->name('communities.leave');
@@ -72,7 +75,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/manage/materials/{material:materials_id}/quizzes/create', [ManageWebController::class, 'quizCreate'])->name('manage.quizzes.create');
         Route::get('/manage/materials/{material:materials_id}/practices/create', [ManageWebController::class, 'practiceCreate'])->name('manage.practices.create');
         Route::get('/manage/materials/{material:materials_id}/files/create', [ManageWebController::class, 'materialFileCreate'])->name('manage.material-files.create');
+        Route::get('/manage/daily-missions', [ManageWebController::class, 'dailyMissions'])->name('manage.daily-missions.index');
         Route::get('/manage/daily-missions/create', [ManageWebController::class, 'dailyMissionCreate'])->name('manage.daily-missions.create');
+        Route::get('/manage/challenges', [ManageWebController::class, 'challenges'])->name('manage.challenges.index');
         Route::get('/manage/challenge/create', [ManageWebController::class, 'challengeCreate'])->name('manage.challenge.create');
         Route::get('/manage/practice-submissions/{submission:practice_submissions_id}', [ManageWebController::class, 'reviewPractice'])->name('manage.practice-submissions.show');
         Route::get('/manage/challenge-submissions/{submission:challenge_submissions_id}', [ManageWebController::class, 'reviewChallenge'])->name('manage.challenge-submissions.show');

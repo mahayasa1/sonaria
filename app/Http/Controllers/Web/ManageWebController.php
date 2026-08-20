@@ -84,6 +84,58 @@ class ManageWebController extends Controller
         ]);
     }
 
+    /**
+     * Daftar challenge komunitas (untuk aksi "Tutup Challenge"). Sebelumnya
+     * halaman React-nya (Manage/Challenges.tsx) sudah ada tapi tidak pernah
+     * terpasang di route manapun — hanya '/manage/challenge/create' yang
+     * ada, jadi halaman ini tidak pernah bisa diakses user.
+     */
+    public function challenges(Request $request): Response|RedirectResponse
+    {
+        $membership = $this->requireManagingMembership($request, mustManage: true);
+        if ($membership instanceof RedirectResponse) {
+            return $membership;
+        }
+
+        $community = $membership->community;
+
+        return Inertia::render('Manage/Challenges', [
+            'community' => $community,
+            'challenges' => $community->challenges()
+                ->with('instrument')
+                ->withCount('submissions')
+                ->latest()
+                ->get(),
+            'canManage' => $request->user()->can('manage', $community),
+            'communityRole' => $membership->role->role_name,
+        ]);
+    }
+
+    /**
+     * Daftar daily mission komunitas (untuk aksi "Nonaktifkan"). Sama seperti
+     * challenges() di atas — Manage/DailyMissions.tsx sudah ada tapi belum
+     * pernah dipasang di route manapun.
+     */
+    public function dailyMissions(Request $request): Response|RedirectResponse
+    {
+        $membership = $this->requireManagingMembership($request, mustManage: true);
+        if ($membership instanceof RedirectResponse) {
+            return $membership;
+        }
+
+        $community = $membership->community;
+
+        return Inertia::render('Manage/DailyMissions', [
+            'community' => $community,
+            'missions' => $community->dailyMissions()
+                ->withCount('questions')
+                ->orderBy('mission_number')
+                ->get(),
+            'canManage' => $request->user()->can('manage', $community),
+            'communityRole' => $membership->role->role_name,
+        ]);
+    }
+
     public function reviews(Request $request): Response|RedirectResponse
     {
         $membership = $this->requireManagingMembership($request);

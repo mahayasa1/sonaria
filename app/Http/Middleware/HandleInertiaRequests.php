@@ -28,7 +28,7 @@ class HandleInertiaRequests extends Middleware
                     $request->session()->get('community_inactive'),
             ],
 
-            'active_community' => fn () => $this->resolveActiveCommunity($request),
+            'activeCommunity' => fn () => $this->resolveActiveCommunity($request),
         ];
     }
 

@@ -22,6 +22,7 @@ export default function ViceLeader({
       role="Member"
       communityRole="Wakil Ketua"
       communityName={community.community_name}
+      communityId={community.communities_id}
     >
       <header className="flex items-center gap-3">
         <div className="rounded-full bg-[#4C8C86]/15 p-2.5 text-[#4C8C86]">

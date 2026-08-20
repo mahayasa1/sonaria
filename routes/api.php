@@ -5,7 +5,6 @@ use App\Http\Controllers\Api\Admin\BadgeController as AdminBadgeController;
 use App\Http\Controllers\Api\Admin\LevelController as AdminLevelController;
 use App\Http\Controllers\Api\Admin\MusicCategoryController as AdminMusicCategoryController;
 use App\Http\Controllers\Api\Admin\RoleController as AdminRoleController;
-use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChallengeController;
 use App\Http\Controllers\Api\ChallengeSubmissionController;
 use App\Http\Controllers\Api\CommunityController;
@@ -30,16 +29,18 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | Mengikuti alur: Login -> Pilih Kategori -> Cari Komunitas -> Halaman
 | Komunitas (Main Quest, Daily Mission, Challenge, Forum).
+|
+| Auth (register/login/logout) TIDAK ada di sini — sepenuhnya ditangani
+| Laravel Fortify lewat session (lihat routes/web.php & FortifyServiceProvider).
+| Dulu ada Api\AuthController custom di sini yang mendaftarkan endpoint
+| token-based (createToken()/currentAccessToken()), tapi package Sanctum-nya
+| tidak pernah terinstall (User model juga tidak pakai trait HasApiTokens),
+| jadi endpoint itu akan fatal error kalau benar-benar dipanggil. Sudah
+| dihapus supaya tidak ada jalur auth kedua yang rusak & tidak konsisten
+| dengan rate-limiting/2FA/verifikasi email yang sudah diurus Fortify.
 */
 
-// ==== Auth (publik) ====
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-
 Route::middleware('auth')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/me', [AuthController::class, 'me']);
-
     // ==== Onboarding: pilih kategori & instrument ====
     Route::get('/categories', [OnboardingController::class, 'categories']);
     Route::get('/categories/{category:music_categories_id}/instruments', [OnboardingController::class, 'instruments']);
@@ -98,6 +99,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/communities/{community:communities_id}/daily-missions', [DailyMissionController::class, 'store']);
         Route::get('/daily-missions/{mission:daily_missions_id}', [DailyMissionController::class, 'show']);
         Route::post('/daily-missions/{mission:daily_missions_id}/complete', [DailyMissionController::class, 'complete']);
+        Route::post('/daily-missions/{mission:daily_missions_id}/deactivate', [DailyMissionController::class, 'deactivate']);
 
         // ==== Challenge (1 aktif, reward besar) ====
         Route::get('/communities/{community:communities_id}/challenge', [ChallengeController::class, 'index']);
@@ -106,6 +108,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/challenges/{challenge:challenges_id}/submissions', [ChallengeSubmissionController::class, 'store']);
         Route::get('/challenges/{challenge:challenges_id}/submissions', [ChallengeSubmissionController::class, 'index']);
         Route::post('/challenge-submissions/{submission:challenge_submissions_id}/review', [ChallengeSubmissionController::class, 'review']);
+        Route::post('/challenges/{challenge:challenges_id}/close', [ChallengeController::class, 'close']);
 
         // ==== Leaderboard ====
         Route::get('/communities/{community:communities_id}/leaderboard', [LeaderboardController::class, 'index']);

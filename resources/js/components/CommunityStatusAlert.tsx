@@ -11,23 +11,23 @@ interface ActiveCommunity {
 }
 
 interface PageProps extends Record<string, any> {
-  active_community?: ActiveCommunity | null;
+  activeCommunity?: ActiveCommunity | null;
 }
 
 export default function CommunityStatusAlert() {
-  const { active_community } = usePage<PageProps>().props;
+  const { activeCommunity } = usePage<PageProps>().props;
 
   /*
    * Tidak ada komunitas
    */
-  if (!active_community) {
+  if (!activeCommunity) {
     return null;
   }
 
   /*
    * Komunitas masih aktif
    */
-  if (active_community.status === 'Active') {
+  if (activeCommunity.status === 'Active') {
     return null;
   }
 
@@ -51,7 +51,7 @@ export default function CommunityStatusAlert() {
           <p className="mt-1 font-manrope text-sm leading-relaxed text-[#9C93A8]">
             Komunitas{' '}
             <span className="font-medium text-[#F3EEE2]">
-              "{active_community.community_name}"
+              "{activeCommunity.community_name}"
             </span>{' '}
             sedang dinonaktifkan oleh Admin.
           </p>

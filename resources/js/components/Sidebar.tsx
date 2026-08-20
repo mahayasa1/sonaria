@@ -28,6 +28,7 @@ interface SidebarProps {
   role?: string;
   communityRole?: string | null;
   communityName?: string | null;
+  communityId?: number | null;
 }
 
 interface ActiveCommunityShared {
@@ -166,11 +167,11 @@ export default function Sidebar({ role = 'Member', communityRole = null, communi
           <Link href="/manage/main-quests/create" className={itemClass('/manage/main-quests')} title="Buat Main Quest">
             <Swords size={18} className="shrink-0" /> <NavLabel>Buat Main Quest</NavLabel>
           </Link>
-          <Link href="/manage/daily-missions/create" className={itemClass('/manage/daily-missions')} title="Buat Daily Mission">
-            <Flame size={18} className="shrink-0" /> <NavLabel>Buat Daily Mission</NavLabel>
+          <Link href="/manage/daily-missions" className={itemClass('/manage/daily-missions')} title="Kelola Daily Mission">
+            <Flame size={18} className="shrink-0" /> <NavLabel>Kelola Daily Mission</NavLabel>
           </Link>
-          <Link href="/manage/challenge/create" className={itemClass('/manage/challenge')} title="Buat Challenge">
-            <Trophy size={18} className="shrink-0" /> <NavLabel>Buat Challenge</NavLabel>
+          <Link href="/manage/challenges" className={itemClass('/manage/challenges')} title="Kelola Challenge">
+            <Trophy size={18} className="shrink-0" /> <NavLabel>Kelola Challenge</NavLabel>
           </Link>
         </>
       )}

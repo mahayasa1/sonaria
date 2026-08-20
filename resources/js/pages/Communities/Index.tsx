@@ -71,12 +71,20 @@ export default function Index({
           </p>
         </div>
 
-        <Link
-          href="/onboarding/category"
-          className="shrink-0 whitespace-nowrap rounded-full border border-[#2A2333] px-4 py-2 font-manrope text-xs text-[#B7AFC2] transition-colors hover:border-[#D9A441]/40 hover:text-[#D9A441]"
-        >
-          Ganti Instrument
-        </Link>
+        <div className="flex shrink-0 items-center gap-2">
+          <Link
+            href="/communities/create"
+            className="whitespace-nowrap rounded-full bg-[#D9A441] px-4 py-2 font-manrope text-xs text-[#14101B] transition-opacity hover:opacity-90"
+          >
+            + Buat Komunitas
+          </Link>
+          <Link
+            href="/onboarding/category"
+            className="whitespace-nowrap rounded-full border border-[#2A2333] px-4 py-2 font-manrope text-xs text-[#B7AFC2] transition-colors hover:border-[#D9A441]/40 hover:text-[#D9A441]"
+          >
+            Ganti Instrument
+          </Link>
+        </div>
       </header>
 
       {flashMessage && (

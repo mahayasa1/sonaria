@@ -7,6 +7,7 @@ use App\Models\Community;
 use App\Models\CommunityJoinRequest;
 use App\Models\CommunityMember;
 use App\Models\CommunityRole;
+use App\Models\Instrument;
 use App\Models\Notification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -61,12 +62,22 @@ class CommunityController extends Controller
         }
 
         $data = $request->validate([
-            'category_id' => ['required', 'exists:music_categories,music_categories_id'],
+            // instrument_id opsional supaya endpoint ini tetap backward-compatible
+            // (mis. dipanggil tanpa instrument, seperti CommunityFactory di test),
+            // tapi kalau diisi, category_id ikut diturunkan dari instrument-nya
+            // supaya komunitas baru tetap muncul saat user browsing per-instrument
+            // (lihat CommunityWebController::index, yang default filter by instrument_id).
+            'instrument_id' => ['nullable', 'exists:instruments,intruments_id'],
+            'category_id' => ['required_without:instrument_id', 'nullable', 'exists:music_categories,music_categories_id'],
             'community_name' => ['required', 'string', 'max:150'],
             'logo' => ['nullable', 'string', 'max:255'],
             'banner' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:255'],
         ]);
+
+        if (! empty($data['instrument_id'])) {
+            $data['category_id'] = Instrument::findOrFail($data['instrument_id'])->category_id;
+        }
 
         $community = Community::create([
             ...$data,

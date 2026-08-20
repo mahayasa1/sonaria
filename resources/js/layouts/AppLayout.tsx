@@ -9,6 +9,7 @@ interface AppLayoutProps {
   role?: string;
   communityRole?: string | null;
   communityName?: string | null;
+  communityId?: number | null;
   hideSidebar?: boolean;
   children: ReactNode;
 }
@@ -18,6 +19,7 @@ export default function AppLayout({
   role = 'Member',
   communityRole = null,
   communityName = null,
+  communityId = null,
   hideSidebar = false,
   children,
 }: AppLayoutProps) {
@@ -25,7 +27,7 @@ export default function AppLayout({
     <div className="flex h-screen overflow-hidden bg-[#14101B] text-[#F3EEE2]">
       <Head title={title} />
       {!hideSidebar && (
-        <Sidebar role={role} communityRole={communityRole} communityName={communityName} />
+        <Sidebar role={role} communityRole={communityRole} communityName={communityName} communityId={communityId} />
       )}
       <div className="flex-1 overflow-y-auto">
         <div

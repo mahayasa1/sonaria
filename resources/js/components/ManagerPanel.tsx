@@ -64,13 +64,13 @@ export default function ManagerPanel({
               <Swords size={16} className="text-[#D9A441]" /> Main Quest
             </Link>
             <Link
-              href="/manage/daily-missions/create"
+              href="/manage/daily-missions"
               className="flex items-center gap-2 rounded-lg bg-white/5 px-4 py-3 font-manrope text-sm text-[#F3EEE2] hover:bg-white/10"
             >
               <Flame size={16} className="text-[#C1443C]" /> Daily Mission
             </Link>
             <Link
-              href="/manage/challenge/create"
+              href="/manage/challenges"
               className="flex items-center gap-2 rounded-lg bg-white/5 px-4 py-3 font-manrope text-sm text-[#F3EEE2] hover:bg-white/10"
             >
               <Trophy size={16} className="text-[#D9A441]" /> Challenge

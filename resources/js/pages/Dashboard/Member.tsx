@@ -16,7 +16,7 @@ import CommunityStatusAlert from '@/components/CommunityStatusAlert';
 export default function Member({
   user = { name: 'Aditya', total_xp: 1240, username: 'aditya_gitar' },
   level = { level: 4, min_xp: 1000, max_xp: 2000, title: 'Penabuh Ritme' },
-  community = { community_name: 'Komunitas Gitar Nusantara' },
+  community = { community_name: 'Komunitas Gitar Nusantara', communities_id: 0 },
   mainQuests = [
     { main_quests_id: 1, level: 1, title: 'Dasar Fingering', is_completed: true },
     { main_quests_id: 2, level: 2, title: 'Tangga Nada Mayor', is_completed: true },
@@ -47,7 +47,7 @@ export default function Member({
   // ajakan mencari komunitas alih-alih Main Quest/Daily Mission/Challenge palsu.
   if (!community) {
     return (
-      <AppLayout title="Dashboard" role="Member">
+      <AppLayout title="Dashboard" role="Member" >
         <header>
           <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
             Selamat berlatih,
@@ -79,7 +79,7 @@ export default function Member({
   }
 
   return (
-    <AppLayout title="Dashboard" role="Member" communityName={community.community_name}>
+    <AppLayout title="Dashboard" role="Member" communityName={community.community_name} communityId={community.communities_id}>
       <header>
         <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
           Selamat berlatih,

@@ -125,11 +125,31 @@ class DailyMissionController extends Controller
     }
 
     /**
+     * Nonaktifkan daily mission yang sedang aktif. Hanya Ketua/Wakil Ketua.
+     * Membebaskan 1 slot dari maksimal 6 slot aktif per komunitas (lihat
+     * validasi "activeCount" di store()). Dipanggil dari tombol
+     * "Nonaktifkan" di Manage/DailyMissions.tsx.
+     */
+    public function deactivate(Request $request, DailyMission $mission): JsonResponse
+    {
+        $this->authorize('manage', $mission->community);
+
+        if ($mission->status !== 'Active') {
+            throw ValidationException::withMessages([
+                'status' => ['Daily mission ini tidak sedang aktif.'],
+            ]);
+        }
+
+        $mission->update(['status' => 'Inactive']);
+
+        return response()->json($mission);
+    }
+
+    /**
      * Detail mission + soal & opsi TANPA is_correct, untuk dikerjakan user.
      */
     public function show(DailyMission $mission): JsonResponse
-    {
-        $mission->load(['questions' => fn ($q) => $q->orderBy('order_number')]);
+    {        $mission->load(['questions' => fn ($q) => $q->orderBy('order_number')]);
         $mission->load(['questions.options' => function ($query) {
             $query->select('daily_mission_options_id', 'question_id', 'option_label', 'option_text');
         }]);

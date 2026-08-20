@@ -57,6 +57,34 @@ class CommunityWebController extends Controller
         ]);
     }
 
+    /**
+     * Form buat komunitas baru. Hanya render halamannya di sini — submit-nya
+     * langsung ke POST /api/communities (Api\CommunityController::store),
+     * yang sudah mengecek user->level->can_create_community, supaya logika
+     * validasi/level-gate tidak terduplikasi antara Web dan Api controller
+     * (pola yang sama seperti Manage/*Create, lihat ManageWebController).
+     */
+    public function create(Request $request): Response|RedirectResponse
+    {
+        $user = $request->user();
+
+        if (! $user->instrument_id) {
+            return redirect()->route('onboarding.category');
+        }
+
+        $user->load('level');
+
+        return Inertia::render('Communities/Create', [
+            'canCreate' => (bool) $user->level?->can_create_community,
+            'currentLevel' => $user->level ? [
+                'level' => $user->level->level,
+                'title' => $user->level->title,
+            ] : null,
+            'instruments' => Instrument::orderBy('name')->get(['intruments_id', 'name', 'category_id']),
+            'currentInstrument' => $user->instrument()->select('intruments_id', 'name')->first(),
+        ]);
+    }
+
     public function show(Request $request, Community $community): Response|RedirectResponse
     {
         $user = $request->user();

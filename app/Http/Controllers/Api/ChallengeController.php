@@ -62,4 +62,25 @@ class ChallengeController extends Controller
 
         return response()->json($challenge, 201);
     }
+
+    /**
+     * Tutup challenge yang sedang aktif. Hanya Ketua/Wakil Ketua. Setelah
+     * ditutup, komunitas boleh buat challenge baru lagi (lihat validasi
+     * "hasActive" di store()). Dipanggil dari tombol "Tutup Challenge" di
+     * Manage/Challenges.tsx.
+     */
+    public function close(Request $request, Challenge $challenge): JsonResponse
+    {
+        $this->authorize('manage', $challenge->community);
+
+        if ($challenge->status !== 'Active') {
+            throw ValidationException::withMessages([
+                'status' => ['Challenge ini tidak sedang aktif.'],
+            ]);
+        }
+
+        $challenge->update(['status' => 'Closed']);
+
+        return response()->json($challenge);
+    }
 }

@@ -27,6 +27,7 @@ export default function CommunityStaff({
       role="Member"
       communityRole="Staff"
       communityName={community.community_name}
+      communityId={community.communities_id}
     >
       <header className="flex items-center gap-3">
         <div className="rounded-full bg-[#9C93A8]/15 p-2.5 text-[#9C93A8]">
