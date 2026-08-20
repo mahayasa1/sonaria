@@ -24,6 +24,9 @@ class Level extends Model
     ];
 
     protected $casts = [
+        'level' => 'integer',
+        'min_xp' => 'integer',
+        'max_xp' => 'integer',
         'can_create_community' => 'boolean',
     ];
 
