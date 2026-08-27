@@ -11,12 +11,17 @@ export default function Register() {
     password_confirmation: '',
   });
 
-  function submit(e) {
+  function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     post('/register');
   }
 
-  const fields = [
+  const fields: Array<{
+    key: keyof typeof data;
+    label: string;
+    type: string;
+    placeholder: string;
+  }> = [
     { key: 'username', label: 'Username', type: 'text', placeholder: 'gitaris_pemula' },
     { key: 'name', label: 'Nama lengkap', type: 'text', placeholder: 'Nama kamu' },
     { key: 'email', label: 'Email', type: 'email', placeholder: 'kamu@email.com' },
@@ -50,7 +55,11 @@ export default function Register() {
                   className="w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-4 py-2.5 font-manrope text-sm text-[#F3EEE2] outline-none focus:border-[#D9A441]"
                   placeholder={f.placeholder}
                 />
-                {errors[f.key] && <p className="mt-1.5 text-xs text-[#C1443C]">{errors[f.key]}</p>}
+                {errors[f.key as keyof typeof data] && (
+                  <p className="mt-1.5 text-xs text-[#C1443C]">
+                    {errors[f.key as keyof typeof data]}
+                  </p>
+                )}
               </div>
             ))}
 

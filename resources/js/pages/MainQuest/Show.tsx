@@ -33,12 +33,14 @@ interface Quiz {
   passing_score: number;
   xp_reward: number;
   questions?: QuizQuestion[];
+  user_has_passed?: boolean;
 }
 interface Practice {
   practices_id: number;
   title: string;
   xp_reward: number;
   deadline?: string;
+  user_submission_status?: 'Pending' | 'Approved' | 'Revision' | 'Rejected' | null;
 }
 interface MaterialProgress {
   progress_percentage: number;
@@ -82,6 +84,24 @@ function QuizPanel({ quiz }: { quiz: Quiz }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ score: number; is_passed: boolean } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Kalau backend bilang user sudah pernah lulus quiz ini, tampilkan status
+  // itu dulu daripada langsung form kosong seolah belum pernah dikerjakan.
+  // "Ulangi Kuis" tetap tersedia, tapi XP tidak akan dicairkan lagi.
+  const [retaking, setRetaking] = useState(false);
+
+  if (quiz.user_has_passed && !retaking && !result) {
+    return (
+      <div className="rounded-lg bg-[#4C8C86]/12 p-4 font-manrope text-sm text-[#4C8C86]">
+        <p>Kamu sudah lulus quiz ini.</p>
+        <button
+          onClick={() => setRetaking(true)}
+          className="mt-2 font-manrope text-xs text-[#B7AFC2] underline underline-offset-2 hover:text-[#F3EEE2]"
+        >
+          Ulangi kuis (tidak menambah XP lagi)
+        </button>
+      </div>
+    );
+  }
 
   const start = async () => {
     setLoading(true);
@@ -207,6 +227,7 @@ function PracticePanel({ practice }: { practice: Practice }) {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [resubmitting, setResubmitting] = useState(false);
 
   const submit = async () => {
     if (!videoPath) return;
@@ -229,6 +250,37 @@ function PracticePanel({ practice }: { practice: Practice }) {
     return (
       <div className="rounded-lg bg-[#4C8C86]/12 p-4 font-manrope text-sm text-[#4C8C86]">
         Video latihan terkirim, menunggu review dari pengelola komunitas.
+      </div>
+    );
+  }
+
+  // Sudah pernah punya submission sebelumnya (dari kunjungan halaman
+  // sebelumnya) — tampilkan status itu dulu, bukan form kosong seolah
+  // belum pernah mengerjakan practice ini sama sekali.
+  if (practice.user_submission_status && !resubmitting) {
+    const statusLabel: Record<string, string> = {
+      Pending: 'Video kamu sedang menunggu review dari pengelola komunitas.',
+      Approved: 'Practice ini sudah disetujui. XP sudah kamu dapatkan.',
+      Revision: 'Video kamu perlu revisi. Kirim ulang video yang sudah diperbaiki.',
+      Rejected: 'Video kamu ditolak. Kamu bisa mengirim ulang.',
+    };
+    const isApproved = practice.user_submission_status === 'Approved';
+
+    return (
+      <div
+        className={`rounded-lg p-4 font-manrope text-sm ${
+          isApproved ? 'bg-[#4C8C86]/12 text-[#4C8C86]' : 'bg-[#D9A441]/12 text-[#D9A441]'
+        }`}
+      >
+        <p>{statusLabel[practice.user_submission_status] ?? 'Video sudah dikirim sebelumnya.'}</p>
+        {!isApproved && (
+          <button
+            onClick={() => setResubmitting(true)}
+            className="mt-2 font-manrope text-xs text-[#B7AFC2] underline underline-offset-2 hover:text-[#F3EEE2]"
+          >
+            Kirim video baru
+          </button>
+        )}
       </div>
     );
   }

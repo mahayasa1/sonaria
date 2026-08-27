@@ -84,9 +84,25 @@ class QuizAttemptController extends Controller
             $user = $attempt->user;
             $categoryId = $quiz->material?->instrument?->category_id;
 
-            $this->gamification->addXp($user, (int) $quiz->xp_reward, $categoryId, "Quiz: {$quiz->title}");
-            $this->gamification->addPoint($user, (int) $quiz->point_reward, 'Quiz Passed', Quiz::class, $quiz->quizzes_id, categoryId: $categoryId);
-            $this->gamification->unlockAchievement($user, 'first_quiz_passed');
+            // Reward XP/Point hanya untuk kelulusan PERTAMA kali pada quiz ini.
+            // Attempt lulus berikutnya (retake) tetap tercatat sebagai lulus,
+            // tapi tidak mencairkan XP/Point lagi (mencegah farming lewat
+            // mengulang-ulang quiz yang sudah pernah lulus).
+            $hasPassedBefore = QuizAttempt::where('quiz_id', $quiz->quizzes_id)
+                ->where('user_id', $user->users_id)
+                ->where('is_passed', true)
+                ->where('quiz_attempts_id', '!=', $attempt->quiz_attempts_id)
+                ->exists();
+
+            if (! $hasPassedBefore) {
+                $this->gamification->addXp($user, (int) $quiz->xp_reward, $categoryId, "Quiz: {$quiz->title}");
+                $this->gamification->addPoint($user, (int) $quiz->point_reward, 'Quiz Passed', Quiz::class, $quiz->quizzes_id, categoryId: $categoryId);
+                $this->gamification->unlockAchievement($user, 'first_quiz_passed');
+            }
+
+            if ($quiz->material?->mainQuest) {
+                $this->gamification->checkMainQuestCompletion($user, $quiz->material->mainQuest);
+            }
         }
 
         return response()->json($attempt->fresh('answers'));

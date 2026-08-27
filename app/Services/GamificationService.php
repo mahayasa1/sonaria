@@ -5,11 +5,13 @@ namespace App\Services;
 use App\Models\Achievement;
 use App\Models\Badge;
 use App\Models\Level;
+use App\Models\MainQuest;
 use App\Models\User;
 use App\Models\UserAchievement;
 use App\Models\UserBadge;
 use App\Models\UserCategoryPoint;
 use App\Models\UserLevelHistory;
+use App\Models\UserMainQuestCompletion;
 use App\Models\XpLog;
 use App\Models\PointLog;
 use Illuminate\Support\Facades\DB;
@@ -205,6 +207,44 @@ class GamificationService
         $row->total_point = (int) ($row->total_point ?? 0) + $point;
         $row->updated_at = now();
         $row->save();
+    }
+
+    /**
+     * Cek apakah sebuah main quest baru saja tuntas untuk user ini
+     * (semua material Completed, semua quiz lulus, semua practice approved).
+     * Kalau iya dan XP-nya belum pernah dicairkan sebelumnya (dicek lewat
+     * user_main_quest_completions), cairkan xp_reward/point_reward milik
+     * quest itu tepat sekali. Dipanggil dari titik-titik yang bisa mengubah
+     * status kelulusan: update progress materi, submit quiz, review practice
+     * (GAM-007 — sebelumnya XP quest tidak pernah dicairkan sama sekali).
+     */
+    public function checkMainQuestCompletion(User $user, MainQuest $mainQuest): void
+    {
+        $alreadyCompleted = UserMainQuestCompletion::where('user_id', $user->users_id)
+            ->where('main_quest_id', $mainQuest->main_quests_id)
+            ->exists();
+
+        if ($alreadyCompleted) {
+            return;
+        }
+
+        if (! $mainQuest->isCompletedForUser($user->users_id)) {
+            return;
+        }
+
+        UserMainQuestCompletion::create([
+            'user_id' => $user->users_id,
+            'main_quest_id' => $mainQuest->main_quests_id,
+            'completed_at' => now(),
+        ]);
+
+        if ((int) $mainQuest->xp_reward > 0) {
+            $this->addXp($user, (int) $mainQuest->xp_reward, null, "Main Quest: {$mainQuest->title}");
+        }
+
+        if ((int) $mainQuest->point_reward > 0) {
+            $this->addPoint($user, (int) $mainQuest->point_reward, 'Main Quest Completed', MainQuest::class, $mainQuest->main_quests_id);
+        }
     }
 
     /**

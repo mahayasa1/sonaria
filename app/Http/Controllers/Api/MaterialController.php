@@ -6,12 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\MainQuest;
 use App\Models\Material;
 use App\Models\MaterialProgress;
+use App\Services\GamificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class MaterialController extends Controller
 {
+    public function __construct(protected GamificationService $gamification)
+    {
+    }
+
     /**
      * Tambah Learning Material baru ke sebuah birama Main Quest.
      * Hanya Ketua/Wakil Ketua komunitas pemilik quest tersebut.
@@ -92,6 +97,10 @@ class MaterialController extends Controller
         }
 
         $progress->save();
+
+        if ($progress->status === 'Completed') {
+            $this->gamification->checkMainQuestCompletion($user, $material->mainQuest);
+        }
 
         return response()->json($progress);
     }

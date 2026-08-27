@@ -23,8 +23,8 @@ class MainQuestController extends Controller
             ->with(['materials.progress' => fn ($q) => $q->where('user_id', $user->users_id)])
             ->orderBy('level')
             ->get()
-            ->map(function (MainQuest $quest) {
-                $quest->setAttribute('is_completed', $this->isQuestCompleted($quest));
+            ->map(function (MainQuest $quest) use ($user) {
+                $quest->setAttribute('is_completed', $quest->isCompletedForUser($user->users_id));
 
                 return $quest;
             });
@@ -78,21 +78,4 @@ class MainQuestController extends Controller
         return response()->json($quest, 201);
     }
 
-    /**
-     * Quest dianggap selesai jika seluruh materialnya sudah Completed
-     * (progress material, quiz lulus, practice approved — dicek longgar
-     * lewat status MaterialProgress untuk kesederhanaan MVP).
-     */
-    protected function isQuestCompleted(MainQuest $quest): bool
-    {
-        if ($quest->materials->isEmpty()) {
-            return false;
-        }
-
-        return $quest->materials->every(function ($material) {
-            $progress = $material->progress->first();
-
-            return $progress && $progress->status === 'Completed';
-        });
-    }
 }

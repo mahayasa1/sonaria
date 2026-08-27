@@ -34,8 +34,8 @@ class MainQuestWebController extends Controller
             ->with(['materials.progress' => fn ($q) => $q->where('user_id', $user->users_id)])
             ->orderBy('level')
             ->get()
-            ->map(function (MainQuest $quest) {
-                $quest->setAttribute('is_completed', $this->isQuestCompleted($quest));
+            ->map(function (MainQuest $quest) use ($user) {
+                $quest->setAttribute('is_completed', $quest->isCompletedForUser($user->users_id));
 
                 return $quest;
             });
@@ -64,26 +64,34 @@ class MainQuestWebController extends Controller
                 // Jangan bocorkan is_correct ke user yang belum submit.
                 $q->select('quiz_options_id', 'question_id', 'option_label', 'option_text');
             },
+            // Riwayat kelulusan quiz & submission practice milik user ini —
+            // dipakai frontend supaya QuizPanel/PracticePanel tahu kalau
+            // sudah pernah lulus/submit dan tidak menampilkan seolah-olah
+            // belum pernah dikerjakan sama sekali.
+            'materials.quizzes.attempts' => fn ($q) => $q->where('user_id', $user->users_id)->latest('finished_at'),
             'materials.practices',
+            'materials.practices.submissions' => fn ($q) => $q->where('user_id', $user->users_id)->latest('submitted_at'),
             'materials.progress' => fn ($q) => $q->where('user_id', $user->users_id),
         ]);
+
+        // Tambahkan flag ringkas per quiz/practice tanpa mengekspos seluruh
+        // riwayat attempt/submission user lain ke frontend.
+        foreach ($mainQuest->materials as $material) {
+            foreach ($material->quizzes as $quiz) {
+                $quiz->setAttribute('user_has_passed', $quiz->attempts->contains('is_passed', true));
+                $quiz->unsetRelation('attempts');
+            }
+
+            foreach ($material->practices as $practice) {
+                $latestSubmission = $practice->submissions->first();
+                $practice->setAttribute('user_submission_status', $latestSubmission?->status);
+                $practice->unsetRelation('submissions');
+            }
+        }
 
         return Inertia::render('MainQuest/Show', [
             'mainQuest' => $mainQuest,
             'canManage' => $request->user()->can('manage', $mainQuest->community),
         ]);
-    }
-
-    protected function isQuestCompleted(MainQuest $quest): bool
-    {
-        if ($quest->materials->isEmpty()) {
-            return false;
-        }
-
-        return $quest->materials->every(function ($material) {
-            $progress = $material->progress->first();
-
-            return $progress && $progress->status === 'Completed';
-        });
     }
 }

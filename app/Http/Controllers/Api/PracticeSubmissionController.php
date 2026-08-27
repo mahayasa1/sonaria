@@ -95,9 +95,26 @@ class PracticeSubmissionController extends Controller
             $user = $submission->user;
             $categoryId = $practice->material->instrument->category_id ?? null;
 
-            $this->gamification->addXp($user, (int) $practice->xp_reward, $categoryId, "Practice: {$practice->title}");
-            $this->gamification->addPoint($user, (int) $practice->point_reward, 'Practice Approved', PracticeSubmission::class, $submission->practice_submissions_id, categoryId: $categoryId);
-            $this->gamification->unlockAchievement($user, 'first_practice_approved');
+            // Sama seperti quiz: XP/Point practice cuma cair untuk approval
+            // PERTAMA yang lolos minimum_score. Submission/approval berikutnya
+            // (mis. user resubmit walau sudah pernah Approved) tidak menambah
+            // XP lagi.
+            $hasApprovedBefore = PracticeSubmission::where('practice_id', $practice->practices_id)
+                ->where('user_id', $user->users_id)
+                ->where('status', 'Approved')
+                ->where('practice_submissions_id', '!=', $submission->practice_submissions_id)
+                ->whereHas('review', fn ($q) => $q->where('score', '>=', (float) $practice->minimum_score))
+                ->exists();
+
+            if (! $hasApprovedBefore) {
+                $this->gamification->addXp($user, (int) $practice->xp_reward, $categoryId, "Practice: {$practice->title}");
+                $this->gamification->addPoint($user, (int) $practice->point_reward, 'Practice Approved', PracticeSubmission::class, $submission->practice_submissions_id, categoryId: $categoryId);
+                $this->gamification->unlockAchievement($user, 'first_practice_approved');
+            }
+
+            if ($practice->material?->mainQuest) {
+                $this->gamification->checkMainQuestCompletion($user, $practice->material->mainQuest);
+            }
         }
 
         return response()->json($review, 201);
