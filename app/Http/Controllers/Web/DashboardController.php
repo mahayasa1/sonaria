@@ -72,6 +72,11 @@ class DashboardController extends Controller
      */
     protected function renderMember($user, Community $community): Response
     {
+        // Sesuai sequence diagram "Melihat Badge & Achievement — Member":
+        // load koleksi Badge dan Achievement milik user supaya bisa
+        // ditampilkan di Dashboard/Member.
+        $user->load('badges.badge', 'achievements.achievement');
+
         $communityData = [
             'communities_id' => $community->communities_id,
             'community_name' => $community->community_name,
@@ -129,6 +134,8 @@ class DashboardController extends Controller
             'dailyMissions' => $dailyMissions,
             'challenge' => $challenge,
             'recentPosts' => $recentPosts,
+            'badges' => $user->badges->pluck('badge'),
+            'achievements' => $user->achievements->pluck('achievement'),
         ]);
     }
 
