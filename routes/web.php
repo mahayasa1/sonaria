@@ -94,14 +94,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/communities/{community}', [AdminWebController::class, 'destroyCommunity'])->name('admin.communities.destroy');
     Route::get('/admin/categories', [AdminWebController::class, 'categories'])->name('admin.categories');
     Route::post('/admin/categories', [AdminWebController::class, 'storeCategory'])->name('admin.categories.store');
+    Route::put('/admin/categories/{category:music_categories_id}', [AdminWebController::class, 'updateCategory'])->name('admin.categories.update');
     Route::delete('/admin/categories/{category:music_categories_id}', [AdminWebController::class, 'destroyCategory'])->name('admin.categories.destroy');
     Route::post('/admin/categories/{category:music_categories_id}/instruments', [AdminWebController::class, 'storeInstrument'])->name('admin.instruments.store');
+    Route::put('/admin/instruments/{instrument:intruments_id}', [AdminWebController::class, 'updateInstrument'])->name('admin.instruments.update');
     Route::delete('/admin/instruments/{instrument:intruments_id}', [AdminWebController::class, 'destroyInstrument'])->name('admin.instruments.destroy');
     Route::get('/admin/achievements', [AdminWebController::class, 'achievements'])->name('admin.achievements');
     Route::post('/admin/achievements', [AdminWebController::class, 'storeAchievement'])->name('admin.achievements.store');
+    Route::put('/admin/achievements/{achievement:achievements_id}', [AdminWebController::class, 'updateAchievement'])->name('admin.achievements.update');
     Route::delete('/admin/achievements/{achievement:achievements_id}', [AdminWebController::class, 'destroyAchievement'])->name('admin.achievements.destroy');
     Route::get('/admin/badges', [AdminWebController::class, 'badges'])->name('admin.badges');
     Route::post('/admin/badges', [AdminWebController::class, 'storeBadge'])->name('admin.badges.store');
+    Route::put('/admin/badges/{badge:badges_id}', [AdminWebController::class, 'updateBadge'])->name('admin.badges.update');
     Route::delete('/admin/badges/{badge:badges_id}', [AdminWebController::class, 'destroyBadge'])->name('admin.badges.destroy');
     Route::get('/admin/settings', [AdminWebController::class, 'settings'])->name('admin.settings');
 

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { router } from '@inertiajs/react';
 import AppLayout from '@/layouts/AppLayout';
-import { Plus, Trash2, Music2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Music2, X } from 'lucide-react';
 
 interface Instrument {
   intruments_id: number;
   name: string;
+  description?: string;
   difficulty?: string;
 }
 interface Category {
@@ -62,6 +63,14 @@ export default function Categories({ categories }: { categories: Category[] }) {
   const [newName, setNewName] = useState('');
   const [newDescription, setNewDescription] = useState('');
 
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [categoryForm, setCategoryForm] = useState({ name: '', description: '' });
+  const [savingCategory, setSavingCategory] = useState(false);
+
+  const [editingInstrument, setEditingInstrument] = useState<Instrument | null>(null);
+  const [instrumentForm, setInstrumentForm] = useState({ name: '', description: '', difficulty: 'Easy' });
+  const [savingInstrument, setSavingInstrument] = useState(false);
+
   const submitCategory = () => {
     if (!newName.trim()) return;
     router.post(
@@ -82,9 +91,45 @@ export default function Categories({ categories }: { categories: Category[] }) {
     router.delete(`/admin/categories/${category.music_categories_id}`, { preserveScroll: true });
   };
 
+  const openEditCategory = (category: Category) => {
+    setEditingCategory(category);
+    setCategoryForm({ name: category.name, description: category.description ?? '' });
+  };
+
+  const submitEditCategory = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingCategory) return;
+    setSavingCategory(true);
+    router.put(`/admin/categories/${editingCategory.music_categories_id}`, categoryForm, {
+      preserveScroll: true,
+      onSuccess: () => setEditingCategory(null),
+      onFinish: () => setSavingCategory(false),
+    });
+  };
+
   const deleteInstrument = (instrument: Instrument) => {
     if (!confirm(`Hapus instrument ${instrument.name}?`)) return;
     router.delete(`/admin/instruments/${instrument.intruments_id}`, { preserveScroll: true });
+  };
+
+  const openEditInstrument = (instrument: Instrument) => {
+    setEditingInstrument(instrument);
+    setInstrumentForm({
+      name: instrument.name,
+      description: instrument.description ?? '',
+      difficulty: instrument.difficulty ?? 'Easy',
+    });
+  };
+
+  const submitEditInstrument = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingInstrument) return;
+    setSavingInstrument(true);
+    router.put(`/admin/instruments/${editingInstrument.intruments_id}`, instrumentForm, {
+      preserveScroll: true,
+      onSuccess: () => setEditingInstrument(null),
+      onFinish: () => setSavingInstrument(false),
+    });
   };
 
   return (
@@ -132,13 +177,22 @@ export default function Categories({ categories }: { categories: Category[] }) {
                   {category.instruments_count} instrument · {category.communities_count} komunitas
                 </p>
               </div>
-              <button
-                onClick={() => deleteCategory(category)}
-                className="shrink-0 text-[#75708A] hover:text-[#C1443C]"
-                title="Hapus kategori"
-              >
-                <Trash2 size={15} />
-              </button>
+              <div className="flex shrink-0 items-center gap-3">
+                <button
+                  onClick={() => openEditCategory(category)}
+                  className="text-[#75708A] hover:text-[#F3EEE2]"
+                  title="Edit kategori"
+                >
+                  <Pencil size={14} />
+                </button>
+                <button
+                  onClick={() => deleteCategory(category)}
+                  className="text-[#75708A] hover:text-[#C1443C]"
+                  title="Hapus kategori"
+                >
+                  <Trash2 size={15} />
+                </button>
+              </div>
             </div>
 
             <div className="mt-3 flex flex-wrap gap-1.5">
@@ -148,6 +202,13 @@ export default function Categories({ categories }: { categories: Category[] }) {
                   className="flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1 font-manrope text-[11px] text-[#B7AFC2]"
                 >
                   {instrument.name}
+                  <button
+                    onClick={() => openEditInstrument(instrument)}
+                    className="text-[#75708A] hover:text-[#F3EEE2]"
+                    title="Edit instrument"
+                  >
+                    <Pencil size={10} />
+                  </button>
                   <button onClick={() => deleteInstrument(instrument)} className="text-[#75708A] hover:text-[#C1443C]">
                     <Trash2 size={10} />
                   </button>
@@ -159,6 +220,116 @@ export default function Categories({ categories }: { categories: Category[] }) {
           </div>
         ))}
       </section>
+
+      {editingCategory && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-sm rounded-xl border border-[#2A2333] bg-[#1E1826] p-6">
+            <div className="flex items-center justify-between">
+              <h2 className="font-fraunces text-xl text-[#F3EEE2]">Edit Kategori</h2>
+              <button onClick={() => setEditingCategory(null)} className="text-[#75708A] hover:text-[#F3EEE2]">
+                <X size={18} />
+              </button>
+            </div>
+            <form onSubmit={submitEditCategory} className="mt-5 space-y-4">
+              <div>
+                <label className="font-manrope text-xs text-[#75708A]">Nama Kategori</label>
+                <input
+                  value={categoryForm.name}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
+                  required
+                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="font-manrope text-xs text-[#75708A]">Deskripsi</label>
+                <textarea
+                  value={categoryForm.description}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })}
+                  rows={3}
+                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingCategory(null)}
+                  className="rounded-full bg-white/5 px-4 py-2 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingCategory}
+                  className="rounded-full bg-[#D9A441] px-4 py-2 font-manrope text-xs text-[#14101B] disabled:opacity-50"
+                >
+                  {savingCategory ? 'Menyimpan...' : 'Simpan'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {editingInstrument && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-sm rounded-xl border border-[#2A2333] bg-[#1E1826] p-6">
+            <div className="flex items-center justify-between">
+              <h2 className="font-fraunces text-xl text-[#F3EEE2]">Edit Instrument</h2>
+              <button onClick={() => setEditingInstrument(null)} className="text-[#75708A] hover:text-[#F3EEE2]">
+                <X size={18} />
+              </button>
+            </div>
+            <form onSubmit={submitEditInstrument} className="mt-5 space-y-4">
+              <div>
+                <label className="font-manrope text-xs text-[#75708A]">Nama Instrument</label>
+                <input
+                  value={instrumentForm.name}
+                  onChange={(e) => setInstrumentForm({ ...instrumentForm, name: e.target.value })}
+                  required
+                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="font-manrope text-xs text-[#75708A]">Deskripsi</label>
+                <textarea
+                  value={instrumentForm.description}
+                  onChange={(e) => setInstrumentForm({ ...instrumentForm, description: e.target.value })}
+                  rows={3}
+                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="font-manrope text-xs text-[#75708A]">Tingkat Kesulitan</label>
+                <select
+                  value={instrumentForm.difficulty}
+                  onChange={(e) => setInstrumentForm({ ...instrumentForm, difficulty: e.target.value })}
+                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                >
+                  <option value="Easy">Easy</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Hard">Hard</option>
+                </select>
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingInstrument(null)}
+                  className="rounded-full bg-white/5 px-4 py-2 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingInstrument}
+                  className="rounded-full bg-[#D9A441] px-4 py-2 font-manrope text-xs text-[#14101B] disabled:opacity-50"
+                >
+                  {savingInstrument ? 'Menyimpan...' : 'Simpan'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </AppLayout>
   );
 }

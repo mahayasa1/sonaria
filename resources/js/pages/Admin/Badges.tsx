@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { router } from '@inertiajs/react';
 import AppLayout from '@/layouts/AppLayout';
-import { BadgeCheck, Plus, Trash2 } from 'lucide-react';
+import { BadgeCheck, Plus, Pencil, Trash2, X } from 'lucide-react';
 
 interface Badge {
   badges_id: number;
@@ -17,6 +17,10 @@ export default function Badges({ badges }: { badges: Badge[] }) {
   const [description, setDescription] = useState('');
   const [xpRequired, setXpRequired] = useState(0);
 
+  const [editingBadge, setEditingBadge] = useState<Badge | null>(null);
+  const [editForm, setEditForm] = useState({ badge_name: '', description: '', xp_required: 0 });
+  const [saving, setSaving] = useState(false);
+
   const submit = () => {
     if (!name.trim()) return;
     router.post(
@@ -30,6 +34,26 @@ export default function Badges({ badges }: { badges: Badge[] }) {
         },
       },
     );
+  };
+
+  const openEdit = (badge: Badge) => {
+    setEditingBadge(badge);
+    setEditForm({
+      badge_name: badge.badge_name,
+      description: badge.description ?? '',
+      xp_required: badge.xp_required ?? 0,
+    });
+  };
+
+  const submitEdit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingBadge) return;
+    setSaving(true);
+    router.put(`/admin/badges/${editingBadge.badges_id}`, editForm, {
+      preserveScroll: true,
+      onSuccess: () => setEditingBadge(null),
+      onFinish: () => setSaving(false),
+    });
   };
 
   const destroy = (badge: Badge) => {
@@ -86,6 +110,13 @@ export default function Badges({ badges }: { badges: Badge[] }) {
             </div>
             <div className="flex items-center gap-4">
               {!!b.xp_required && <span className="font-mono text-xs text-[#D9A441]">{b.xp_required} XP</span>}
+              <button
+                onClick={() => openEdit(b)}
+                className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10"
+              >
+                <Pencil size={13} />
+                Edit
+              </button>
               <button onClick={() => destroy(b)} className="text-[#75708A] hover:text-[#C1443C]">
                 <Trash2 size={15} />
               </button>
@@ -93,6 +124,64 @@ export default function Badges({ badges }: { badges: Badge[] }) {
           </div>
         ))}
       </section>
+
+      {editingBadge && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-sm rounded-xl border border-[#2A2333] bg-[#1E1826] p-6">
+            <div className="flex items-center justify-between">
+              <h2 className="font-fraunces text-xl text-[#F3EEE2]">Edit Badge</h2>
+              <button onClick={() => setEditingBadge(null)} className="text-[#75708A] hover:text-[#F3EEE2]">
+                <X size={18} />
+              </button>
+            </div>
+            <form onSubmit={submitEdit} className="mt-5 space-y-4">
+              <div>
+                <label className="font-manrope text-xs text-[#75708A]">Nama Badge</label>
+                <input
+                  value={editForm.badge_name}
+                  onChange={(e) => setEditForm({ ...editForm, badge_name: e.target.value })}
+                  required
+                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="font-manrope text-xs text-[#75708A]">Deskripsi</label>
+                <textarea
+                  value={editForm.description}
+                  onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                  rows={3}
+                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="font-manrope text-xs text-[#75708A]">XP Dibutuhkan</label>
+                <input
+                  type="number"
+                  value={editForm.xp_required}
+                  onChange={(e) => setEditForm({ ...editForm, xp_required: Number(e.target.value) })}
+                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingBadge(null)}
+                  className="rounded-full bg-white/5 px-4 py-2 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="rounded-full bg-[#D9A441] px-4 py-2 font-manrope text-xs text-[#14101B] disabled:opacity-50"
+                >
+                  {saving ? 'Menyimpan...' : 'Simpan'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </AppLayout>
   );
 }

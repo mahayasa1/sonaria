@@ -2,6 +2,7 @@ import React from 'react';
 import AppLayout from '@/layouts/AppLayout';
 import StaffProgress from '@/components/StaffProgress';
 import ManagerPanel from '@/components/ManagerPanel';
+import BadgeAchievementShowcase from '@/components/BadgeAchievementShowcase';
 import { Crown } from 'lucide-react';
 import NotificationBell from '@/components/NotificationBell';
 import CommunityStatusAlert from '@/components/CommunityStatusAlert';
@@ -21,6 +22,8 @@ export default function CommunityLeader({
     { id: 1, title: 'Video Practice: Etude I', user: { name: 'Rafi' }, type: 'Practice', reviewUrl: '#' },
     { id: 2, title: 'Video Challenge: Cover Lagu Daerah', user: { name: 'Nadia' }, type: 'Challenge', reviewUrl: '#' },
   ],
+  badges = [],
+  achievements = [],
 }) {
   return (
     <AppLayout
@@ -55,6 +58,9 @@ export default function CommunityLeader({
           <StaffProgress percentage={72} label="Kapasitas komunitas" value="128 / 180" accent="reed" />
         </div>
       </section>
+
+      {/* Badge & Achievement */}
+      <BadgeAchievementShowcase badges={badges} achievements={achievements} />
 
       <ManagerPanel
         communityId={community.communities_id}

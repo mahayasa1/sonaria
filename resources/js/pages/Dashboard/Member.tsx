@@ -3,6 +3,7 @@ import { Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/AppLayout';
 import StaffProgress from '@/components/StaffProgress';
 import EmptyState from '@/components/EmptyState';
+import BadgeAchievementShowcase from '@/components/BadgeAchievementShowcase';
 import { Swords, Flame, Trophy, MessageSquare, ChevronRight, Compass } from 'lucide-react';
 import NotificationBell from '@/components/NotificationBell';
 import CommunityStatusAlert from '@/components/CommunityStatusAlert';
@@ -37,6 +38,18 @@ interface MemberProps {
     title: string;
     user: { name: string };
   }>;
+  badges?: Array<{
+    badges_id: number;
+    badge_name: string;
+    description?: string;
+    icon?: string;
+  }>;
+  achievements?: Array<{
+    achievements_id: number;
+    title: string;
+    description?: string;
+    icon?: string;
+  }>;
 }
 
 /**
@@ -53,6 +66,8 @@ export default function Member({
   dailyMissions = [],
   challenge = null,
   recentPosts = [],
+  badges = [],
+  achievements = [],
 }: MemberProps) {
   // level bisa null kalau data level user belum di-load / belum di-seed —
   // jaga-jaga supaya halaman tidak crash, walau seharusnya selalu dikirim
@@ -136,6 +151,9 @@ export default function Member({
           </div>
         )}
       </section>
+
+      {/* Badge & Achievement */}
+      <BadgeAchievementShowcase badges={badges} achievements={achievements} />
 
       {/* Grid modul komunitas */}
       <section className="mt-6 grid gap-5 md:grid-cols-2">

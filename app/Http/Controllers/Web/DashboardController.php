@@ -53,9 +53,9 @@ class DashboardController extends Controller
         $communityRoleName = $membership->role->role_name;
 
         return match ($communityRoleName) {
-            'Ketua' => $this->renderLeader($membership),
-            'Wakil Ketua' => $this->renderViceLeader($membership),
-            'Staff' => $this->renderStaff($membership),
+            'Ketua' => $this->renderLeader($user, $membership),
+            'Wakil Ketua' => $this->renderViceLeader($user, $membership),
+            'Staff' => $this->renderStaff($user, $membership),
             default => $this->renderMember($user, $community),
         };
     }
@@ -161,11 +161,13 @@ class DashboardController extends Controller
         ]);
     }
 
-    protected function renderLeader(CommunityMember $membership): Response
+    protected function renderLeader($user, CommunityMember $membership): Response
     {
         $community = $membership->community;
+        $user->load('badges.badge', 'achievements.achievement');
 
         return Inertia::render('Dashboard/CommunityLeader', [
+            'user' => $user,
             'community' => [
                 'communities_id' => $community->communities_id,
                 'community_name' => $community->community_name,
@@ -177,14 +179,18 @@ class DashboardController extends Controller
                 ->where('status', 'Pending')
                 ->get(),
             'pendingSubmissions' => $this->pendingSubmissions($community->communities_id),
+            'badges' => $user->badges->pluck('badge'),
+            'achievements' => $user->achievements->pluck('achievement'),
         ]);
     }
 
-    protected function renderViceLeader(CommunityMember $membership): Response
+    protected function renderViceLeader($user, CommunityMember $membership): Response
     {
         $community = $membership->community;
+        $user->load('badges.badge', 'achievements.achievement');
 
         return Inertia::render('Dashboard/ViceLeader', [
+            'user' => $user,
             'community' => [
                 'communities_id' => $community->communities_id,
                 'community_name' => $community->community_name,
@@ -196,14 +202,18 @@ class DashboardController extends Controller
                 ->where('status', 'Pending')
                 ->get(),
             'pendingSubmissions' => $this->pendingSubmissions($community->communities_id),
+            'badges' => $user->badges->pluck('badge'),
+            'achievements' => $user->achievements->pluck('achievement'),
         ]);
     }
 
-    protected function renderStaff(CommunityMember $membership): Response
+    protected function renderStaff($user, CommunityMember $membership): Response
     {
         $community = $membership->community;
+        $user->load('badges.badge', 'achievements.achievement');
 
         return Inertia::render('Dashboard/CommunityStaff', [
+            'user' => $user,
             'community' => [
                 'communities_id' => $community->communities_id,
                 'community_name' => $community->community_name,
@@ -215,6 +225,8 @@ class DashboardController extends Controller
                 ->where('status', 'Pending')
                 ->get(),
             'pendingSubmissions' => $this->pendingSubmissions($community->communities_id),
+            'badges' => $user->badges->pluck('badge'),
+            'achievements' => $user->achievements->pluck('achievement'),
         ]);
     }
 

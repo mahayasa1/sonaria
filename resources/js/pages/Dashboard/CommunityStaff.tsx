@@ -1,6 +1,7 @@
 import React from 'react';
 import AppLayout from '@/layouts/AppLayout';
 import ManagerPanel from '@/components/ManagerPanel';
+import BadgeAchievementShowcase from '@/components/BadgeAchievementShowcase';
 import { Headset } from 'lucide-react';
 import NotificationBell from '@/components/NotificationBell';
 import CommunityStatusAlert from '@/components/CommunityStatusAlert';
@@ -20,6 +21,8 @@ export default function CommunityStaff({
   pendingSubmissions = [
     { id: 4, title: 'Video Practice: Fingerstyle Dasar', user: { name: 'Sinta' }, type: 'Practice', reviewUrl: '#' },
   ],
+  badges = [],
+  achievements = [],
 }) {
   return (
     <AppLayout
@@ -50,6 +53,9 @@ export default function CommunityStaff({
         mereview submission latihan. Pembuatan quest, misi, dan challenge tetap
         ditangani Ketua &amp; Wakil Ketua.
       </p>
+
+      {/* Badge & Achievement */}
+      <BadgeAchievementShowcase badges={badges} achievements={achievements} />
 
       <ManagerPanel
         communityId={community.communities_id}

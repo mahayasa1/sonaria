@@ -1,6 +1,7 @@
 import React from 'react';
 import AppLayout from '@/layouts/AppLayout';
 import ManagerPanel from '@/components/ManagerPanel';
+import BadgeAchievementShowcase from '@/components/BadgeAchievementShowcase';
 import { ShieldHalf } from 'lucide-react';
 import NotificationBell from '@/components/NotificationBell';
 import CommunityStatusAlert from '@/components/CommunityStatusAlert';
@@ -15,6 +16,8 @@ export default function ViceLeader({
   pendingSubmissions = [
     { id: 3, title: 'Video Practice: Chord Barre', user: { name: 'Ica' }, type: 'Practice', reviewUrl: '#' },
   ],
+  badges = [],
+  achievements = [],
 }) {
   return (
     <AppLayout
@@ -44,6 +47,9 @@ export default function ViceLeader({
         Kamu mendampingi Ketua mengelola konten dan menjaga aktivitas harian komunitas
         tetap berjalan lancar.
       </p>
+
+      {/* Badge & Achievement */}
+      <BadgeAchievementShowcase badges={badges} achievements={achievements} />
 
       <ManagerPanel
         communityId={community.communities_id}

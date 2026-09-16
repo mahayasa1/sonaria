@@ -15,12 +15,13 @@ use Inertia\Inertia;
 use Inertia\Response;
 
 /**
- * Panel Admin. Belum ada Api\Admin* controller khusus (lihat CLAUDE.md menu
- * Admin: Users, Music Categories, Communities, Materials, Quizzes, dst) —
- * untuk langkah ini baru Users & Communities yang disambungkan penuh,
- * termasuk aksi moderasi dasar (aktif/blokir). Sisanya (Materials, Quizzes,
- * Challenges, Achievements, Badges, Reports) menyusul mengikuti pola yang
- * sama begitu dibutuhkan.
+ * Panel Admin. Menu yang sudah tersambung penuh (index + create/edit/delete
+ * sesuai kebutuhan masing-masing): Users (edit & moderasi status, tanpa
+ * create karena akun dibuat lewat registrasi), Communities (edit & moderasi
+ * status, tanpa create karena komunitas dibuat oleh member), Categories +
+ * Instruments (create & edit), Achievements (create & edit), Badges
+ * (create & edit). Materials, Quizzes, Challenges, Reports menyusul
+ * mengikuti pola yang sama begitu dibutuhkan.
  */
 class AdminWebController extends Controller
 {
@@ -174,6 +175,21 @@ class AdminWebController extends Controller
         return back()->with('success', 'Kategori baru ditambahkan.');
     }
 
+    public function updateCategory(Request $request, MusicCategory $category): RedirectResponse
+    {
+        $this->ensureAdmin($request);
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:100', 'unique:music_categories,name,'.$category->music_categories_id.',music_categories_id'],
+            'description' => ['nullable', 'string', 'max:255'],
+            'icon' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $category->update($data);
+
+        return back()->with('success', "Kategori {$category->name} diperbarui.");
+    }
+
     public function destroyCategory(Request $request, MusicCategory $category): RedirectResponse
     {
         $this->ensureAdmin($request);
@@ -200,6 +216,21 @@ class AdminWebController extends Controller
         $category->instruments()->create($data);
 
         return back()->with('success', 'Instrument baru ditambahkan.');
+    }
+
+    public function updateInstrument(Request $request, Instrument $instrument): RedirectResponse
+    {
+        $this->ensureAdmin($request);
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:100'],
+            'description' => ['nullable', 'string', 'max:255'],
+            'difficulty' => ['nullable', 'in:Easy,Medium,Hard'],
+        ]);
+
+        $instrument->update($data);
+
+        return back()->with('success', "Instrument {$instrument->name} diperbarui.");
     }
 
     public function destroyInstrument(Request $request, Instrument $instrument): RedirectResponse
@@ -241,6 +272,23 @@ class AdminWebController extends Controller
         return back()->with('success', 'Achievement baru ditambahkan.');
     }
 
+    public function updateAchievement(Request $request, Achievement $achievement): RedirectResponse
+    {
+        $this->ensureAdmin($request);
+
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:150'],
+            'description' => ['nullable', 'string', 'max:255'],
+            'icon' => ['nullable', 'string', 'max:100'],
+            'xp_reward' => ['required', 'integer', 'min:0'],
+            'point_reward' => ['nullable', 'integer', 'min:0'],
+        ]);
+
+        $achievement->update($data);
+
+        return back()->with('success', "Achievement {$achievement->title} diperbarui.");
+    }
+
     public function destroyAchievement(Request $request, Achievement $achievement): RedirectResponse
     {
         $this->ensureAdmin($request);
@@ -273,6 +321,23 @@ class AdminWebController extends Controller
         Badge::create($data);
 
         return back()->with('success', 'Badge baru ditambahkan.');
+    }
+
+    public function updateBadge(Request $request, Badge $badge): RedirectResponse
+    {
+        $this->ensureAdmin($request);
+
+        $data = $request->validate([
+            'badge_name' => ['required', 'string', 'max:150'],
+            'description' => ['nullable', 'string', 'max:255'],
+            'icon' => ['nullable', 'string', 'max:100'],
+            'xp_required' => ['nullable', 'integer', 'min:0'],
+            'point_required' => ['nullable', 'integer', 'min:0'],
+        ]);
+
+        $badge->update($data);
+
+        return back()->with('success', "Badge {$badge->badge_name} diperbarui.");
     }
 
     public function destroyBadge(Request $request, Badge $badge): RedirectResponse
