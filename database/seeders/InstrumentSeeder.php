@@ -12,24 +12,24 @@ class InstrumentSeeder extends Seeder
     {
         $data = [
             'Percussion' => [
-                ['name' => 'Drum Set', 'difficulty' => 'Beginner'],
-                ['name' => 'Kendang', 'difficulty' => 'Intermediate'],
-                ['name' => 'Marimba', 'difficulty' => 'Advanced'],
+                ['name' => 'Drum Set', 'difficulty' => 'Easy'],
+                ['name' => 'Kendang', 'difficulty' => 'Medium'],
+                ['name' => 'Marimba', 'difficulty' => 'Hard'],
             ],
             'Woodwind' => [
-                ['name' => 'Seruling', 'difficulty' => 'Beginner'],
-                ['name' => 'Klarinet', 'difficulty' => 'Intermediate'],
-                ['name' => 'Saksofon', 'difficulty' => 'Intermediate'],
+                ['name' => 'Seruling', 'difficulty' => 'Easy'],
+                ['name' => 'Klarinet', 'difficulty' => 'Medium'],
+                ['name' => 'Saksofon', 'difficulty' => 'Medium'],
             ],
             'Brass' => [
-                ['name' => 'Trompet', 'difficulty' => 'Beginner'],
-                ['name' => 'Trombon', 'difficulty' => 'Intermediate'],
-                ['name' => 'French Horn', 'difficulty' => 'Advanced'],
+                ['name' => 'Trompet', 'difficulty' => 'Easy'],
+                ['name' => 'Trombon', 'difficulty' => 'Medium'],
+                ['name' => 'French Horn', 'difficulty' => 'Hard'],
             ],
             'String' => [
-                ['name' => 'Gitar Akustik', 'difficulty' => 'Beginner'],
-                ['name' => 'Biola', 'difficulty' => 'Intermediate'],
-                ['name' => 'Cello', 'difficulty' => 'Advanced'],
+                ['name' => 'Gitar Akustik', 'difficulty' => 'Easy'],
+                ['name' => 'Biola', 'difficulty' => 'Medium'],
+                ['name' => 'Cello', 'difficulty' => 'Hard'],
             ],
         ];
 
