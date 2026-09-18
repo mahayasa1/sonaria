@@ -1,4 +1,14 @@
-import type { CSSProperties } from 'react';
+// Perbaikan untuk resources/js/Pages/settings/profile.tsx
+//
+// Dua perubahan:
+// 1. Preview foto: tambah useState untuk menyimpan object URL dari file
+//    yang baru dipilih, dan onChange handler di <input type="file"> yang
+//    tadinya kosong sama sekali.
+// 2. Notifikasi sukses: baca prop `success` (dikirim dari
+//    ProfileController::edit setelah redirect dari update()) dan tampilkan
+//    sebagai banner sementara.
+
+import { useEffect, useState, type CSSProperties } from 'react';
 import { Form, Head, Link, usePage } from '@inertiajs/react';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/delete-user';
@@ -7,7 +17,6 @@ import { edit } from '@/routes/profile';
 import { send } from '@/routes/verification';
 import type { Auth } from '@/types';
 
-// ⚠️ Sesuaikan path ini dengan lokasi asli file quest-ui.tsx di project kamu
 import {
     PIXEL_CLIP,
     PixelPanel,
@@ -21,9 +30,6 @@ type PageProps = {
     auth: Auth;
 };
 
-// Data dari model UserProfile (app/Models/UserProfile.php).
-// Kalau kamu sudah punya type ini di @/types, hapus definisi lokal ini
-// dan import dari sana supaya tidak dobel.
 type UserProfileData = {
     gender: 'Male' | 'Female' | null;
     birth_date: string | null;
@@ -48,17 +54,50 @@ const labelClass =
 export default function Profile({
     mustVerifyEmail,
     status,
+    success,
     profile,
 }: {
     mustVerifyEmail: boolean;
     status?: string;
+    success?: string;
     profile: UserProfileData;
 }) {
     const { auth } = usePage<PageProps>().props;
     const user = auth?.user;
 
-    // Guard: kalau prop `auth` belum tersedia (mis. shared data Inertia
-    // belum ke-set di request ini), tampilkan fallback daripada crash.
+    // Preview foto yang baru dipilih (belum di-submit). null = belum ada
+    // file baru dipilih, jadi masih tampilkan foto lama dari server.
+    const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+
+    // Bersihkan object URL saat komponen unmount / preview berganti,
+    // supaya tidak bocor memori (createObjectURL menahan referensi file
+    // di memori sampai di-revoke manual).
+    useEffect(() => {
+        return () => {
+            if (photoPreview) URL.revokeObjectURL(photoPreview);
+        };
+    }, [photoPreview]);
+
+    function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+        if (!file) {
+            setPhotoPreview(null);
+            return;
+        }
+        // Revoke preview sebelumnya sebelum bikin yang baru.
+        if (photoPreview) URL.revokeObjectURL(photoPreview);
+        setPhotoPreview(URL.createObjectURL(file));
+    }
+
+    // Notifikasi sukses tampil sebentar lalu hilang sendiri.
+    const [showSuccess, setShowSuccess] = useState(Boolean(success));
+    useEffect(() => {
+        if (!success) return;
+        setShowSuccess(true);
+        const t = setTimeout(() => setShowSuccess(false), 4000);
+        return () => clearTimeout(t);
+    }, [success]);
+
     if (!user) {
         return (
             <>
@@ -73,9 +112,6 @@ export default function Profile({
     const isVerified = mustVerifyEmail ? user.email_verified_at !== null : true;
     const birthDateValue = profile?.birth_date ? profile.birth_date.slice(0, 10) : '';
 
-    // Progress "kelengkapan karakter" — dihitung dari data asli, dipakai
-    // juga oleh backend (ProfileController::isProfileComplete) untuk
-    // menentukan profile_completed.
     const checks = [
         Boolean(user.name),
         Boolean(user.email),
@@ -97,6 +133,16 @@ export default function Profile({
             <Head title="Profile settings" />
             <h1 className="sr-only">Profile settings</h1>
 
+            {/* Notifikasi sukses */}
+            {showSuccess && success && (
+                <div
+                    className="mb-4 rounded-[4px] border border-[#34D399]/40 bg-[#34D399]/10 px-4 py-2.5 font-[var(--font-pixel-mono)] text-sm text-[#34D399]"
+                    role="status"
+                >
+                    {success}
+                </div>
+            )}
+
             <div className="space-y-6">
                     {/* ===== Character Banner ===== */}
                     <PixelPanel>
@@ -106,7 +152,13 @@ export default function Profile({
                                     className="h-24 w-24 overflow-hidden bg-gradient-to-br from-[#38BDF8]/30 to-[#818CF8]/30"
                                     style={{ clipPath: PIXEL_CLIP }}
                                 >
-                                    {user.photo ? (
+                                    {photoPreview ? (
+                                        <img
+                                            src={photoPreview}
+                                            alt="Preview foto baru"
+                                            className="h-full w-full object-cover"
+                                        />
+                                    ) : user.photo ? (
                                         <img
                                             src={`/storage/${user.photo}`}
                                             alt={user.name}
@@ -183,8 +235,14 @@ export default function Profile({
                                                             name="photo"
                                                             accept="image/png,image/jpeg,image/webp"
                                                             className="sr-only"
+                                                            onChange={handlePhotoChange}
                                                         />
                                                     </PixelButton>
+                                                    {photoPreview && (
+                                                        <span className="font-[var(--font-pixel-mono)] text-[10px] text-[#34D399]">
+                                                            Foto baru dipilih — klik Save Progress untuk menyimpan
+                                                        </span>
+                                                    )}
                                                     <p className="font-[var(--font-pixel-mono)] text-[10px] text-[#CBD5F5]/70">
                                                         JPG, PNG, or WEBP. Max 100MB.
                                                     </p>

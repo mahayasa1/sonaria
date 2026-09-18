@@ -344,7 +344,7 @@ export default function Sidebar({ role = 'Member', communityRole = null, communi
       >
         {/* Logo lengkap */}
         <Link
-          href="/"
+          href="/dashboard"
           className={`flex items-center gap-2.5 ${collapsed ? 'lg:hidden' : ''}`}
         >
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full ">
@@ -354,7 +354,7 @@ export default function Sidebar({ role = 'Member', communityRole = null, communi
         </Link>
 
         {/* Logo mini saat collapsed */}
-        <Link href="/" className={`hidden ${collapsed ? 'lg:flex' : ''}`}>
+        <Link href="/dashboard" className={`hidden ${collapsed ? 'lg:flex' : ''}`}>
           <span className="flex h-8 w-8 items-center justify-center rounded-full ">
             <img src="/images/logo.png" alt="Sonaria" className="h-full w-full" />
           </span>
