@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name', 100);
             $table->string('image', 255)->nullable();
             $table->string('description', 100)->nullable();
-            $table->enum('difficulty', ['Beginner', 'Intermediate', 'Advanced']);
+            $table->enum('difficulty', ['Easy', 'Medium', 'Hard'])->default('Easy');
             $table->timestamps();
         });
     }
