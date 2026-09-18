@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')
                 ->constrained(table: 'users', column: 'users_id')
                 ->cascadeOnDelete();
-            $table->enum('gender', ['Laki-laki', 'Perempuan'])->nullable();
+            $table->enum('gender', ['Male', 'Female'])->nullable();
             $table->date('birth_date')->nullable();
             $table->string('phone', 20)->nullable();
             $table->string('address', 100)->nullable();

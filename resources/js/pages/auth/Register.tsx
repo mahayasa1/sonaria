@@ -72,6 +72,15 @@ function ArrowIcon() {
   );
 }
 
+// Ikon panah kembali (mengarah ke kiri) untuk tombol "Kembali ke Beranda".
+function BackArrowIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M19 12H5M11 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export default function Register() {
   const { data, setData, post, processing, errors } = useForm({
     username: '',
@@ -158,6 +167,16 @@ export default function Register() {
 
       <div className="relative overflow-hidden">
         <OnboardingGradientBackground />
+
+        {/* Tombol kembali ke landing page */}
+        <Link
+          href="/"
+          className="sonaria-rise fixed left-4 top-4 z-20 flex items-center gap-1.5 rounded-full border border-[#2A2333] bg-[#14101B]/70 px-3 py-1.5 font-manrope text-xs text-[#9C93A8] backdrop-blur-md transition-colors hover:border-[#D9A441]/50 hover:text-[#D9A441]"
+          style={{ animationDelay: '0s' }}
+        >
+          <BackArrowIcon />
+          Kembali ke Beranda
+        </Link>
 
         <div className="relative z-10 flex items-center justify-center px-6 py-6">
           <div className="w-full max-w-sm">
