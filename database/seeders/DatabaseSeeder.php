@@ -33,15 +33,6 @@ class DatabaseSeeder extends Seeder
             // kalau sewaktu-waktu dibutuhkan.
             TestingUserSeeder::class,
             TestingCommunitySeeder::class,
-            TestingQuestSeeder::class,
-            TestingMaterialSeeder::class,
-            TestingPracticeSeeder::class,
-            TestingQuizSeeder::class,
-            TestingChallengeSeeder::class,
-            TestingGamificationSeeder::class,
-            TestingForumSeeder::class,
-            TestingNotificationSeeder::class,
-            TestingActivityLogSeeder::class,
             TestingMediaSeeder::class,
         ]);
     }
