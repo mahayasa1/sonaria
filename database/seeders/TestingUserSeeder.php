@@ -32,36 +32,36 @@ class TestingUserSeeder extends Seeder
 
         // username => [name, email, level, instrument|null, total_xp, total_point, gender, city]
         $users = [
-            'admin_sonaria' => ['Admin Sonaria', 'admin@sonaria.test', 1, null, 0, 0, 'Laki-laki', 'Jakarta'],
+            'admin_sonaria' => ['Admin Sonaria', 'admin@sonaria.test', 1, null, 0, 0, 'Male', 'Jakarta'],
 
             // Level 1 — baru mulai
-            'user_pemula' => ['Raka', 'user_pemula@sonaria.test', 1, null, 20, 2, 'Laki-laki', 'Bandung'],
-            'user_tempo' => ['Tempo', 'user_tempo@sonaria.test', 1, 'Gitar Akustik', 460, 40, 'Laki-laki', 'Surabaya'],
+            'user_pemula' => ['Raka', 'user_pemula@sonaria.test', 1, null, 20, 2, 'Male', 'Bandung'],
+            'user_tempo' => ['Tempo', 'user_tempo@sonaria.test', 1, 'Gitar Akustik', 460, 40, 'Male', 'Surabaya'],
 
             // Level 2
-            'user_chord' => ['Chord', 'user_chord@sonaria.test', 2, 'Gitar Akustik', 520, 50, 'Perempuan', 'Bandung'],
-            'user_ritme' => ['Ritme', 'user_ritme@sonaria.test', 2, 'Drum Set', 750, 70, 'Laki-laki', 'Medan'],
+            'user_chord' => ['Chord', 'user_chord@sonaria.test', 2, 'Gitar Akustik', 520, 50, 'Female', 'Bandung'],
+            'user_ritme' => ['Ritme', 'user_ritme@sonaria.test', 2, 'Drum Set', 750, 70, 'Male', 'Medan'],
 
             // Level 3
-            'user_melodi' => ['Citra', 'user_melodi@sonaria.test', 3, 'Biola', 1050, 90, 'Perempuan', 'Yogyakarta'],
-            'user_maestro' => ['Maestro', 'user_maestro@sonaria.test', 3, 'Cello', 1900, 150, 'Laki-laki', 'Semarang'],
+            'user_melodi' => ['Citra', 'user_melodi@sonaria.test', 3, 'Biola', 1050, 90, 'Female', 'Yogyakarta'],
+            'user_maestro' => ['Maestro', 'user_maestro@sonaria.test', 3, 'Cello', 1900, 150, 'Male', 'Semarang'],
 
             // Level 4 — Wakil Ketua & Staff komunitas Gitar
-            'wakil_gitar' => ['Bima', 'wakilketua@sonaria.test', 4, 'Gitar Akustik', 2400, 200, 'Laki-laki', 'Bandung'],
-            'staff_gitar' => ['Fajar', 'staff@sonaria.test', 4, 'Gitar Akustik', 2050, 180, 'Laki-laki', 'Bandung'],
+            'wakil_gitar' => ['Bima', 'wakilketua@sonaria.test', 4, 'Gitar Akustik', 2400, 200, 'Male', 'Bandung'],
+            'staff_gitar' => ['Fajar', 'staff@sonaria.test', 4, 'Gitar Akustik', 2050, 180, 'Male', 'Bandung'],
 
             // Level 5
-            'member_gitar' => ['Aditya', 'member@sonaria.test', 5, 'Gitar Akustik', 5350, 400, 'Laki-laki', 'Bandung'],
-            'member_drum' => ['Nanda', 'member_drum@sonaria.test', 5, 'Drum Set', 3600, 260, 'Perempuan', 'Medan'],
+            'member_gitar' => ['Aditya', 'member@sonaria.test', 5, 'Gitar Akustik', 5350, 400, 'Male', 'Bandung'],
+            'member_drum' => ['Nanda', 'member_drum@sonaria.test', 5, 'Drum Set', 3600, 260, 'Female', 'Medan'],
 
             // Level 6
-            'member_biola' => ['Vino', 'member_biola@sonaria.test', 6, 'Biola', 5600, 420, 'Laki-laki', 'Yogyakarta'],
-            'member_trompet' => ['Yoga', 'member_trompet@sonaria.test', 6, 'Trompet', 7900, 600, 'Laki-laki', 'Makassar'],
+            'member_biola' => ['Vino', 'member_biola@sonaria.test', 6, 'Biola', 5600, 420, 'Male', 'Yogyakarta'],
+            'member_trompet' => ['Yoga', 'member_trompet@sonaria.test', 6, 'Trompet', 7900, 600, 'Male', 'Makassar'],
 
             // Level 7 — Ketua komunitas
-            'ketua_gitar' => ['Salsa', 'ketua@sonaria.test', 7, 'Gitar Akustik', 8000, 700, 'Perempuan', 'Bandung'],
-            'ketua_drum' => ['Kevin', 'ketua_drum@sonaria.test', 7, 'Drum Set', 8000, 700, 'Laki-laki', 'Medan'],
-            'ketua_biola' => ['Melodi', 'ketua_biola@sonaria.test', 7, 'Biola', 8000, 700, 'Perempuan', 'Yogyakarta'],
+            'ketua_gitar' => ['Salsa', 'ketua@sonaria.test', 7, 'Gitar Akustik', 8000, 700, 'Female', 'Bandung'],
+            'ketua_drum' => ['Kevin', 'ketua_drum@sonaria.test', 7, 'Drum Set', 8000, 700, 'Male', 'Medan'],
+            'ketua_biola' => ['Melodi', 'ketua_biola@sonaria.test', 7, 'Biola', 8000, 700, 'Female', 'Yogyakarta'],
         ];
 
         foreach ($users as $username => $row) {
