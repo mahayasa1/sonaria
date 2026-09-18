@@ -40,28 +40,28 @@ export default function MainQuestCreate({
 
   return (
     <AppLayout title="Buat Main Quest" role="Member" communityRole="Ketua" communityName={community.community_name}>
-      <Link href="/dashboard" className="flex items-center gap-1.5 font-manrope text-xs text-[#75708A] hover:text-[#F3EEE2]">
+      <Link href="/dashboard" className="flex items-center gap-1.5 font-manrope text-xs text-[#8D89B0] hover:text-[#EDE9FE]">
         <ArrowLeft size={14} /> Kembali
       </Link>
 
       <header className="mt-3">
-        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
-          <Swords size={24} className="text-[#D9A441]" /> Main Quest Baru
+        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
+          <Swords size={24} className="text-[#8B5CF6]" /> Main Quest Baru
         </h1>
       </header>
 
       {availableLevels.length === 0 ? (
-        <p className="mt-6 font-manrope text-sm text-[#B7AFC2]">
+        <p className="mt-6 font-manrope text-sm text-[#DDD6FE]">
           Semua 7 birama Main Quest sudah dibuat untuk komunitas ini.
         </p>
       ) : (
         <div className="mt-6 max-w-lg space-y-4">
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Birama (Level)</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Birama (Level)</label>
             <select
               value={level}
               onChange={(e) => setLevel(Number(e.target.value))}
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
             >
               {availableLevels.map((l) => (
                 <option key={l} value={l}>
@@ -71,41 +71,41 @@ export default function MainQuestCreate({
             </select>
           </div>
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Judul</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Judul</label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
             />
           </div>
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Deskripsi</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Deskripsi</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
             />
           </div>
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Reward XP</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Reward XP</label>
             <input
               type="number"
               value={xpReward}
               onChange={(e) => setXpReward(Number(e.target.value))}
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
             />
           </div>
 
           <button
             onClick={submit}
             disabled={loading || !title}
-            className="flex items-center gap-2 rounded-full bg-[#D9A441] px-6 py-2.5 font-manrope text-sm text-[#14101B] disabled:opacity-40"
+            className="flex items-center gap-2 rounded-full bg-[#8B5CF6] px-6 py-2.5 font-manrope text-sm text-[#020617] disabled:opacity-40"
           >
             {loading && <Loader2 size={14} className="animate-spin" />}
             Simpan
           </button>
-          {error && <p className="font-manrope text-xs text-[#C1443C]">{error}</p>}
+          {error && <p className="font-manrope text-xs text-[#F87171]">{error}</p>}
         </div>
       )}
     </AppLayout>

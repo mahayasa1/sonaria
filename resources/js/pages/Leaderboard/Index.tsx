@@ -13,9 +13,9 @@ interface Entry {
 }
 
 const PODIUM_COLOR: Record<number, string> = {
-  1: '#D9A441',
-  2: '#B7AFC2',
-  3: '#C1443C',
+  1: '#8B5CF6',
+  2: '#DDD6FE',
+  3: '#F87171',
 };
 
 export default function Index({
@@ -36,11 +36,11 @@ export default function Index({
     <AppLayout title="Leaderboard" role="Member" communityName={community.community_name}>
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
+          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#8D89B0]">
             {community.community_name}
           </p>
-          <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
-            <Trophy size={24} className="text-[#D9A441]" /> Leaderboard
+          <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
+            <Trophy size={24} className="text-[#8B5CF6]" /> Leaderboard
           </h1>
         </div>
         <div className="flex gap-2">
@@ -50,8 +50,8 @@ export default function Index({
               onClick={() => router.get('/leaderboard', { period: p }, { preserveState: true })}
               className={`rounded-full border px-4 py-1.5 font-manrope text-xs ${
                 period === p
-                  ? 'border-[#D9A441] bg-[#D9A441]/12 text-[#D9A441]'
-                  : 'border-[#2A2333] text-[#B7AFC2]'
+                  ? 'border-[#8B5CF6] bg-[#8B5CF6]/12 text-[#8B5CF6]'
+                  : 'border-[#312E81] text-[#DDD6FE]'
               }`}
             >
               {p}
@@ -88,8 +88,8 @@ export default function Index({
                     className="mx-auto"
                     style={{ color: PODIUM_COLOR[entry.rank] }}
                   />
-                  <p className="mt-2 font-fraunces text-lg text-[#F3EEE2]">{entry.user.name}</p>
-                  <p className="font-manrope text-xs text-[#75708A]">@{entry.user.username}</p>
+                  <p className="mt-2 font-fraunces text-lg text-[#EDE9FE]">{entry.user.name}</p>
+                  <p className="font-manrope text-xs text-[#8D89B0]">@{entry.user.username}</p>
                   <p className="mt-2 font-mono text-sm" style={{ color: PODIUM_COLOR[entry.rank] }}>
                     {entry.total_xp} XP
                   </p>
@@ -102,21 +102,21 @@ export default function Index({
 
           {/* Sisanya sebagai tabel */}
           {rest.length > 0 && (
-            <section className="mt-6 divide-y divide-[#2A2333] rounded-xl border border-[#2A2333] bg-[#1E1826]">
+            <section className="mt-6 divide-y divide-[#312E81] rounded-xl border border-[#312E81] bg-[#0A1128]">
               {rest.map((entry) => (
                 <div
                   key={entry.leaderboards_id}
                   className={`flex items-center gap-4 px-5 py-3.5 ${
-                    entry.user.users_id === myUserId ? 'bg-[#D9A441]/8' : ''
+                    entry.user.users_id === myUserId ? 'bg-[#8B5CF6]/8' : ''
                   }`}
                 >
-                  <span className="w-6 shrink-0 font-mono text-sm text-[#75708A]">#{entry.rank}</span>
-                  <Medal size={16} className="shrink-0 text-[#75708A]" />
+                  <span className="w-6 shrink-0 font-mono text-sm text-[#8D89B0]">#{entry.rank}</span>
+                  <Medal size={16} className="shrink-0 text-[#8D89B0]" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-manrope text-sm text-[#F3EEE2]">{entry.user.name}</p>
-                    <p className="truncate font-manrope text-xs text-[#75708A]">@{entry.user.username}</p>
+                    <p className="truncate font-manrope text-sm text-[#EDE9FE]">{entry.user.name}</p>
+                    <p className="truncate font-manrope text-xs text-[#8D89B0]">@{entry.user.username}</p>
                   </div>
-                  <span className="shrink-0 font-mono text-sm text-[#D9A441]">{entry.total_xp} XP</span>
+                  <span className="shrink-0 font-mono text-sm text-[#8B5CF6]">{entry.total_xp} XP</span>
                 </div>
               ))}
             </section>

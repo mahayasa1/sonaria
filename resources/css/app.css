@@ -2,6 +2,8 @@
 
 @import 'tw-animate-css';
 
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
@@ -12,6 +14,9 @@
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
+
+    --font-pixel: 'Press Start 2P', ui-monospace, monospace;
+    --font-pixel-mono: 'VT323', ui-monospace, monospace;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -95,6 +100,8 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.87 0 0);
+    --font-pixel: 'Eight Bit Dragon', ui-monospace, monospace;
+    --font-pixel-mono: 'JetBrains Mono', ui-monospace, monospace;
 }
 
 .dark {
@@ -140,4 +147,42 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+@keyframes onboarding-panel-in {
+    from {
+        transform: translate(-50%, 46%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+}
+
+@keyframes onboarding-panel-out {
+    from {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+    to {
+        transform: translate(-50%, 46%);
+        opacity: 0;
+    }
+}
+
+.animate-panel-in {
+    animation: onboarding-panel-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-panel-out {
+    animation: onboarding-panel-out 0.3s ease-in forwards;
+}
+
+@font-face {
+    font-family: 'Eight Bit Dragon';
+    src: url('/fonts/EightBitDragon-anqx.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }

@@ -60,16 +60,16 @@ export default function MaterialCreate({
     <AppLayout title="Tambah Materi" role="Member" communityRole="Ketua" communityName={mainQuest.community.community_name}>
       <Link
         href={`/main-quests/${mainQuest.main_quests_id}`}
-        className="flex items-center gap-1.5 font-manrope text-xs text-[#75708A] hover:text-[#F3EEE2]"
+        className="flex items-center gap-1.5 font-manrope text-xs text-[#8D89B0] hover:text-[#EDE9FE]"
       >
         <ArrowLeft size={14} /> Kembali ke {mainQuest.title}
       </Link>
 
       <header className="mt-3">
-        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
-          <BookOpen size={24} className="text-[#D9A441]" /> Materi Baru
+        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
+          <BookOpen size={24} className="text-[#8B5CF6]" /> Materi Baru
         </h1>
-        <p className="mt-1 font-manrope text-sm text-[#75708A]">untuk {mainQuest.title}</p>
+        <p className="mt-1 font-manrope text-sm text-[#8D89B0]">untuk {mainQuest.title}</p>
       </header>
 
       {createdId ? (
@@ -80,25 +80,25 @@ export default function MaterialCreate({
           <div className="flex flex-wrap gap-2">
             <Link
               href={`/manage/materials/${createdId}/files/create`}
-              className="rounded-full bg-[#4C8C86] px-5 py-2.5 font-manrope text-sm text-[#14101B]"
+              className="rounded-full bg-[#4C8C86] px-5 py-2.5 font-manrope text-sm text-[#020617]"
             >
               Tambah File Materi
             </Link>
             <Link
               href={`/manage/materials/${createdId}/quizzes/create`}
-              className="rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B]"
+              className="rounded-full bg-[#8B5CF6] px-5 py-2.5 font-manrope text-sm text-[#020617]"
             >
               Tambah Quiz
             </Link>
             <Link
               href={`/manage/materials/${createdId}/practices/create`}
-              className="rounded-full border border-[#D9A441]/40 px-5 py-2.5 font-manrope text-sm text-[#D9A441]"
+              className="rounded-full border border-[#8B5CF6]/40 px-5 py-2.5 font-manrope text-sm text-[#8B5CF6]"
             >
               Tambah Practice
             </Link>
             <Link
               href={`/main-quests/${mainQuest.main_quests_id}`}
-              className="rounded-full border border-[#2A2333] px-5 py-2.5 font-manrope text-sm text-[#B7AFC2]"
+              className="rounded-full border border-[#312E81] px-5 py-2.5 font-manrope text-sm text-[#DDD6FE]"
             >
               Selesai
             </Link>
@@ -107,11 +107,11 @@ export default function MaterialCreate({
       ) : (
         <div className="mt-6 max-w-lg space-y-4">
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Instrument</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Instrument</label>
             <select
               value={instrumentId}
               onChange={(e) => setInstrumentId(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
             >
               {instruments.map((i) => (
                 <option key={i.intruments_id} value={i.intruments_id}>
@@ -121,29 +121,29 @@ export default function MaterialCreate({
             </select>
           </div>
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Judul</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Judul</label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
             />
           </div>
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Deskripsi</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Deskripsi</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="font-manrope text-xs text-[#75708A]">Kesulitan</label>
+              <label className="font-manrope text-xs text-[#8D89B0]">Kesulitan</label>
               <select
                 value={difficulty}
                 onChange={(e) => setDifficulty(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
               >
                 <option value="Easy">Easy</option>
                 <option value="Medium">Medium</option>
@@ -151,12 +151,12 @@ export default function MaterialCreate({
               </select>
             </div>
             <div>
-              <label className="font-manrope text-xs text-[#75708A]">Estimasi (menit)</label>
+              <label className="font-manrope text-xs text-[#8D89B0]">Estimasi (menit)</label>
               <input
                 type="number"
                 value={estimatedTime}
                 onChange={(e) => setEstimatedTime(Number(e.target.value))}
-                className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
               />
             </div>
           </div>
@@ -164,12 +164,12 @@ export default function MaterialCreate({
           <button
             onClick={submit}
             disabled={loading || !title}
-            className="flex items-center gap-2 rounded-full bg-[#D9A441] px-6 py-2.5 font-manrope text-sm text-[#14101B] disabled:opacity-40"
+            className="flex items-center gap-2 rounded-full bg-[#8B5CF6] px-6 py-2.5 font-manrope text-sm text-[#020617] disabled:opacity-40"
           >
             {loading && <Loader2 size={14} className="animate-spin" />}
             Simpan &amp; Lanjut
           </button>
-          {error && <p className="font-manrope text-xs text-[#C1443C]">{error}</p>}
+          {error && <p className="font-manrope text-xs text-[#F87171]">{error}</p>}
         </div>
       )}
     </AppLayout>

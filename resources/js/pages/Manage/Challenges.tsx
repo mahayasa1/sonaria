@@ -20,8 +20,8 @@ interface ChallengeItem {
 
 const STATUS_STYLE: Record<ChallengeItem['status'], string> = {
   Active: 'border-[#4C8C86]/40 bg-[#4C8C86]/12 text-[#4C8C86]',
-  Draft: 'border-[#D9A441]/40 bg-[#D9A441]/12 text-[#D9A441]',
-  Closed: 'border-[#75708A]/40 bg-white/5 text-[#75708A]',
+  Draft: 'border-[#8B5CF6]/40 bg-[#8B5CF6]/12 text-[#8B5CF6]',
+  Closed: 'border-[#8D89B0]/40 bg-white/5 text-[#8D89B0]',
 };
 
 function ChallengeRow({
@@ -51,7 +51,7 @@ function ChallengeRow({
   };
 
   return (
-    <div className="rounded-xl border border-[#2A2333] bg-[#1E1826] p-5">
+    <div className="rounded-xl border border-[#312E81] bg-[#0A1128] p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
@@ -59,14 +59,14 @@ function ChallengeRow({
               {challenge.status}
             </span>
             {challenge.instrument && (
-              <span className="font-manrope text-xs text-[#75708A]">{challenge.instrument.name}</span>
+              <span className="font-manrope text-xs text-[#8D89B0]">{challenge.instrument.name}</span>
             )}
           </div>
-          <p className="mt-1.5 font-fraunces text-lg text-[#F3EEE2]">{challenge.title}</p>
+          <p className="mt-1.5 font-fraunces text-lg text-[#EDE9FE]">{challenge.title}</p>
           {challenge.description && (
-            <p className="mt-1 font-manrope text-sm text-[#B7AFC2]">{challenge.description}</p>
+            <p className="mt-1 font-manrope text-sm text-[#DDD6FE]">{challenge.description}</p>
           )}
-          <div className="mt-2 flex flex-wrap gap-4 font-manrope text-xs text-[#75708A]">
+          <div className="mt-2 flex flex-wrap gap-4 font-manrope text-xs text-[#8D89B0]">
             <span>+{challenge.xp_reward} XP</span>
             <span>{challenge.submissions_count} submission</span>
             <span>
@@ -74,14 +74,14 @@ function ChallengeRow({
               {new Date(challenge.end_date).toLocaleDateString('id-ID')}
             </span>
           </div>
-          {error && <p className="mt-2 font-manrope text-xs text-[#C1443C]">{error}</p>}
+          {error && <p className="mt-2 font-manrope text-xs text-[#F87171]">{error}</p>}
         </div>
 
         {canManage && challenge.status === 'Active' && (
           <button
             onClick={close}
             disabled={loading}
-            className="flex shrink-0 items-center gap-1.5 rounded-full border border-[#C1443C]/40 px-3.5 py-1.5 font-manrope text-xs text-[#C1443C] disabled:opacity-50"
+            className="flex shrink-0 items-center gap-1.5 rounded-full border border-[#F87171]/40 px-3.5 py-1.5 font-manrope text-xs text-[#F87171] disabled:opacity-50"
           >
             {loading ? <Loader2 size={12} className="animate-spin" /> : <Lock size={12} />}
             Tutup Challenge
@@ -110,17 +110,17 @@ export default function Challenges({
     <AppLayout title="Kelola Challenge" role="Member" communityRole={communityRole} communityName={community.community_name}>
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
+          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#8D89B0]">
             {community.community_name}
           </p>
-          <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
-            <Trophy size={24} className="text-[#D9A441]" /> Kelola Challenge
+          <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
+            <Trophy size={24} className="text-[#8B5CF6]" /> Kelola Challenge
           </h1>
         </div>
         {canManage && !hasActive && (
           <Link
             href="/manage/challenge/create"
-            className="flex items-center gap-1.5 rounded-full bg-[#D9A441] px-4 py-2.5 font-manrope text-sm text-[#14101B]"
+            className="flex items-center gap-1.5 rounded-full bg-[#8B5CF6] px-4 py-2.5 font-manrope text-sm text-[#020617]"
           >
             <Plus size={15} /> Challenge Baru
           </Link>

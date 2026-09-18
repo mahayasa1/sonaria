@@ -52,10 +52,10 @@ function NewPostModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="w-full max-w-lg rounded-xl border border-[#2A2333] bg-[#1E1826] p-6">
+      <div className="w-full max-w-lg rounded-xl border border-[#312E81] bg-[#0A1128] p-6">
         <div className="flex items-center justify-between">
-          <h3 className="font-fraunces text-xl text-[#F3EEE2]">Diskusi Baru</h3>
-          <button onClick={onClose} className="text-[#75708A] hover:text-[#F3EEE2]">
+          <h3 className="font-fraunces text-xl text-[#EDE9FE]">Diskusi Baru</h3>
+          <button onClick={onClose} className="text-[#8D89B0] hover:text-[#EDE9FE]">
             <X size={18} />
           </button>
         </div>
@@ -64,24 +64,24 @@ function NewPostModal({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Judul diskusi"
-            className="w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none"
+            className="w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none"
           />
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Tulis pertanyaan atau topik diskusimu..."
             rows={5}
-            className="w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none"
+            className="w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none"
           />
           <button
             onClick={submit}
             disabled={loading || !title || !content}
-            className="flex items-center gap-2 rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B] disabled:opacity-40"
+            className="flex items-center gap-2 rounded-full bg-[#8B5CF6] px-5 py-2.5 font-manrope text-sm text-[#020617] disabled:opacity-40"
           >
             {loading && <Loader2 size={14} className="animate-spin" />}
             Posting
           </button>
-          {error && <p className="font-manrope text-xs text-[#C1443C]">{error}</p>}
+          {error && <p className="font-manrope text-xs text-[#F87171]">{error}</p>}
         </div>
       </div>
     </div>
@@ -103,16 +103,16 @@ export default function Index({
     <AppLayout title="Forum" role="Member" communityName={community.community_name}>
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
+          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#8D89B0]">
             {community.community_name}
           </p>
-          <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
+          <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
             <MessageSquare size={24} className="text-[#4C8C86]" /> Forum
           </h1>
         </div>
         <button
           onClick={() => setCreating(true)}
-          className="flex items-center gap-1.5 rounded-full bg-[#D9A441] px-4 py-2.5 font-manrope text-sm text-[#14101B]"
+          className="flex items-center gap-1.5 rounded-full bg-[#8B5CF6] px-4 py-2.5 font-manrope text-sm text-[#020617]"
         >
           <Plus size={15} /> Diskusi Baru
         </button>
@@ -128,8 +128,8 @@ export default function Index({
             onClick={() => router.get('/forum', { sort: s.key }, { preserveState: true })}
             className={`rounded-full border px-4 py-1.5 font-manrope text-xs ${
               sort === s.key
-                ? 'border-[#D9A441] bg-[#D9A441]/12 text-[#D9A441]'
-                : 'border-[#2A2333] text-[#B7AFC2]'
+                ? 'border-[#8B5CF6] bg-[#8B5CF6]/12 text-[#8B5CF6]'
+                : 'border-[#312E81] text-[#DDD6FE]'
             }`}
           >
             {s.label}
@@ -151,11 +151,11 @@ export default function Index({
             <Link
               key={post.forum_posts_id}
               href={`/forum/${post.forum_posts_id}`}
-              className="block rounded-xl border border-[#2A2333] bg-[#1E1826] p-5 transition-colors hover:border-[#4C8C86]/40"
+              className="block rounded-xl border border-[#312E81] bg-[#0A1128] p-5 transition-colors hover:border-[#4C8C86]/40"
             >
-              <p className="font-fraunces text-lg text-[#F3EEE2]">{post.title}</p>
-              <p className="mt-1 line-clamp-2 font-manrope text-sm text-[#B7AFC2]">{post.content}</p>
-              <div className="mt-3 flex items-center gap-4 font-manrope text-xs text-[#75708A]">
+              <p className="font-fraunces text-lg text-[#EDE9FE]">{post.title}</p>
+              <p className="mt-1 line-clamp-2 font-manrope text-sm text-[#DDD6FE]">{post.content}</p>
+              <div className="mt-3 flex items-center gap-4 font-manrope text-xs text-[#8D89B0]">
                 <span>oleh {post.user.name}</span>
                 <span className="flex items-center gap-1">
                   <Heart size={12} /> {post.total_like}

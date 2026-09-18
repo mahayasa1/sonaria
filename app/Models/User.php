@@ -187,3 +187,4 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return $this->hasMany(MediaFile::class, 'uploaded_by', 'users_id');
     }
 }
+

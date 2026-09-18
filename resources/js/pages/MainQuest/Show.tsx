@@ -95,7 +95,7 @@ function QuizPanel({ quiz }: { quiz: Quiz }) {
         <p>Kamu sudah lulus quiz ini.</p>
         <button
           onClick={() => setRetaking(true)}
-          className="mt-2 font-manrope text-xs text-[#B7AFC2] underline underline-offset-2 hover:text-[#F3EEE2]"
+          className="mt-2 font-manrope text-xs text-[#DDD6FE] underline underline-offset-2 hover:text-[#EDE9FE]"
         >
           Ulangi kuis (tidak menambah XP lagi)
         </button>
@@ -145,7 +145,7 @@ function QuizPanel({ quiz }: { quiz: Quiz }) {
     return (
       <div
         className={`rounded-lg p-4 font-manrope text-sm ${
-          result.is_passed ? 'bg-[#4C8C86]/12 text-[#4C8C86]' : 'bg-[#C1443C]/12 text-[#C1443C]'
+          result.is_passed ? 'bg-[#4C8C86]/12 text-[#4C8C86]' : 'bg-[#F87171]/12 text-[#F87171]'
         }`}
       >
         {result.is_passed
@@ -157,7 +157,7 @@ function QuizPanel({ quiz }: { quiz: Quiz }) {
 
   if (questions.length === 0) {
     return (
-      <p className="font-manrope text-xs text-[#75708A]">Quiz ini belum punya soal.</p>
+      <p className="font-manrope text-xs text-[#8D89B0]">Quiz ini belum punya soal.</p>
     );
   }
 
@@ -167,12 +167,12 @@ function QuizPanel({ quiz }: { quiz: Quiz }) {
         <button
           onClick={start}
           disabled={loading}
-          className="flex items-center gap-2 rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B] disabled:opacity-50"
+          className="flex items-center gap-2 rounded-full bg-[#8B5CF6] px-5 py-2.5 font-manrope text-sm text-[#020617] disabled:opacity-50"
         >
           {loading && <Loader2 size={14} className="animate-spin" />}
           Mulai Kuis ({questions.length} soal)
         </button>
-        {error && <p className="mt-2 font-manrope text-xs text-[#C1443C]">{error}</p>}
+        {error && <p className="mt-2 font-manrope text-xs text-[#F87171]">{error}</p>}
       </div>
     );
   }
@@ -181,7 +181,7 @@ function QuizPanel({ quiz }: { quiz: Quiz }) {
     <div className="space-y-4">
       {questions.map((q, i) => (
         <div key={q.quiz_questions_id}>
-          <p className="font-manrope text-sm text-[#F3EEE2]">
+          <p className="font-manrope text-sm text-[#EDE9FE]">
             {i + 1}. {q.question}
           </p>
           <div className="mt-2 space-y-1.5">
@@ -190,8 +190,8 @@ function QuizPanel({ quiz }: { quiz: Quiz }) {
                 key={opt.quiz_options_id}
                 className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 font-manrope text-xs ${
                   answers[q.quiz_questions_id] === opt.quiz_options_id
-                    ? 'border-[#D9A441] bg-[#D9A441]/8 text-[#F3EEE2]'
-                    : 'border-[#2A2333] text-[#B7AFC2] hover:border-[#D9A441]/30'
+                    ? 'border-[#8B5CF6] bg-[#8B5CF6]/8 text-[#EDE9FE]'
+                    : 'border-[#312E81] text-[#DDD6FE] hover:border-[#8B5CF6]/30'
                 }`}
               >
                 <input
@@ -202,7 +202,7 @@ function QuizPanel({ quiz }: { quiz: Quiz }) {
                     setAnswers((prev) => ({ ...prev, [q.quiz_questions_id]: opt.quiz_options_id }))
                   }
                 />
-                <span className="font-mono text-[#D9A441]">{opt.option_label}.</span> {opt.option_text}
+                <span className="font-mono text-[#8B5CF6]">{opt.option_label}.</span> {opt.option_text}
               </label>
             ))}
           </div>
@@ -211,12 +211,12 @@ function QuizPanel({ quiz }: { quiz: Quiz }) {
       <button
         onClick={submit}
         disabled={loading || Object.keys(answers).length < questions.length}
-        className="flex items-center gap-2 rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B] disabled:opacity-40"
+        className="flex items-center gap-2 rounded-full bg-[#8B5CF6] px-5 py-2.5 font-manrope text-sm text-[#020617] disabled:opacity-40"
       >
         {loading && <Loader2 size={14} className="animate-spin" />}
         Kirim Jawaban
       </button>
-      {error && <p className="font-manrope text-xs text-[#C1443C]">{error}</p>}
+      {error && <p className="font-manrope text-xs text-[#F87171]">{error}</p>}
     </div>
   );
 }
@@ -269,14 +269,14 @@ function PracticePanel({ practice }: { practice: Practice }) {
     return (
       <div
         className={`rounded-lg p-4 font-manrope text-sm ${
-          isApproved ? 'bg-[#4C8C86]/12 text-[#4C8C86]' : 'bg-[#D9A441]/12 text-[#D9A441]'
+          isApproved ? 'bg-[#4C8C86]/12 text-[#4C8C86]' : 'bg-[#8B5CF6]/12 text-[#8B5CF6]'
         }`}
       >
         <p>{statusLabel[practice.user_submission_status] ?? 'Video sudah dikirim sebelumnya.'}</p>
         {!isApproved && (
           <button
             onClick={() => setResubmitting(true)}
-            className="mt-2 font-manrope text-xs text-[#B7AFC2] underline underline-offset-2 hover:text-[#F3EEE2]"
+            className="mt-2 font-manrope text-xs text-[#DDD6FE] underline underline-offset-2 hover:text-[#EDE9FE]"
           >
             Kirim video baru
           </button>
@@ -291,23 +291,23 @@ function PracticePanel({ practice }: { practice: Practice }) {
         value={videoTitle}
         onChange={(e) => setVideoTitle(e.target.value)}
         placeholder="Judul video (opsional)"
-        className="w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none"
+        className="w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none"
       />
       <input
         value={videoPath}
         onChange={(e) => setVideoPath(e.target.value)}
         placeholder="Link video latihan (YouTube/Drive, dsb.)"
-        className="w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none"
+        className="w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none"
       />
       <button
         onClick={submit}
         disabled={loading || !videoPath}
-        className="flex items-center gap-2 rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B] disabled:opacity-40"
+        className="flex items-center gap-2 rounded-full bg-[#8B5CF6] px-5 py-2.5 font-manrope text-sm text-[#020617] disabled:opacity-40"
       >
         {loading && <Loader2 size={14} className="animate-spin" />}
         Kirim Video Latihan
       </button>
-      {error && <p className="font-manrope text-xs text-[#C1443C]">{error}</p>}
+      {error && <p className="font-manrope text-xs text-[#F87171]">{error}</p>}
     </div>
   );
 }
@@ -331,14 +331,14 @@ function MaterialFileRow({ file }: { file: MaterialFile }) {
       href={file.file_path}
       target="_blank"
       rel="noreferrer"
-      className="flex items-center gap-2.5 rounded-lg border border-[#2A2333] px-3 py-2.5 font-manrope text-sm text-[#B7AFC2] hover:border-[#4C8C86]/40 hover:text-[#F3EEE2]"
+      className="flex items-center gap-2.5 rounded-lg border border-[#312E81] px-3 py-2.5 font-manrope text-sm text-[#DDD6FE] hover:border-[#4C8C86]/40 hover:text-[#EDE9FE]"
     >
       <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#4C8C86]/12 text-[#4C8C86]">
         {fileTypeIcon(file.file_type)}
       </span>
       <span className="min-w-0 flex-1 truncate">{file.title}</span>
-      {file.duration && <span className="shrink-0 font-mono text-xs text-[#75708A]">{file.duration}</span>}
-      <ExternalLink size={12} className="shrink-0 text-[#75708A]" />
+      {file.duration && <span className="shrink-0 font-mono text-xs text-[#8D89B0]">{file.duration}</span>}
+      <ExternalLink size={12} className="shrink-0 text-[#8D89B0]" />
     </a>
   );
 }
@@ -364,17 +364,17 @@ function MaterialCard({ material, canManage }: { material: Material; canManage: 
   };
 
   return (
-    <div className="rounded-xl border border-[#2A2333] bg-[#1E1826]">
+    <div className="rounded-xl border border-[#312E81] bg-[#0A1128]">
       <button
         onClick={() => setExpanded((v) => !v)}
         className="flex w-full items-center gap-4 p-5 text-left"
       >
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/5 text-[#D9A441]">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/5 text-[#8B5CF6]">
           <BookOpen size={16} />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="font-fraunces text-lg text-[#F3EEE2]">{material.title}</p>
-          <div className="mt-1 flex flex-wrap gap-3 font-manrope text-xs text-[#75708A]">
+          <p className="font-fraunces text-lg text-[#EDE9FE]">{material.title}</p>
+          <div className="mt-1 flex flex-wrap gap-3 font-manrope text-xs text-[#8D89B0]">
             {material.difficulty && <span>Kesulitan: {material.difficulty}</span>}
             {material.estimated_time && (
               <span className="flex items-center gap-1">
@@ -391,9 +391,9 @@ function MaterialCard({ material, canManage }: { material: Material; canManage: 
       </div>
 
       {expanded && (
-        <div className="space-y-6 border-t border-[#2A2333] p-5">
+        <div className="space-y-6 border-t border-[#312E81] p-5">
           {material.description && (
-            <p className="font-manrope text-sm text-[#B7AFC2]">{material.description}</p>
+            <p className="font-manrope text-sm text-[#DDD6FE]">{material.description}</p>
           )}
 
           {progress < 100 && (
@@ -417,7 +417,7 @@ function MaterialCard({ material, canManage }: { material: Material; canManage: 
 
           {material.quizzes.map((quiz) => (
             <div key={quiz.quizzes_id}>
-              <div className="mb-2 flex items-center gap-2 text-[#D9A441]">
+              <div className="mb-2 flex items-center gap-2 text-[#8B5CF6]">
                 <ListChecks size={16} />
                 <span className="font-manrope text-sm">{quiz.title}</span>
                 <span className="font-mono text-xs">+{quiz.xp_reward} XP</span>
@@ -428,7 +428,7 @@ function MaterialCard({ material, canManage }: { material: Material; canManage: 
 
           {material.practices.map((practice) => (
             <div key={practice.practices_id}>
-              <div className="mb-2 flex items-center gap-2 text-[#C1443C]">
+              <div className="mb-2 flex items-center gap-2 text-[#F87171]">
                 <Video size={16} />
                 <span className="font-manrope text-sm">{practice.title}</span>
                 <span className="font-mono text-xs">+{practice.xp_reward} XP</span>
@@ -438,7 +438,7 @@ function MaterialCard({ material, canManage }: { material: Material; canManage: 
           ))}
 
           {canManage && (
-            <div className="flex flex-wrap gap-2 border-t border-[#2A2333] pt-4">
+            <div className="flex flex-wrap gap-2 border-t border-[#312E81] pt-4">
               <Link
                 href={`/manage/materials/${material.materials_id}/files/create`}
                 className="rounded-full border border-[#4C8C86]/40 px-4 py-1.5 font-manrope text-xs text-[#4C8C86]"
@@ -447,13 +447,13 @@ function MaterialCard({ material, canManage }: { material: Material; canManage: 
               </Link>
               <Link
                 href={`/manage/materials/${material.materials_id}/quizzes/create`}
-                className="rounded-full border border-[#D9A441]/40 px-4 py-1.5 font-manrope text-xs text-[#D9A441]"
+                className="rounded-full border border-[#8B5CF6]/40 px-4 py-1.5 font-manrope text-xs text-[#8B5CF6]"
               >
                 + Tambah Quiz
               </Link>
               <Link
                 href={`/manage/materials/${material.materials_id}/practices/create`}
-                className="rounded-full border border-[#C1443C]/40 px-4 py-1.5 font-manrope text-xs text-[#C1443C]"
+                className="rounded-full border border-[#F87171]/40 px-4 py-1.5 font-manrope text-xs text-[#F87171]"
               >
                 + Tambah Practice
               </Link>
@@ -474,28 +474,28 @@ export default function Show({ mainQuest, canManage }: { mainQuest: MainQuest; c
     >
       <Link
         href="/main-quests"
-        className="flex items-center gap-1.5 font-manrope text-xs text-[#75708A] hover:text-[#F3EEE2]"
+        className="flex items-center gap-1.5 font-manrope text-xs text-[#8D89B0] hover:text-[#EDE9FE]"
       >
         <ArrowLeft size={14} /> Kembali ke Main Quest
       </Link>
 
       <header className="mt-3 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
+          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#8D89B0]">
             Birama {mainQuest.level}
           </p>
-          <h1 className="font-fraunces text-3xl text-[#F3EEE2]">{mainQuest.title}</h1>
+          <h1 className="font-fraunces text-3xl text-[#EDE9FE]">{mainQuest.title}</h1>
           {mainQuest.description && (
-            <p className="mt-2 max-w-xl font-manrope text-sm text-[#B7AFC2]">{mainQuest.description}</p>
+            <p className="mt-2 max-w-xl font-manrope text-sm text-[#DDD6FE]">{mainQuest.description}</p>
           )}
-          <span className="mt-2 inline-block font-mono text-sm text-[#D9A441]">
+          <span className="mt-2 inline-block font-mono text-sm text-[#8B5CF6]">
             +{mainQuest.xp_reward} XP total
           </span>
         </div>
         {canManage && (
           <Link
             href={`/manage/main-quests/${mainQuest.main_quests_id}/materials/create`}
-            className="rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B]"
+            className="rounded-full bg-[#8B5CF6] px-5 py-2.5 font-manrope text-sm text-[#020617]"
           >
             + Tambah Materi
           </Link>

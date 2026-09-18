@@ -127,65 +127,65 @@ export default function QuizCreate({ material }: { material: Material }) {
     >
       <Link
         href={`/main-quests/${material.main_quest.main_quests_id}`}
-        className="flex items-center gap-1.5 font-manrope text-xs text-[#75708A] hover:text-[#F3EEE2]"
+        className="flex items-center gap-1.5 font-manrope text-xs text-[#8D89B0] hover:text-[#EDE9FE]"
       >
         <ArrowLeft size={14} /> Kembali
       </Link>
 
       <header className="mt-3">
-        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
-          <ListChecks size={24} className="text-[#D9A441]" /> Quiz Baru
+        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
+          <ListChecks size={24} className="text-[#8B5CF6]" /> Quiz Baru
         </h1>
-        <p className="mt-1 font-manrope text-sm text-[#75708A]">untuk materi {material.title}</p>
+        <p className="mt-1 font-manrope text-sm text-[#8D89B0]">untuk materi {material.title}</p>
       </header>
 
       <div className="mt-6 max-w-2xl space-y-5">
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Judul Quiz</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Judul Quiz</label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
             />
           </div>
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Deskripsi</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Deskripsi</label>
             <input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
             />
           </div>
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Reward XP</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Reward XP</label>
             <input
               type="number"
               value={xpReward}
               onChange={(e) => setXpReward(Number(e.target.value))}
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
             />
           </div>
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Passing Score</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Passing Score</label>
             <input
               type="number"
               value={passingScore}
               onChange={(e) => setPassingScore(Number(e.target.value))}
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
             />
           </div>
         </div>
 
         <div className="space-y-4">
           {questions.map((q, qi) => (
-            <div key={qi} className="rounded-xl border border-[#2A2333] bg-[#1E1826] p-4">
+            <div key={qi} className="rounded-xl border border-[#312E81] bg-[#0A1128] p-4">
               <div className="flex items-center justify-between">
-                <span className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
+                <span className="font-manrope text-xs uppercase tracking-[0.14em] text-[#8D89B0]">
                   Pertanyaan {qi + 1}
                 </span>
                 {questions.length > 1 && (
-                  <button onClick={() => removeQuestion(qi)} className="text-[#C1443C]">
+                  <button onClick={() => removeQuestion(qi)} className="text-[#F87171]">
                     <Trash2 size={14} />
                   </button>
                 )}
@@ -195,7 +195,7 @@ export default function QuizCreate({ material }: { material: Material }) {
                 onChange={(e) => updateQuestion(qi, { question: e.target.value })}
                 placeholder="Tulis pertanyaan..."
                 rows={2}
-                className="mt-2 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none"
+                className="mt-2 w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none"
               />
 
               <div className="mt-3 space-y-2">
@@ -206,7 +206,7 @@ export default function QuizCreate({ material }: { material: Material }) {
                       className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[10px] ${
                         o.is_correct
                           ? 'border-[#4C8C86] bg-[#4C8C86]/20 text-[#4C8C86]'
-                          : 'border-[#2A2333] text-[#75708A]'
+                          : 'border-[#312E81] text-[#8D89B0]'
                       }`}
                       title="Tandai sebagai jawaban benar"
                     >
@@ -216,10 +216,10 @@ export default function QuizCreate({ material }: { material: Material }) {
                       value={o.option_text}
                       onChange={(e) => updateOption(qi, oi, { option_text: e.target.value })}
                       placeholder={`Opsi ${o.option_label}`}
-                      className="flex-1 rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-1.5 font-manrope text-xs text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none"
+                      className="flex-1 rounded-lg border border-[#312E81] bg-[#020617] px-3 py-1.5 font-manrope text-xs text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none"
                     />
                     {q.options.length > 2 && (
-                      <button onClick={() => removeOption(qi, oi)} className="text-[#75708A] hover:text-[#C1443C]">
+                      <button onClick={() => removeOption(qi, oi)} className="text-[#8D89B0] hover:text-[#F87171]">
                         <Trash2 size={13} />
                       </button>
                     )}
@@ -228,7 +228,7 @@ export default function QuizCreate({ material }: { material: Material }) {
                 {q.options.length < 5 && (
                   <button
                     onClick={() => addOption(qi)}
-                    className="flex items-center gap-1 font-manrope text-xs text-[#D9A441]"
+                    className="flex items-center gap-1 font-manrope text-xs text-[#8B5CF6]"
                   >
                     <Plus size={13} /> Tambah opsi
                   </button>
@@ -239,7 +239,7 @@ export default function QuizCreate({ material }: { material: Material }) {
 
           <button
             onClick={addQuestion}
-            className="flex items-center gap-1.5 rounded-full border border-[#2A2333] px-4 py-2 font-manrope text-xs text-[#B7AFC2] hover:border-[#D9A441]/40"
+            className="flex items-center gap-1.5 rounded-full border border-[#312E81] px-4 py-2 font-manrope text-xs text-[#DDD6FE] hover:border-[#8B5CF6]/40"
           >
             <Plus size={14} /> Tambah Pertanyaan
           </button>
@@ -248,12 +248,12 @@ export default function QuizCreate({ material }: { material: Material }) {
         <button
           onClick={submit}
           disabled={loading || !valid}
-          className="flex items-center gap-2 rounded-full bg-[#D9A441] px-6 py-2.5 font-manrope text-sm text-[#14101B] disabled:opacity-40"
+          className="flex items-center gap-2 rounded-full bg-[#8B5CF6] px-6 py-2.5 font-manrope text-sm text-[#020617] disabled:opacity-40"
         >
           {loading && <Loader2 size={14} className="animate-spin" />}
           Simpan Quiz
         </button>
-        {error && <p className="font-manrope text-xs text-[#C1443C]">{error}</p>}
+        {error && <p className="font-manrope text-xs text-[#F87171]">{error}</p>}
       </div>
     </AppLayout>
   );

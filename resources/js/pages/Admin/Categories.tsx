@@ -38,12 +38,12 @@ function AddInstrumentRow({ categoryId }: { categoryId: number }) {
         onChange={(e) => setName(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && submit()}
         placeholder="Nama instrument baru"
-        className="flex-1 rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-1.5 font-manrope text-xs text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none"
+        className="flex-1 rounded-lg border border-[#312E81] bg-[#020617] px-3 py-1.5 font-manrope text-xs text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none"
       />
       <select
         value={difficulty}
         onChange={(e) => setDifficulty(e.target.value)}
-        className="rounded-lg border border-[#2A2333] bg-[#14101B] px-2 py-1.5 font-manrope text-xs text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+        className="rounded-lg border border-[#312E81] bg-[#020617] px-2 py-1.5 font-manrope text-xs text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
       >
         <option value="Easy">Easy</option>
         <option value="Medium">Medium</option>
@@ -51,7 +51,7 @@ function AddInstrumentRow({ categoryId }: { categoryId: number }) {
       </select>
       <button
         onClick={submit}
-        className="flex items-center gap-1 rounded-lg bg-[#D9A441] px-3 py-1.5 font-manrope text-xs text-[#14101B]"
+        className="flex items-center gap-1 rounded-lg bg-[#8B5CF6] px-3 py-1.5 font-manrope text-xs text-[#020617]"
       >
         <Plus size={13} />
       </button>
@@ -135,29 +135,29 @@ export default function Categories({ categories }: { categories: Category[] }) {
   return (
     <AppLayout title="Kategori Alat Musik" role="Admin">
       <header>
-        <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">Admin</p>
-        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
-          <Music2 size={24} className="text-[#D9A441]" /> Kategori Alat Musik
+        <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#8D89B0]">Admin</p>
+        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
+          <Music2 size={24} className="text-[#8B5CF6]" /> Kategori Alat Musik
         </h1>
       </header>
 
       {/* Form kategori baru */}
-      <section className="mt-6 flex flex-col gap-2 rounded-xl border border-[#2A2333] bg-[#1E1826] p-5 sm:flex-row">
+      <section className="mt-6 flex flex-col gap-2 rounded-xl border border-[#312E81] bg-[#0A1128] p-5 sm:flex-row">
         <input
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           placeholder="Nama kategori (mis. Gitar)"
-          className="flex-1 rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none"
+          className="flex-1 rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none"
         />
         <input
           value={newDescription}
           onChange={(e) => setNewDescription(e.target.value)}
           placeholder="Deskripsi singkat (opsional)"
-          className="flex-1 rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none"
+          className="flex-1 rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none"
         />
         <button
           onClick={submitCategory}
-          className="flex items-center justify-center gap-1.5 rounded-full bg-[#D9A441] px-5 py-2 font-manrope text-sm text-[#14101B]"
+          className="flex items-center justify-center gap-1.5 rounded-full bg-[#8B5CF6] px-5 py-2 font-manrope text-sm text-[#020617]"
         >
           <Plus size={14} /> Tambah Kategori
         </button>
@@ -166,28 +166,28 @@ export default function Categories({ categories }: { categories: Category[] }) {
       {/* List kategori */}
       <section className="mt-6 grid gap-4 sm:grid-cols-2">
         {categories.map((category) => (
-          <div key={category.music_categories_id} className="rounded-xl border border-[#2A2333] bg-[#1E1826] p-5">
+          <div key={category.music_categories_id} className="rounded-xl border border-[#312E81] bg-[#0A1128] p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="font-fraunces text-lg text-[#F3EEE2]">{category.name}</p>
+                <p className="font-fraunces text-lg text-[#EDE9FE]">{category.name}</p>
                 {category.description && (
-                  <p className="mt-0.5 font-manrope text-xs text-[#75708A]">{category.description}</p>
+                  <p className="mt-0.5 font-manrope text-xs text-[#8D89B0]">{category.description}</p>
                 )}
-                <p className="mt-1 font-manrope text-[11px] text-[#75708A]">
+                <p className="mt-1 font-manrope text-[11px] text-[#8D89B0]">
                   {category.instruments_count} instrument · {category.communities_count} komunitas
                 </p>
               </div>
               <div className="flex shrink-0 items-center gap-3">
                 <button
                   onClick={() => openEditCategory(category)}
-                  className="text-[#75708A] hover:text-[#F3EEE2]"
+                  className="text-[#8D89B0] hover:text-[#EDE9FE]"
                   title="Edit kategori"
                 >
                   <Pencil size={14} />
                 </button>
                 <button
                   onClick={() => deleteCategory(category)}
-                  className="text-[#75708A] hover:text-[#C1443C]"
+                  className="text-[#8D89B0] hover:text-[#F87171]"
                   title="Hapus kategori"
                 >
                   <Trash2 size={15} />
@@ -199,17 +199,17 @@ export default function Categories({ categories }: { categories: Category[] }) {
               {category.instruments.map((instrument) => (
                 <span
                   key={instrument.intruments_id}
-                  className="flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1 font-manrope text-[11px] text-[#B7AFC2]"
+                  className="flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1 font-manrope text-[11px] text-[#DDD6FE]"
                 >
                   {instrument.name}
                   <button
                     onClick={() => openEditInstrument(instrument)}
-                    className="text-[#75708A] hover:text-[#F3EEE2]"
+                    className="text-[#8D89B0] hover:text-[#EDE9FE]"
                     title="Edit instrument"
                   >
                     <Pencil size={10} />
                   </button>
-                  <button onClick={() => deleteInstrument(instrument)} className="text-[#75708A] hover:text-[#C1443C]">
+                  <button onClick={() => deleteInstrument(instrument)} className="text-[#8D89B0] hover:text-[#F87171]">
                     <Trash2 size={10} />
                   </button>
                 </span>
@@ -223,44 +223,44 @@ export default function Categories({ categories }: { categories: Category[] }) {
 
       {editingCategory && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-sm rounded-xl border border-[#2A2333] bg-[#1E1826] p-6">
+          <div className="w-full max-w-sm rounded-xl border border-[#312E81] bg-[#0A1128] p-6">
             <div className="flex items-center justify-between">
-              <h2 className="font-fraunces text-xl text-[#F3EEE2]">Edit Kategori</h2>
-              <button onClick={() => setEditingCategory(null)} className="text-[#75708A] hover:text-[#F3EEE2]">
+              <h2 className="font-fraunces text-xl text-[#EDE9FE]">Edit Kategori</h2>
+              <button onClick={() => setEditingCategory(null)} className="text-[#8D89B0] hover:text-[#EDE9FE]">
                 <X size={18} />
               </button>
             </div>
             <form onSubmit={submitEditCategory} className="mt-5 space-y-4">
               <div>
-                <label className="font-manrope text-xs text-[#75708A]">Nama Kategori</label>
+                <label className="font-manrope text-xs text-[#8D89B0]">Nama Kategori</label>
                 <input
                   value={categoryForm.name}
                   onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
                   required
-                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                  className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="font-manrope text-xs text-[#75708A]">Deskripsi</label>
+                <label className="font-manrope text-xs text-[#8D89B0]">Deskripsi</label>
                 <textarea
                   value={categoryForm.description}
                   onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })}
                   rows={3}
-                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                  className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
                 />
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setEditingCategory(null)}
-                  className="rounded-full bg-white/5 px-4 py-2 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10"
+                  className="rounded-full bg-white/5 px-4 py-2 font-manrope text-xs text-[#DDD6FE] hover:bg-white/10"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={savingCategory}
-                  className="rounded-full bg-[#D9A441] px-4 py-2 font-manrope text-xs text-[#14101B] disabled:opacity-50"
+                  className="rounded-full bg-[#8B5CF6] px-4 py-2 font-manrope text-xs text-[#020617] disabled:opacity-50"
                 >
                   {savingCategory ? 'Menyimpan...' : 'Simpan'}
                 </button>
@@ -272,38 +272,38 @@ export default function Categories({ categories }: { categories: Category[] }) {
 
       {editingInstrument && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-sm rounded-xl border border-[#2A2333] bg-[#1E1826] p-6">
+          <div className="w-full max-w-sm rounded-xl border border-[#312E81] bg-[#0A1128] p-6">
             <div className="flex items-center justify-between">
-              <h2 className="font-fraunces text-xl text-[#F3EEE2]">Edit Instrument</h2>
-              <button onClick={() => setEditingInstrument(null)} className="text-[#75708A] hover:text-[#F3EEE2]">
+              <h2 className="font-fraunces text-xl text-[#EDE9FE]">Edit Instrument</h2>
+              <button onClick={() => setEditingInstrument(null)} className="text-[#8D89B0] hover:text-[#EDE9FE]">
                 <X size={18} />
               </button>
             </div>
             <form onSubmit={submitEditInstrument} className="mt-5 space-y-4">
               <div>
-                <label className="font-manrope text-xs text-[#75708A]">Nama Instrument</label>
+                <label className="font-manrope text-xs text-[#8D89B0]">Nama Instrument</label>
                 <input
                   value={instrumentForm.name}
                   onChange={(e) => setInstrumentForm({ ...instrumentForm, name: e.target.value })}
                   required
-                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                  className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="font-manrope text-xs text-[#75708A]">Deskripsi</label>
+                <label className="font-manrope text-xs text-[#8D89B0]">Deskripsi</label>
                 <textarea
                   value={instrumentForm.description}
                   onChange={(e) => setInstrumentForm({ ...instrumentForm, description: e.target.value })}
                   rows={3}
-                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                  className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="font-manrope text-xs text-[#75708A]">Tingkat Kesulitan</label>
+                <label className="font-manrope text-xs text-[#8D89B0]">Tingkat Kesulitan</label>
                 <select
                   value={instrumentForm.difficulty}
                   onChange={(e) => setInstrumentForm({ ...instrumentForm, difficulty: e.target.value })}
-                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                  className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
                 >
                   <option value="Easy">Easy</option>
                   <option value="Medium">Medium</option>
@@ -314,14 +314,14 @@ export default function Categories({ categories }: { categories: Category[] }) {
                 <button
                   type="button"
                   onClick={() => setEditingInstrument(null)}
-                  className="rounded-full bg-white/5 px-4 py-2 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10"
+                  className="rounded-full bg-white/5 px-4 py-2 font-manrope text-xs text-[#DDD6FE] hover:bg-white/10"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={savingInstrument}
-                  className="rounded-full bg-[#D9A441] px-4 py-2 font-manrope text-xs text-[#14101B] disabled:opacity-50"
+                  className="rounded-full bg-[#8B5CF6] px-4 py-2 font-manrope text-xs text-[#020617] disabled:opacity-50"
                 >
                   {savingInstrument ? 'Menyimpan...' : 'Simpan'}
                 </button>

@@ -73,12 +73,12 @@ export default function Communities({
   return (
     <AppLayout title="Kelola Komunitas" role="Admin">
       <header>
-        <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">Admin</p>
-        <h1 className="font-fraunces text-3xl text-[#F3EEE2]">Komunitas</h1>
+        <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#8D89B0]">Admin</p>
+        <h1 className="font-fraunces text-3xl text-[#EDE9FE]">Komunitas</h1>
       </header>
 
       <div className="relative mt-6 max-w-sm">
-        <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#75708A]" />
+        <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8D89B0]" />
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -86,48 +86,48 @@ export default function Communities({
             e.key === 'Enter' && router.get('/admin/communities', { search }, { preserveState: true })
           }
           placeholder="Cari nama komunitas..."
-          className="w-full rounded-full border border-[#2A2333] bg-[#1E1826] py-2.5 pl-10 pr-4 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none"
+          className="w-full rounded-full border border-[#312E81] bg-[#0A1128] py-2.5 pl-10 pr-4 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none"
         />
       </div>
 
       <section className="mt-6 grid gap-4 sm:grid-cols-2">
         {communities.data.map((c) => (
-          <div key={c.communities_id} className="rounded-xl border border-[#2A2333] bg-[#1E1826] p-5">
+          <div key={c.communities_id} className="rounded-xl border border-[#312E81] bg-[#0A1128] p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="font-fraunces text-lg text-[#F3EEE2]">{c.community_name}</p>
-                <p className="font-manrope text-xs text-[#75708A]">
+                <p className="font-fraunces text-lg text-[#EDE9FE]">{c.community_name}</p>
+                <p className="font-manrope text-xs text-[#8D89B0]">
                   {c.category?.name ?? 'Umum'} · dikelola {c.owner?.name ?? '-'}
                 </p>
               </div>
               <span
                 className={`shrink-0 rounded-full px-2.5 py-1 font-manrope text-[11px] ${
-                  c.status === 'Active' ? 'bg-[#4C8C86]/12 text-[#4C8C86]' : 'bg-[#C1443C]/12 text-[#C1443C]'
+                  c.status === 'Active' ? 'bg-[#4C8C86]/12 text-[#4C8C86]' : 'bg-[#F87171]/12 text-[#F87171]'
                 }`}
               >
                 {c.status}
               </span>
             </div>
             <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-              <span className="font-mono text-xs text-[#D9A441]">{c.total_member} anggota</span>
+              <span className="font-mono text-xs text-[#8B5CF6]">{c.total_member} anggota</span>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => openEdit(c)}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 font-manrope text-xs text-[#DDD6FE] hover:bg-white/10"
                 >
                   <Pencil size={13} />
                   Edit
                 </button>
                 <button
                   onClick={() => toggleStatus(c)}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 font-manrope text-xs text-[#DDD6FE] hover:bg-white/10"
                 >
                   {c.status === 'Active' ? <Ban size={13} /> : <CheckCircle2 size={13} />}
                   {c.status === 'Active' ? 'Nonaktifkan' : 'Aktifkan'}
                 </button>
                 <button
                   onClick={() => deleteCommunity(c)}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-[#C1443C]/12 px-3 py-1.5 font-manrope text-xs text-[#C1443C] hover:bg-[#C1443C]/20"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-[#F87171]/12 px-3 py-1.5 font-manrope text-xs text-[#F87171] hover:bg-[#F87171]/20"
                 >
                   <Trash2 size={13} />
                   Hapus
@@ -146,7 +146,7 @@ export default function Communities({
               disabled={!link.url}
               onClick={() => link.url && router.get(link.url, {}, { preserveState: true })}
               className={`rounded-lg px-3 py-1.5 font-manrope text-xs ${
-                link.active ? 'bg-[#D9A441] text-[#14101B]' : 'bg-white/5 text-[#B7AFC2] disabled:opacity-30'
+                link.active ? 'bg-[#8B5CF6] text-[#020617]' : 'bg-white/5 text-[#DDD6FE] disabled:opacity-30'
               }`}
               dangerouslySetInnerHTML={{ __html: link.label }}
             />
@@ -156,31 +156,31 @@ export default function Communities({
 
       {editingCommunity && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-sm rounded-xl border border-[#2A2333] bg-[#1E1826] p-6">
+          <div className="w-full max-w-sm rounded-xl border border-[#312E81] bg-[#0A1128] p-6">
             <div className="flex items-center justify-between">
-              <h2 className="font-fraunces text-xl text-[#F3EEE2]">Edit Komunitas</h2>
-              <button onClick={() => setEditingCommunity(null)} className="text-[#75708A] hover:text-[#F3EEE2]">
+              <h2 className="font-fraunces text-xl text-[#EDE9FE]">Edit Komunitas</h2>
+              <button onClick={() => setEditingCommunity(null)} className="text-[#8D89B0] hover:text-[#EDE9FE]">
                 <X size={18} />
               </button>
             </div>
             <form onSubmit={submitEdit} className="mt-5 space-y-4">
               <div>
-                <label className="font-manrope text-xs text-[#75708A]">Nama Komunitas</label>
+                <label className="font-manrope text-xs text-[#8D89B0]">Nama Komunitas</label>
                 <input
                   value={editForm.community_name}
                   onChange={(e) => setEditForm({ ...editForm, community_name: e.target.value })}
                   required
-                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                  className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="font-manrope text-xs text-[#75708A]">Kategori</label>
+                <label className="font-manrope text-xs text-[#8D89B0]">Kategori</label>
                 <select
                   value={editForm.music_category_id}
                   onChange={(e) =>
                     setEditForm({ ...editForm, music_category_id: e.target.value ? Number(e.target.value) : '' })
                   }
-                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                  className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
                 >
                   <option value="">Umum</option>
                   {categories.map((cat) => (
@@ -191,26 +191,26 @@ export default function Communities({
                 </select>
               </div>
               <div>
-                <label className="font-manrope text-xs text-[#75708A]">Deskripsi</label>
+                <label className="font-manrope text-xs text-[#8D89B0]">Deskripsi</label>
                 <textarea
                   value={editForm.description}
                   onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
                   rows={3}
-                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                  className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
                 />
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setEditingCommunity(null)}
-                  className="rounded-full bg-white/5 px-4 py-2 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10"
+                  className="rounded-full bg-white/5 px-4 py-2 font-manrope text-xs text-[#DDD6FE] hover:bg-white/10"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="rounded-full bg-[#D9A441] px-4 py-2 font-manrope text-xs text-[#14101B] disabled:opacity-50"
+                  className="rounded-full bg-[#8B5CF6] px-4 py-2 font-manrope text-xs text-[#020617] disabled:opacity-50"
                 >
                   {saving ? 'Menyimpan...' : 'Simpan'}
                 </button>

@@ -21,8 +21,8 @@ interface Mission {
 
 const STATUS_STYLE: Record<Mission['status'], string> = {
   Active: 'border-[#4C8C86]/40 bg-[#4C8C86]/12 text-[#4C8C86]',
-  Draft: 'border-[#D9A441]/40 bg-[#D9A441]/12 text-[#D9A441]',
-  Inactive: 'border-[#75708A]/40 bg-white/5 text-[#75708A]',
+  Draft: 'border-[#8B5CF6]/40 bg-[#8B5CF6]/12 text-[#8B5CF6]',
+  Inactive: 'border-[#8D89B0]/40 bg-white/5 text-[#8D89B0]',
 };
 
 function MissionRow({
@@ -52,20 +52,20 @@ function MissionRow({
   };
 
   return (
-    <div className="rounded-xl border border-[#2A2333] bg-[#1E1826] p-5">
+    <div className="rounded-xl border border-[#312E81] bg-[#0A1128] p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
             <span className={`rounded-full border px-2.5 py-0.5 font-manrope text-[10px] ${STATUS_STYLE[mission.status]}`}>
               {mission.status}
             </span>
-            <span className="font-manrope text-xs text-[#75708A]">Slot #{mission.mission_number}</span>
+            <span className="font-manrope text-xs text-[#8D89B0]">Slot #{mission.mission_number}</span>
           </div>
-          <p className="mt-1.5 font-fraunces text-lg text-[#F3EEE2]">{mission.title}</p>
+          <p className="mt-1.5 font-fraunces text-lg text-[#EDE9FE]">{mission.title}</p>
           {mission.description && (
-            <p className="mt-1 font-manrope text-sm text-[#B7AFC2]">{mission.description}</p>
+            <p className="mt-1 font-manrope text-sm text-[#DDD6FE]">{mission.description}</p>
           )}
-          <div className="mt-2 flex flex-wrap gap-4 font-manrope text-xs text-[#75708A]">
+          <div className="mt-2 flex flex-wrap gap-4 font-manrope text-xs text-[#8D89B0]">
             {typeof mission.questions_count === 'number' && (
               <span>{mission.questions_count} soal</span>
             )}
@@ -77,14 +77,14 @@ function MissionRow({
               {new Date(mission.end_date).toLocaleDateString('id-ID')}
             </span>
           </div>
-          {error && <p className="mt-2 font-manrope text-xs text-[#C1443C]">{error}</p>}
+          {error && <p className="mt-2 font-manrope text-xs text-[#F87171]">{error}</p>}
         </div>
 
         {canManage && mission.status === 'Active' && (
           <button
             onClick={deactivate}
             disabled={loading}
-            className="flex shrink-0 items-center gap-1.5 rounded-full border border-[#C1443C]/40 px-3.5 py-1.5 font-manrope text-xs text-[#C1443C] disabled:opacity-50"
+            className="flex shrink-0 items-center gap-1.5 rounded-full border border-[#F87171]/40 px-3.5 py-1.5 font-manrope text-xs text-[#F87171] disabled:opacity-50"
           >
             {loading ? <Loader2 size={12} className="animate-spin" /> : <Power size={12} />}
             Nonaktifkan
@@ -113,18 +113,18 @@ export default function DailyMissions({
     <AppLayout title="Kelola Daily Mission" role="Member" communityRole={communityRole} communityName={community.community_name}>
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
+          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#8D89B0]">
             {community.community_name}
           </p>
-          <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
-            <Flame size={24} className="text-[#C1443C]" /> Kelola Daily Mission
+          <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
+            <Flame size={24} className="text-[#F87171]" /> Kelola Daily Mission
           </h1>
-          <p className="mt-1 font-manrope text-xs text-[#75708A]">{activeCount} / 6 slot aktif</p>
+          <p className="mt-1 font-manrope text-xs text-[#8D89B0]">{activeCount} / 6 slot aktif</p>
         </div>
         {canManage && activeCount < 6 && (
           <Link
             href="/manage/daily-missions/create"
-            className="flex items-center gap-1.5 rounded-full bg-[#D9A441] px-4 py-2.5 font-manrope text-sm text-[#14101B]"
+            className="flex items-center gap-1.5 rounded-full bg-[#8B5CF6] px-4 py-2.5 font-manrope text-sm text-[#020617]"
           >
             <Plus size={15} /> Daily Mission Baru
           </Link>

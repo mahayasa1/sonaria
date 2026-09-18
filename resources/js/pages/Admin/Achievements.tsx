@@ -64,60 +64,60 @@ export default function Achievements({ achievements }: { achievements: Achieveme
   return (
     <AppLayout title="Kelola Achievement" role="Admin">
       <header>
-        <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">Admin</p>
-        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
-          <Award size={24} className="text-[#D9A441]" /> Achievement
+        <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#8D89B0]">Admin</p>
+        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
+          <Award size={24} className="text-[#8B5CF6]" /> Achievement
         </h1>
       </header>
 
-      <section className="mt-6 grid gap-2 rounded-xl border border-[#2A2333] bg-[#1E1826] p-5 sm:grid-cols-[1fr_2fr_120px_auto]">
+      <section className="mt-6 grid gap-2 rounded-xl border border-[#312E81] bg-[#0A1128] p-5 sm:grid-cols-[1fr_2fr_120px_auto]">
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Judul achievement"
-          className="rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none"
+          className="rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none"
         />
         <input
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Deskripsi"
-          className="rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none"
+          className="rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none"
         />
         <input
           type="number"
           value={xpReward}
           onChange={(e) => setXpReward(Number(e.target.value))}
           placeholder="XP"
-          className="rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+          className="rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
         />
         <button
           onClick={submit}
-          className="flex items-center justify-center gap-1.5 rounded-full bg-[#D9A441] px-5 py-2 font-manrope text-sm text-[#14101B]"
+          className="flex items-center justify-center gap-1.5 rounded-full bg-[#8B5CF6] px-5 py-2 font-manrope text-sm text-[#020617]"
         >
           <Plus size={14} /> Tambah
         </button>
       </section>
 
-      <section className="mt-6 divide-y divide-[#2A2333] overflow-hidden rounded-xl border border-[#2A2333] bg-[#1E1826]">
+      <section className="mt-6 divide-y divide-[#312E81] overflow-hidden rounded-xl border border-[#312E81] bg-[#0A1128]">
         {achievements.map((a) => (
           <div key={a.achievements_id} className="flex items-center justify-between px-5 py-3.5">
             <div>
-              <p className="font-manrope text-sm text-[#F3EEE2]">{a.title}</p>
-              {a.description && <p className="font-manrope text-xs text-[#75708A]">{a.description}</p>}
-              <p className="mt-0.5 font-manrope text-[11px] text-[#75708A]">
+              <p className="font-manrope text-sm text-[#EDE9FE]">{a.title}</p>
+              {a.description && <p className="font-manrope text-xs text-[#8D89B0]">{a.description}</p>}
+              <p className="mt-0.5 font-manrope text-[11px] text-[#8D89B0]">
                 Diraih {a.user_achievements_count} user
               </p>
             </div>
             <div className="flex items-center gap-4">
-              <span className="font-mono text-xs text-[#D9A441]">+{a.xp_reward} XP</span>
+              <span className="font-mono text-xs text-[#8B5CF6]">+{a.xp_reward} XP</span>
               <button
                 onClick={() => openEdit(a)}
-                className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10"
+                className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 font-manrope text-xs text-[#DDD6FE] hover:bg-white/10"
               >
                 <Pencil size={13} />
                 Edit
               </button>
-              <button onClick={() => destroy(a)} className="text-[#75708A] hover:text-[#C1443C]">
+              <button onClick={() => destroy(a)} className="text-[#8D89B0] hover:text-[#F87171]">
                 <Trash2 size={15} />
               </button>
             </div>
@@ -127,54 +127,54 @@ export default function Achievements({ achievements }: { achievements: Achieveme
 
       {editingAchievement && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-sm rounded-xl border border-[#2A2333] bg-[#1E1826] p-6">
+          <div className="w-full max-w-sm rounded-xl border border-[#312E81] bg-[#0A1128] p-6">
             <div className="flex items-center justify-between">
-              <h2 className="font-fraunces text-xl text-[#F3EEE2]">Edit Achievement</h2>
-              <button onClick={() => setEditingAchievement(null)} className="text-[#75708A] hover:text-[#F3EEE2]">
+              <h2 className="font-fraunces text-xl text-[#EDE9FE]">Edit Achievement</h2>
+              <button onClick={() => setEditingAchievement(null)} className="text-[#8D89B0] hover:text-[#EDE9FE]">
                 <X size={18} />
               </button>
             </div>
             <form onSubmit={submitEdit} className="mt-5 space-y-4">
               <div>
-                <label className="font-manrope text-xs text-[#75708A]">Judul</label>
+                <label className="font-manrope text-xs text-[#8D89B0]">Judul</label>
                 <input
                   value={editForm.title}
                   onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
                   required
-                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                  className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="font-manrope text-xs text-[#75708A]">Deskripsi</label>
+                <label className="font-manrope text-xs text-[#8D89B0]">Deskripsi</label>
                 <textarea
                   value={editForm.description}
                   onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
                   rows={3}
-                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                  className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="font-manrope text-xs text-[#75708A]">XP Reward</label>
+                <label className="font-manrope text-xs text-[#8D89B0]">XP Reward</label>
                 <input
                   type="number"
                   value={editForm.xp_reward}
                   onChange={(e) => setEditForm({ ...editForm, xp_reward: Number(e.target.value) })}
                   required
-                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                  className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
                 />
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setEditingAchievement(null)}
-                  className="rounded-full bg-white/5 px-4 py-2 font-manrope text-xs text-[#B7AFC2] hover:bg-white/10"
+                  className="rounded-full bg-white/5 px-4 py-2 font-manrope text-xs text-[#DDD6FE] hover:bg-white/10"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="rounded-full bg-[#D9A441] px-4 py-2 font-manrope text-xs text-[#14101B] disabled:opacity-50"
+                  className="rounded-full bg-[#8B5CF6] px-4 py-2 font-manrope text-xs text-[#020617] disabled:opacity-50"
                 >
                   {saving ? 'Menyimpan...' : 'Simpan'}
                 </button>

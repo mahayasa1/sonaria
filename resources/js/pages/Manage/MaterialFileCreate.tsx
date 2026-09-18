@@ -62,16 +62,16 @@ export default function MaterialFileCreate({ material }: { material: Material })
     >
       <Link
         href={`/main-quests/${material.main_quest.main_quests_id}`}
-        className="flex items-center gap-1.5 font-manrope text-xs text-[#75708A] hover:text-[#F3EEE2]"
+        className="flex items-center gap-1.5 font-manrope text-xs text-[#8D89B0] hover:text-[#EDE9FE]"
       >
         <ArrowLeft size={14} /> Kembali
       </Link>
 
       <header className="mt-3">
-        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
+        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
           <FileVideo size={24} className="text-[#4C8C86]" /> File Materi Baru
         </h1>
-        <p className="mt-1 font-manrope text-sm text-[#75708A]">untuk materi {material.title}</p>
+        <p className="mt-1 font-manrope text-sm text-[#8D89B0]">untuk materi {material.title}</p>
       </header>
 
       {done ? (
@@ -87,13 +87,13 @@ export default function MaterialFileCreate({ material }: { material: Material })
                 setDuration('');
                 setFileSize('');
               }}
-              className="rounded-full border border-[#D9A441]/40 px-5 py-2.5 font-manrope text-sm text-[#D9A441]"
+              className="rounded-full border border-[#8B5CF6]/40 px-5 py-2.5 font-manrope text-sm text-[#8B5CF6]"
             >
               Tambah File Lain
             </button>
             <Link
               href={`/main-quests/${material.main_quest.main_quests_id}`}
-              className="rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B]"
+              className="rounded-full bg-[#8B5CF6] px-5 py-2.5 font-manrope text-sm text-[#020617]"
             >
               Selesai
             </Link>
@@ -102,11 +102,11 @@ export default function MaterialFileCreate({ material }: { material: Material })
       ) : (
         <div className="mt-6 max-w-lg space-y-4">
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Jenis File</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Jenis File</label>
             <select
               value={fileType}
               onChange={(e) => setFileType(e.target.value as typeof fileType)}
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
             >
               {FILE_TYPES.map((t) => (
                 <option key={t.value} value={t.value}>
@@ -116,54 +116,54 @@ export default function MaterialFileCreate({ material }: { material: Material })
             </select>
           </div>
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Judul File</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Judul File</label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="mis. Pengenalan Kunci Dasar"
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A]/60 focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0]/60 focus:border-[#8B5CF6]/50 focus:outline-none"
             />
           </div>
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Nama File</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Nama File</label>
             <input
               value={fileName}
               onChange={(e) => setFileName(e.target.value)}
               placeholder="mis. kunci-dasar.mp4"
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A]/60 focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0]/60 focus:border-[#8B5CF6]/50 focus:outline-none"
             />
           </div>
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Link / Path File</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Link / Path File</label>
             <input
               value={filePath}
               onChange={(e) => setFilePath(e.target.value)}
               placeholder="URL video/PDF (YouTube, Drive, storage, dsb.)"
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A]/60 focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0]/60 focus:border-[#8B5CF6]/50 focus:outline-none"
             />
-            <p className="mt-1 font-manrope text-[11px] text-[#75708A]">
+            <p className="mt-1 font-manrope text-[11px] text-[#8D89B0]">
               Unggah file ke storage/CDN terlebih dahulu, lalu tempel link/path-nya di sini.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {isTimeBased && (
               <div>
-                <label className="font-manrope text-xs text-[#75708A]">Durasi (mis. 05:30)</label>
+                <label className="font-manrope text-xs text-[#8D89B0]">Durasi (mis. 05:30)</label>
                 <input
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
                   placeholder="00:00"
-                  className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A]/60 focus:border-[#D9A441]/50 focus:outline-none"
+                  className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0]/60 focus:border-[#8B5CF6]/50 focus:outline-none"
                 />
               </div>
             )}
             <div>
-              <label className="font-manrope text-xs text-[#75708A]">Ukuran File (bytes, opsional)</label>
+              <label className="font-manrope text-xs text-[#8D89B0]">Ukuran File (bytes, opsional)</label>
               <input
                 type="number"
                 value={fileSize}
                 onChange={(e) => setFileSize(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
               />
             </div>
           </div>
@@ -171,12 +171,12 @@ export default function MaterialFileCreate({ material }: { material: Material })
           <button
             onClick={submit}
             disabled={loading || !title || !fileName || !filePath}
-            className="flex items-center gap-2 rounded-full bg-[#D9A441] px-6 py-2.5 font-manrope text-sm text-[#14101B] disabled:opacity-40"
+            className="flex items-center gap-2 rounded-full bg-[#8B5CF6] px-6 py-2.5 font-manrope text-sm text-[#020617] disabled:opacity-40"
           >
             {loading && <Loader2 size={14} className="animate-spin" />}
             Simpan File Materi
           </button>
-          {error && <p className="font-manrope text-xs text-[#C1443C]">{error}</p>}
+          {error && <p className="font-manrope text-xs text-[#F87171]">{error}</p>}
         </div>
       )}
     </AppLayout>

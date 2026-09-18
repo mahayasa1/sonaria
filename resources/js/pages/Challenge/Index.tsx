@@ -59,11 +59,11 @@ export default function Index({
   return (
     <AppLayout title="Challenge" role="Member" communityName={community.community_name}>
       <header>
-        <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
+        <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#8D89B0]">
           {community.community_name}
         </p>
-        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
-          <Trophy size={24} className="text-[#D9A441]" /> Challenge
+        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
+          <Trophy size={24} className="text-[#8B5CF6]" /> Challenge
         </h1>
       </header>
 
@@ -76,21 +76,21 @@ export default function Index({
           />
         </div>
       ) : (
-        <section className="mt-8 overflow-hidden rounded-xl border border-[#2A2333] bg-[#1E1826]">
-          <div className="h-32 bg-gradient-to-br from-[#D9A441]/30 via-[#1E1826] to-[#1E1826]" />
+        <section className="mt-8 overflow-hidden rounded-xl border border-[#312E81] bg-[#0A1128]">
+          <div className="h-32 bg-gradient-to-br from-[#8B5CF6]/30 via-[#0A1128] to-[#0A1128]" />
           <div className="p-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="font-fraunces text-2xl text-[#F3EEE2]">{challenge.title}</h2>
-              <span className="rounded-full bg-[#D9A441]/12 px-4 py-1.5 font-mono text-sm text-[#D9A441]">
+              <h2 className="font-fraunces text-2xl text-[#EDE9FE]">{challenge.title}</h2>
+              <span className="rounded-full bg-[#8B5CF6]/12 px-4 py-1.5 font-mono text-sm text-[#8B5CF6]">
                 +{challenge.xp_reward} XP
               </span>
             </div>
             {challenge.description && (
-              <p className="mt-2 max-w-xl font-manrope text-sm text-[#B7AFC2]">
+              <p className="mt-2 max-w-xl font-manrope text-sm text-[#DDD6FE]">
                 {challenge.description}
               </p>
             )}
-            <div className="mt-4 flex flex-wrap gap-5 font-manrope text-xs text-[#75708A]">
+            <div className="mt-4 flex flex-wrap gap-5 font-manrope text-xs text-[#8D89B0]">
               <span className="flex items-center gap-1.5">
                 <Calendar size={13} />
                 Berakhir {new Date(challenge.end_date).toLocaleDateString('id-ID')}
@@ -101,15 +101,15 @@ export default function Index({
               {challenge.instrument && <span>Instrument: {challenge.instrument.name}</span>}
             </div>
 
-            <div className="mt-6 border-t border-[#2A2333] pt-6">
+            <div className="mt-6 border-t border-[#312E81] pt-6">
               {submission ? (
                 <div
                   className={`rounded-lg p-4 font-manrope text-sm ${
                     submission.status === 'Approved'
                       ? 'bg-[#4C8C86]/12 text-[#4C8C86]'
                       : submission.status === 'Rejected'
-                        ? 'bg-[#C1443C]/12 text-[#C1443C]'
-                        : 'bg-[#D9A441]/12 text-[#D9A441]'
+                        ? 'bg-[#F87171]/12 text-[#F87171]'
+                        : 'bg-[#8B5CF6]/12 text-[#8B5CF6]'
                   }`}
                 >
                   Status submission kamu: <strong>{submission.status}</strong>
@@ -117,30 +117,30 @@ export default function Index({
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
+                  <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#8D89B0]">
                     Upload Video Latihan
                   </p>
                   <input
                     value={videoTitle}
                     onChange={(e) => setVideoTitle(e.target.value)}
                     placeholder="Judul video (opsional)"
-                    className="w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none"
+                    className="w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none"
                   />
                   <input
                     value={videoPath}
                     onChange={(e) => setVideoPath(e.target.value)}
                     placeholder="Link video (YouTube/Drive, dsb.)"
-                    className="w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none"
+                    className="w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none"
                   />
                   <button
                     onClick={submit}
                     disabled={loading || !videoPath}
-                    className="flex items-center gap-2 rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B] disabled:opacity-40"
+                    className="flex items-center gap-2 rounded-full bg-[#8B5CF6] px-5 py-2.5 font-manrope text-sm text-[#020617] disabled:opacity-40"
                   >
                     {loading && <Loader2 size={14} className="animate-spin" />}
                     Kirim ke Challenge
                   </button>
-                  {error && <p className="font-manrope text-xs text-[#C1443C]">{error}</p>}
+                  {error && <p className="font-manrope text-xs text-[#F87171]">{error}</p>}
                 </div>
               )}
             </div>

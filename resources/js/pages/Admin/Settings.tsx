@@ -28,14 +28,14 @@ const TABS: { key: TabKey; label: string; icon: React.ReactNode }[] = [
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="mb-1 block font-manrope text-xs text-[#75708A]">{label}</label>
+      <label className="mb-1 block font-manrope text-xs text-[#8D89B0]">{label}</label>
       {children}
     </div>
   );
 }
 
 const inputClass =
-  'w-full rounded-lg border border-[#2A2333] bg-[#14101B] px-3 py-2 font-manrope text-sm text-[#F3EEE2] placeholder:text-[#75708A] focus:border-[#D9A441]/50 focus:outline-none';
+  'w-full rounded-lg border border-[#312E81] bg-[#020617] px-3 py-2 font-manrope text-sm text-[#EDE9FE] placeholder:text-[#8D89B0] focus:border-[#8B5CF6]/50 focus:outline-none';
 
 /* ---------------------------------------------------------------------- */
 /* Generic CRUD panel: fetch list, add/edit form, delete                  */
@@ -128,11 +128,11 @@ function CrudPanel<T extends Record<string, any>>({
 
   return (
     <div className="mt-6">
-      <div className="grid gap-3 rounded-xl border border-[#2A2333] bg-[#1E1826] p-5 sm:grid-cols-2">
+      <div className="grid gap-3 rounded-xl border border-[#312E81] bg-[#0A1128] p-5 sm:grid-cols-2">
         {formFields.map((f) => (
           <Field key={f.key} label={f.label}>
             {f.type === 'checkbox' ? (
-              <label className="flex items-center gap-2 pt-1.5 font-manrope text-sm text-[#B7AFC2]">
+              <label className="flex items-center gap-2 pt-1.5 font-manrope text-sm text-[#DDD6FE]">
                 <input
                   type="checkbox"
                   checked={!!form[f.key]}
@@ -168,7 +168,7 @@ function CrudPanel<T extends Record<string, any>>({
           <button
             onClick={submit}
             disabled={saving}
-            className="flex items-center gap-1.5 rounded-full bg-[#D9A441] px-5 py-2 font-manrope text-sm text-[#14101B] disabled:opacity-40"
+            className="flex items-center gap-1.5 rounded-full bg-[#8B5CF6] px-5 py-2 font-manrope text-sm text-[#020617] disabled:opacity-40"
           >
             {saving ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
             {editingId !== null ? 'Simpan Perubahan' : 'Tambah'}
@@ -176,43 +176,43 @@ function CrudPanel<T extends Record<string, any>>({
           {editingId !== null && (
             <button
               onClick={resetForm}
-              className="flex items-center gap-1.5 rounded-full border border-[#2A2333] px-4 py-2 font-manrope text-sm text-[#75708A]"
+              className="flex items-center gap-1.5 rounded-full border border-[#312E81] px-4 py-2 font-manrope text-sm text-[#8D89B0]"
             >
               <X size={14} /> Batal
             </button>
           )}
         </div>
-        {error && <p className="font-manrope text-xs text-[#C1443C] sm:col-span-2">{error}</p>}
+        {error && <p className="font-manrope text-xs text-[#F87171] sm:col-span-2">{error}</p>}
       </div>
 
-      <div className="mt-4 overflow-hidden rounded-xl border border-[#2A2333] bg-[#1E1826]">
+      <div className="mt-4 overflow-hidden rounded-xl border border-[#312E81] bg-[#0A1128]">
         {loading ? (
-          <div className="flex items-center gap-2 px-5 py-6 font-manrope text-sm text-[#75708A]">
+          <div className="flex items-center gap-2 px-5 py-6 font-manrope text-sm text-[#8D89B0]">
             <Loader2 size={14} className="animate-spin" /> Memuat...
           </div>
         ) : !items || items.length === 0 ? (
-          <p className="px-5 py-6 font-manrope text-sm text-[#75708A]">{emptyLabel}</p>
+          <p className="px-5 py-6 font-manrope text-sm text-[#8D89B0]">{emptyLabel}</p>
         ) : (
-          <div className="divide-y divide-[#2A2333]">
+          <div className="divide-y divide-[#312E81]">
             {items.map((item) => (
               <div key={item[idKey]} className="flex items-center justify-between gap-4 px-5 py-3.5">
                 <div className="flex min-w-0 flex-1 flex-wrap gap-x-5 gap-y-1">
                   {columns.map((col) => (
                     <div key={col.key} className="min-w-0">
-                      <p className="font-manrope text-sm text-[#F3EEE2]">
+                      <p className="font-manrope text-sm text-[#EDE9FE]">
                         {col.render ? col.render(item) : String(item[col.key] ?? '-')}
                       </p>
-                      <p className="font-manrope text-[10px] uppercase tracking-wide text-[#75708A]">
+                      <p className="font-manrope text-[10px] uppercase tracking-wide text-[#8D89B0]">
                         {col.label}
                       </p>
                     </div>
                   ))}
                 </div>
                 <div className="flex shrink-0 items-center gap-3">
-                  <button onClick={() => startEdit(item)} className="text-[#75708A] hover:text-[#D9A441]">
+                  <button onClick={() => startEdit(item)} className="text-[#8D89B0] hover:text-[#8B5CF6]">
                     <Pencil size={14} />
                   </button>
-                  <button onClick={() => destroy(item)} className="text-[#75708A] hover:text-[#C1443C]">
+                  <button onClick={() => destroy(item)} className="text-[#8D89B0] hover:text-[#F87171]">
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -233,24 +233,24 @@ export default function Settings({ appName }: { appName: string }) {
   return (
     <AppLayout title="Pengaturan" role="Admin">
       <header>
-        <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">Admin</p>
-        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
-          <SettingsIcon size={24} className="text-[#D9A441]" /> Pengaturan
+        <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#8D89B0]">Admin</p>
+        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
+          <SettingsIcon size={24} className="text-[#8B5CF6]" /> Pengaturan
         </h1>
-        <p className="mt-1 font-manrope text-sm text-[#75708A]">
-          Aplikasi: <span className="text-[#F3EEE2]">{appName}</span>
+        <p className="mt-1 font-manrope text-sm text-[#8D89B0]">
+          Aplikasi: <span className="text-[#EDE9FE]">{appName}</span>
         </p>
       </header>
 
-      <div className="mt-6 flex flex-wrap gap-2 border-b border-[#2A2333] pb-3">
+      <div className="mt-6 flex flex-wrap gap-2 border-b border-[#312E81] pb-3">
         {TABS.map((t) => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
             className={`flex items-center gap-1.5 rounded-full px-4 py-2 font-manrope text-sm transition ${
               tab === t.key
-                ? 'bg-[#D9A441] text-[#14101B]'
-                : 'border border-[#2A2333] text-[#B7AFC2] hover:border-[#D9A441]/40'
+                ? 'bg-[#8B5CF6] text-[#020617]'
+                : 'border border-[#312E81] text-[#DDD6FE] hover:border-[#8B5CF6]/40'
             }`}
           >
             {t.icon} {t.label}
@@ -272,7 +272,7 @@ export default function Settings({ appName }: { appName: string }) {
             {
               key: 'users_count',
               label: 'Jumlah User',
-              render: (i) => <span className="text-[#D9A441]">{i.users_count ?? 0}</span>,
+              render: (i) => <span className="text-[#8B5CF6]">{i.users_count ?? 0}</span>,
             },
           ]}
         />
@@ -288,7 +288,7 @@ export default function Settings({ appName }: { appName: string }) {
             { key: 'min_xp', label: 'Min XP', type: 'number', placeholder: '0' },
             { key: 'max_xp', label: 'Max XP', type: 'number', placeholder: 'Opsional' },
             { key: 'icon', label: 'Icon', placeholder: 'Opsional' },
-            { key: 'color', label: 'Warna', placeholder: 'mis. #D9A441' },
+            { key: 'color', label: 'Warna', placeholder: 'mis. #8B5CF6' },
             { key: 'can_create_community', label: 'Boleh Buat Komunitas', type: 'checkbox' },
           ]}
           columns={[
@@ -305,7 +305,7 @@ export default function Settings({ appName }: { appName: string }) {
             {
               key: 'users_count',
               label: 'Jumlah User',
-              render: (i) => <span className="text-[#D9A441]">{i.users_count ?? 0}</span>,
+              render: (i) => <span className="text-[#8B5CF6]">{i.users_count ?? 0}</span>,
             },
           ]}
         />
@@ -330,7 +330,7 @@ export default function Settings({ appName }: { appName: string }) {
             {
               key: 'communities_count',
               label: 'Komunitas',
-              render: (i) => <span className="text-[#D9A441]">{i.communities_count ?? 0}</span>,
+              render: (i) => <span className="text-[#8B5CF6]">{i.communities_count ?? 0}</span>,
             },
           ]}
         />
@@ -353,7 +353,7 @@ export default function Settings({ appName }: { appName: string }) {
             {
               key: 'user_badges_count',
               label: 'Dimiliki User',
-              render: (i) => <span className="text-[#D9A441]">{i.user_badges_count ?? 0}</span>,
+              render: (i) => <span className="text-[#8B5CF6]">{i.user_badges_count ?? 0}</span>,
             },
           ]}
         />
@@ -376,7 +376,7 @@ export default function Settings({ appName }: { appName: string }) {
             {
               key: 'user_achievements_count',
               label: 'Diraih User',
-              render: (i) => <span className="text-[#D9A441]">{i.user_achievements_count ?? 0}</span>,
+              render: (i) => <span className="text-[#8B5CF6]">{i.user_achievements_count ?? 0}</span>,
             },
           ]}
         />

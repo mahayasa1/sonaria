@@ -5,11 +5,12 @@ import BadgeAchievementShowcase from '@/components/BadgeAchievementShowcase';
 import { ShieldHalf } from 'lucide-react';
 import NotificationBell from '@/components/NotificationBell';
 import CommunityStatusAlert from '@/components/CommunityStatusAlert';
+import { QuestScreen, PixelPanel } from '@/components/quest/quest-ui';
 
 /**
  * Dashboard Wakil Ketua Komunitas — kewenangan setara Ketua untuk membuat
  * konten & moderasi (mendampingi Ketua mengelola operasional harian).
-*/
+ */
 export default function ViceLeader({
   community = { communities_id: 1, community_name: 'Komunitas Gitar Nusantara' },
   joinRequests = [{ community_join_requests_id: 3, user: { name: 'Fajar' } }],
@@ -27,37 +28,56 @@ export default function ViceLeader({
       communityName={community.community_name}
       communityId={community.communities_id}
     >
-      <header className="flex items-center gap-3">
-        <div className="rounded-full bg-[#4C8C86]/15 p-2.5 text-[#4C8C86]">
-          <ShieldHalf size={20} />
-        </div>
-        <div>
-          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
-            Wakil Ketua Komunitas
-          </p>
-          <h1 className="font-fraunces text-2xl text-[#F3EEE2]">{community.community_name}</h1>
-        </div>
-        <div className="fixed top-6 right-8 z-50">
-          <NotificationBell />
-        </div>
-      </header>
-      <CommunityStatusAlert />
+      <QuestScreen>
+        <div className="mx-auto max-w-6xl px-6 py-10">
+          <header className="flex items-center gap-3">
+            <div
+              className="flex h-11 w-11 items-center justify-center rounded-full text-[#4ADE80]"
+              style={{ backgroundColor: 'rgba(74,222,128,0.15)' }}
+            >
+              <ShieldHalf size={20} />
+            </div>
+            <div>
+              <p className="text-[10px] font-[var(--font-pixel)] tracking-[0.2em] text-[#93C5FD] uppercase">
+                Wakil Ketua Guild
+              </p>
+              <h1 className="mt-1 text-xl font-[var(--font-pixel)] text-white sm:text-2xl">
+                {community.community_name}
+              </h1>
+            </div>
+            <div className="fixed top-6 right-8 z-50">
+              <NotificationBell />
+            </div>
+          </header>
+          <div className="mt-4">
+            <CommunityStatusAlert />
+          </div>
 
-      <p className="mt-4 max-w-lg font-manrope text-sm text-[#9C93A8]">
-        Kamu mendampingi Ketua mengelola konten dan menjaga aktivitas harian komunitas
-        tetap berjalan lancar.
-      </p>
+          <div className="mt-6">
+            <PixelPanel>
+              <p className="max-w-lg p-5 font-[var(--font-pixel-mono)] text-sm leading-relaxed text-[#C7D2FE]">
+                Kamu mendampingi Ketua mengelola konten dan menjaga aktivitas harian guild
+                tetap berjalan lancar.
+              </p>
+            </PixelPanel>
+          </div>
 
-      {/* Badge & Achievement */}
-      <BadgeAchievementShowcase badges={badges} achievements={achievements} />
+          {/* Badge & Achievement */}
+          <div className="mt-6">
+            <BadgeAchievementShowcase badges={badges} achievements={achievements} />
+          </div>
 
-      <ManagerPanel
-        communityId={community.communities_id}
-        joinRequests={joinRequests}
-        pendingSubmissions={pendingSubmissions}
-        canCreateContent
-        canModerate
-      />
+          <div className="mt-6">
+            <ManagerPanel
+              communityId={community.communities_id}
+              joinRequests={joinRequests}
+              pendingSubmissions={pendingSubmissions}
+              canCreateContent
+              canModerate
+            />
+          </div>
+        </div>
+      </QuestScreen>
     </AppLayout>
   );
 }

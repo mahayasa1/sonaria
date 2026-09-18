@@ -20,6 +20,12 @@ trait ProfileValidationRules
             'name' => $this->nameRules(),
             'email' => $this->emailRules($userId),
             'photo' => $this->photoRules(),
+            'gender' => $this->genderRules(),
+            'birth_date' => $this->birthDateRules(),
+            'phone' => $this->phoneRules(),
+            'address' => $this->addressRules(),
+            'province' => $this->provinceRules(),
+            'city' => $this->cityRules(),
         ];
     }
 
@@ -57,5 +63,54 @@ trait ProfileValidationRules
                 ? Rule::unique(User::class)
                 : Rule::unique(User::class)->ignore($userId, 'users_id'),
         ];
+    }
+
+    /**
+     * @return array<int, ValidationRule|array<mixed>|string>
+     */
+    protected function genderRules(): array
+    {
+        // ⚠️ Sesuaikan daftar opsinya kalau ada nilai lain selain Male/Female.
+        return ['nullable', 'string', Rule::in(['Male', 'Female'])];
+    }
+
+    /**
+     * @return array<int, ValidationRule|array<mixed>|string>
+     */
+    protected function birthDateRules(): array
+    {
+        return ['nullable', 'date', 'before:today'];
+    }
+
+    /**
+     * @return array<int, ValidationRule|array<mixed>|string>
+     */
+    protected function phoneRules(): array
+    {
+        return ['nullable', 'string', 'max:20'];
+    }
+
+    /**
+     * @return array<int, ValidationRule|array<mixed>|string>
+     */
+    protected function addressRules(): array
+    {
+        return ['nullable', 'string', 'max:500'];
+    }
+
+    /**
+     * @return array<int, ValidationRule|array<mixed>|string>
+     */
+    protected function provinceRules(): array
+    {
+        return ['nullable', 'string', 'max:255'];
+    }
+
+    /**
+     * @return array<int, ValidationRule|array<mixed>|string>
+     */
+    protected function cityRules(): array
+    {
+        return ['nullable', 'string', 'max:255'];
     }
 }

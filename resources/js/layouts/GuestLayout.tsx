@@ -1,42 +1,66 @@
 import React, { ReactNode } from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { Music2 } from 'lucide-react';
+import { QuestScreen, PixelButton } from '@/components/quest/quest-ui';
 
 /**
  * Layout publik: landing page, login, register.
- * Latar panggung gelap + garis paranada tipis sebagai tekstur ambient.
+ *
+ * - Landing (showNav=true): tetap pakai QuestScreen (gradient + scanline) + nav lengkap,
+ *   tanpa logo di header (branding sudah ada di hero landing).
+ * - Auth / login & register (showNav=false): TIDAK punya background sendiri (transparent).
+ *   Background full-page (gradient) datang dari halaman Login/Register masing-masing
+ *   (via OnboardingGradientBackground), supaya header & konten menyatu tanpa garis batas.
  */
-export default function GuestLayout({ title, children, showNav = true }: { title: string; children: ReactNode; showNav?: boolean }) {
-  return (
-    <div className="min-h-screen bg-[#14101B] text-[#F3EEE2]">
+export default function GuestLayout({
+  title,
+  children,
+  showNav = true,
+}: {
+  title: string;
+  children: ReactNode;
+  showNav?: boolean;
+}) {
+  const content = (
+    <>
       <Head title={title} />
 
-      {showNav && (
-        <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-          <Link href="/" className="flex items-center gap-2">
-            <Music2 size={22} className="text-[#D9A441]" />
-            <span className="font-fraunces text-xl">Sonaria</span>
+      <header
+        className={`mx-auto flex max-w-6xl items-center px-6 py-6 ${
+          showNav ? 'justify-end' : 'justify-center'
+        }`}
+      >
+        {!showNav && (
+          <Link href="/" className="flex  items-center gap-2">
+            {/* <img src="/images/logo-sonaria.png" alt="Sonaria" className="h-22 w-32" /> */}
           </Link>
+        )}
 
-          <nav className="flex items-center gap-6 font-manrope text-sm text-[#B7AFC2]">
+        {showNav && (
+          <nav className="flex items-center gap-6 font-[var(--font-pixel-mono)] text-sm text-[#93C5FD]/80">
             <Link href="/login" className="hover:text-[#F3EEE2]">
               Masuk
             </Link>
-            <Link
-              href="/register"
-              className="rounded-full bg-[#D9A441] px-4 py-2 text-[#14101B] transition-opacity hover:opacity-90"
-            >
+            <PixelButton as={Link} href="/register" variant="solid">
               Daftar Gratis
-            </Link>
+            </PixelButton>
           </nav>
-        </header>
-      )}
+        )}
+      </header>
 
       <main>{children}</main>
 
-      <footer className="mx-auto max-w-6xl px-6 py-10 font-manrope text-xs text-[#75708A]">
+      <footer className="mx-auto max-w-6xl px-6 py-10 font-[var(--font-pixel-mono)] text-xs text-[#93C5FD]/50">
         © {new Date().getFullYear()} Sonaria. Belajar musik, satu birama pada satu waktu.
       </footer>
-    </div>
+    </>
   );
+
+  if (!showNav) {
+    // Mode auth: tanpa background sendiri, biar gradient dari Login/Register (yang full-page)
+    // yang tampil di belakang header, footer, dan konten — jadi menyatu, tanpa seam.
+    return <div className="relative min-h-screen text-[#F3EEE2]">{content}</div>;
+  }
+
+  // Mode landing: tetap pakai QuestScreen seperti sebelumnya.
+  return <QuestScreen>{content}</QuestScreen>;
 }

@@ -87,16 +87,16 @@ function MissionModal({ mission, onClose, onCompleted }: {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-xl border border-[#2A2333] bg-[#1E1826] p-6">
+      <div className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-xl border border-[#312E81] bg-[#0A1128] p-6">
         <div className="flex items-center justify-between">
-          <h3 className="font-fraunces text-xl text-[#F3EEE2]">{mission.title}</h3>
-          <button onClick={onClose} className="text-[#75708A] hover:text-[#F3EEE2]">
+          <h3 className="font-fraunces text-xl text-[#EDE9FE]">{mission.title}</h3>
+          <button onClick={onClose} className="text-[#8D89B0] hover:text-[#EDE9FE]">
             <X size={18} />
           </button>
         </div>
 
         {loading && !detail && (
-          <div className="mt-6 flex items-center gap-2 font-manrope text-sm text-[#75708A]">
+          <div className="mt-6 flex items-center gap-2 font-manrope text-sm text-[#8D89B0]">
             <Loader2 size={16} className="animate-spin" /> Memuat misi...
           </div>
         )}
@@ -105,7 +105,7 @@ function MissionModal({ mission, onClose, onCompleted }: {
           <div className="mt-4 space-y-4">
             {detail.questions.map((q, i) => (
               <div key={q.daily_mission_questions_id}>
-                <p className="font-manrope text-sm text-[#F3EEE2]">
+                <p className="font-manrope text-sm text-[#EDE9FE]">
                   {i + 1}. {q.question}
                 </p>
                 <div className="mt-2 space-y-1.5">
@@ -114,8 +114,8 @@ function MissionModal({ mission, onClose, onCompleted }: {
                       key={opt.daily_mission_options_id}
                       className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 font-manrope text-xs ${
                         answers[q.daily_mission_questions_id] === opt.daily_mission_options_id
-                          ? 'border-[#D9A441] bg-[#D9A441]/8 text-[#F3EEE2]'
-                          : 'border-[#2A2333] text-[#B7AFC2] hover:border-[#D9A441]/30'
+                          ? 'border-[#8B5CF6] bg-[#8B5CF6]/8 text-[#EDE9FE]'
+                          : 'border-[#312E81] text-[#DDD6FE] hover:border-[#8B5CF6]/30'
                       }`}
                     >
                       <input
@@ -126,7 +126,7 @@ function MissionModal({ mission, onClose, onCompleted }: {
                           setAnswers((prev) => ({ ...prev, [q.daily_mission_questions_id]: opt.daily_mission_options_id }))
                         }
                       />
-                      <span className="font-mono text-[#D9A441]">{opt.option_label}.</span>{' '}
+                      <span className="font-mono text-[#8B5CF6]">{opt.option_label}.</span>{' '}
                       {opt.option_text}
                     </label>
                   ))}
@@ -137,7 +137,7 @@ function MissionModal({ mission, onClose, onCompleted }: {
             <button
               onClick={submit}
               disabled={loading || Object.keys(answers).length < detail.questions.length}
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B] disabled:opacity-40"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-[#8B5CF6] px-5 py-2.5 font-manrope text-sm text-[#020617] disabled:opacity-40"
             >
               {loading && <Loader2 size={14} className="animate-spin" />}
               Kirim Jawaban
@@ -145,7 +145,7 @@ function MissionModal({ mission, onClose, onCompleted }: {
           </div>
         )}
 
-        {error && <p className="mt-3 font-manrope text-xs text-[#C1443C]">{error}</p>}
+        {error && <p className="mt-3 font-manrope text-xs text-[#F87171]">{error}</p>}
       </div>
     </div>
   );
@@ -181,14 +181,14 @@ export default function Index({
     <AppLayout title="Daily Mission" role="Member" communityName={community.community_name}>
       <header className="flex items-center justify-between">
         <div>
-          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
+          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#8D89B0]">
             {community.community_name}
           </p>
-          <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
-            <Flame size={24} className="text-[#C1443C]" /> Daily Mission
+          <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
+            <Flame size={24} className="text-[#F87171]" /> Daily Mission
           </h1>
         </div>
-        <span className="font-mono text-sm text-[#C1443C]">{completedCount} / 6 misi</span>
+        <span className="font-mono text-sm text-[#F87171]">{completedCount} / 6 misi</span>
       </header>
 
       {toast && (
@@ -214,23 +214,23 @@ export default function Index({
               <div
                 key={mission.daily_missions_id}
                 className={`rounded-xl border p-5 ${
-                  done ? 'border-[#4C8C86]/30 bg-[#4C8C86]/8' : 'border-[#2A2333] bg-[#1E1826]'
+                  done ? 'border-[#4C8C86]/30 bg-[#4C8C86]/8' : 'border-[#312E81] bg-[#0A1128]'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-manrope text-[11px] uppercase tracking-[0.14em] text-[#75708A]">
+                  <span className="font-manrope text-[11px] uppercase tracking-[0.14em] text-[#8D89B0]">
                     Misi {mission.mission_number}
                   </span>
                   {done && <CheckCircle2 size={16} className="text-[#4C8C86]" />}
                 </div>
-                <p className="mt-2 font-fraunces text-lg text-[#F3EEE2]">{mission.title}</p>
-                <p className="mt-1 font-mono text-xs text-[#D9A441]">
+                <p className="mt-2 font-fraunces text-lg text-[#EDE9FE]">{mission.title}</p>
+                <p className="mt-1 font-mono text-xs text-[#8B5CF6]">
                   +{mission.xp_reward_min}-{mission.xp_reward_max} XP
                 </p>
                 <button
                   onClick={() => setActive(mission)}
                   disabled={done}
-                  className="mt-4 w-full rounded-full bg-[#D9A441] px-4 py-2 font-manrope text-xs text-[#14101B] disabled:bg-white/5 disabled:text-[#75708A]"
+                  className="mt-4 w-full rounded-full bg-[#8B5CF6] px-4 py-2 font-manrope text-xs text-[#020617] disabled:bg-white/5 disabled:text-[#8D89B0]"
                 >
                   {done ? 'Selesai' : 'Mulai Kuis'}
                 </button>

@@ -67,23 +67,23 @@ function MemberRow({
   return (
     <div className="flex flex-col gap-2 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <p className="font-manrope text-sm text-[#F3EEE2]">
-          {member.user.name} {isSelf && <span className="text-[#75708A]">(kamu)</span>}
+        <p className="font-manrope text-sm text-[#EDE9FE]">
+          {member.user.name} {isSelf && <span className="text-[#8D89B0]">(kamu)</span>}
         </p>
-        <p className="font-manrope text-xs text-[#75708A]">
+        <p className="font-manrope text-xs text-[#8D89B0]">
           @{member.user.username} · gabung {new Date(member.join_date).toLocaleDateString('id-ID')}
         </p>
-        {error && <p className="mt-1 font-manrope text-xs text-[#C1443C]">{error}</p>}
+        {error && <p className="mt-1 font-manrope text-xs text-[#F87171]">{error}</p>}
       </div>
       <div className="flex items-center gap-3">
-        <span className="font-mono text-xs text-[#D9A441]">{member.user.total_xp} XP</span>
+        <span className="font-mono text-xs text-[#8B5CF6]">{member.user.total_xp} XP</span>
 
         {canManageMembers && !isSelf ? (
           <select
             value={member.role.role_name}
             onChange={(e) => changeRole(e.target.value)}
             disabled={loading}
-            className="rounded-full border border-[#2A2333] bg-[#14101B] px-3 py-1 font-manrope text-[11px] text-[#B7AFC2] focus:border-[#D9A441]/50 focus:outline-none disabled:opacity-50"
+            className="rounded-full border border-[#312E81] bg-[#020617] px-3 py-1 font-manrope text-[11px] text-[#DDD6FE] focus:border-[#8B5CF6]/50 focus:outline-none disabled:opacity-50"
           >
             {ASSIGNABLE_ROLES.map((r) => (
               <option key={r} value={r}>
@@ -92,7 +92,7 @@ function MemberRow({
             ))}
           </select>
         ) : (
-          <span className="rounded-full bg-white/5 px-3 py-1 font-manrope text-[11px] text-[#B7AFC2]">
+          <span className="rounded-full bg-white/5 px-3 py-1 font-manrope text-[11px] text-[#DDD6FE]">
             {member.role.role_name}
           </span>
         )}
@@ -101,7 +101,7 @@ function MemberRow({
           <button
             onClick={remove}
             disabled={loading}
-            className="flex items-center gap-1 rounded-full border border-[#C1443C]/40 px-3 py-1 font-manrope text-[11px] text-[#C1443C] disabled:opacity-50"
+            className="flex items-center gap-1 rounded-full border border-[#F87171]/40 px-3 py-1 font-manrope text-[11px] text-[#F87171] disabled:opacity-50"
           >
             {loading && <Loader2 size={11} className="animate-spin" />}
             Keluarkan
@@ -140,15 +140,15 @@ export default function Members({
   return (
     <AppLayout title="Kelola Member" role="Member" communityRole={communityRole}  communityName={community.community_name}>
       <header>
-        <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
+        <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#8D89B0]">
           {community.community_name}
         </p>
-        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
+        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
           <Users size={24} className="text-[#4C8C86]" /> Member ({list.length})
         </h1>
       </header>
 
-      <section className="mt-6 divide-y divide-[#2A2333] overflow-hidden rounded-xl border border-[#2A2333] bg-[#1E1826]">
+      <section className="mt-6 divide-y divide-[#312E81] overflow-hidden rounded-xl border border-[#312E81] bg-[#0A1128]">
         {list.map((m) => (
           <MemberRow
             key={m.community_members_id}
@@ -162,7 +162,7 @@ export default function Members({
       </section>
 
       {!canManageMembers && (
-        <p className="mt-4 font-manrope text-xs text-[#75708A]">
+        <p className="mt-4 font-manrope text-xs text-[#8D89B0]">
           Hanya Ketua/Wakil Ketua yang bisa mengubah role atau mengeluarkan member.
         </p>
       )}

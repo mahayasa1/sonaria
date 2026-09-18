@@ -51,75 +51,75 @@ export default function PracticeCreate({ material }: { material: Material }) {
     >
       <Link
         href={`/main-quests/${material.main_quest.main_quests_id}`}
-        className="flex items-center gap-1.5 font-manrope text-xs text-[#75708A] hover:text-[#F3EEE2]"
+        className="flex items-center gap-1.5 font-manrope text-xs text-[#8D89B0] hover:text-[#EDE9FE]"
       >
         <ArrowLeft size={14} /> Kembali
       </Link>
 
       <header className="mt-3">
-        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#F3EEE2]">
-          <Video size={24} className="text-[#C1443C]" /> Practice Baru
+        <h1 className="flex items-center gap-2 font-fraunces text-3xl text-[#EDE9FE]">
+          <Video size={24} className="text-[#F87171]" /> Practice Baru
         </h1>
-        <p className="mt-1 font-manrope text-sm text-[#75708A]">untuk materi {material.title}</p>
+        <p className="mt-1 font-manrope text-sm text-[#8D89B0]">untuk materi {material.title}</p>
       </header>
 
       <div className="mt-6 max-w-lg space-y-4">
         <div>
-          <label className="font-manrope text-xs text-[#75708A]">Judul</label>
+          <label className="font-manrope text-xs text-[#8D89B0]">Judul</label>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+            className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
           />
         </div>
         <div>
-          <label className="font-manrope text-xs text-[#75708A]">Deskripsi / Instruksi</label>
+          <label className="font-manrope text-xs text-[#8D89B0]">Deskripsi / Instruksi</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
-            className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+            className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
           />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Skor Minimum Lulus</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Skor Minimum Lulus</label>
             <input
               type="number"
               value={minimumScore}
               onChange={(e) => setMinimumScore(Number(e.target.value))}
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
             />
           </div>
           <div>
-            <label className="font-manrope text-xs text-[#75708A]">Reward XP</label>
+            <label className="font-manrope text-xs text-[#8D89B0]">Reward XP</label>
             <input
               type="number"
               value={xpReward}
               onChange={(e) => setXpReward(Number(e.target.value))}
-              className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
             />
           </div>
         </div>
         <div>
-          <label className="font-manrope text-xs text-[#75708A]">Deadline (opsional)</label>
+          <label className="font-manrope text-xs text-[#8D89B0]">Deadline (opsional)</label>
           <input
             type="date"
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-[#2A2333] bg-[#1E1826] px-3 py-2 font-manrope text-sm text-[#F3EEE2] focus:border-[#D9A441]/50 focus:outline-none"
+            className="mt-1 w-full rounded-lg border border-[#312E81] bg-[#0A1128] px-3 py-2 font-manrope text-sm text-[#EDE9FE] focus:border-[#8B5CF6]/50 focus:outline-none"
           />
         </div>
 
         <button
           onClick={submit}
           disabled={loading || !title}
-          className="flex items-center gap-2 rounded-full bg-[#D9A441] px-6 py-2.5 font-manrope text-sm text-[#14101B] disabled:opacity-40"
+          className="flex items-center gap-2 rounded-full bg-[#8B5CF6] px-6 py-2.5 font-manrope text-sm text-[#020617] disabled:opacity-40"
         >
           {loading && <Loader2 size={14} className="animate-spin" />}
           Simpan
         </button>
-        {error && <p className="font-manrope text-xs text-[#C1443C]">{error}</p>}
+        {error && <p className="font-manrope text-xs text-[#F87171]">{error}</p>}
       </div>
     </AppLayout>
   );

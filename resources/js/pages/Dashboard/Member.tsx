@@ -1,12 +1,18 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/AppLayout';
-import StaffProgress from '@/components/StaffProgress';
-import EmptyState from '@/components/EmptyState';
 import BadgeAchievementShowcase from '@/components/BadgeAchievementShowcase';
 import { Swords, Flame, Trophy, MessageSquare, ChevronRight, Compass } from 'lucide-react';
 import NotificationBell from '@/components/NotificationBell';
 import CommunityStatusAlert from '@/components/CommunityStatusAlert';
+import {
+  QuestScreen,
+  PixelPanel,
+  CornerBrackets,
+  PixelButton,
+  PixelProgress,
+  QuestTag,
+} from '@/components/quest/quest-ui';
 
 interface MemberProps {
   user: {
@@ -84,182 +90,250 @@ export default function Member({
   // ajakan mencari komunitas alih-alih Main Quest/Daily Mission/Challenge palsu.
   if (!community) {
     return (
-      <AppLayout title="Dashboard" role="Member" >
-        <header>
-          <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
-            Selamat berlatih,
-          </p>
-          <h1 className="font-fraunces text-3xl text-[#F3EEE2]">{user.name}</h1>
-          <div className="fixed top-6 right-8 z-50">
-            <NotificationBell />
-          </div>
-        </header>
-        <CommunityStatusAlert />
+      <AppLayout title="Dashboard" role="Member">
+        <QuestScreen>
+          <div className="mx-auto max-w-6xl px-6 py-10">
+            <header>
+              <p className="text-[10px] font-[var(--font-pixel)] tracking-[0.25em] text-[#93C5FD] uppercase">
+                Selamat berlatih,
+              </p>
+              <h1 className="mt-2 text-2xl font-[var(--font-pixel)] text-white sm:text-3xl">
+                {user.name}
+              </h1>
+              <div className="fixed top-6 right-8 z-50">
+                <NotificationBell />
+              </div>
+            </header>
+            <div className="mt-4">
+              <CommunityStatusAlert />
+            </div>
 
-        <div className="mt-6">
-          <EmptyState
-            icon={Compass}
-            title="Kamu belum tergabung di komunitas manapun"
-            description="Cari komunitas sesuai instrumenmu untuk mulai mengerjakan Main Quest, Daily Mission, dan Challenge."
-            action={
-              <Link
-                href="/communities"
-                className="rounded-full bg-[#D9A441] px-5 py-2.5 font-manrope text-sm text-[#14101B] transition-opacity hover:opacity-90"
-              >
-                Cari Komunitas
-              </Link>
-            }
-          />
-        </div>
+            <div className="mt-8">
+              <PixelPanel>
+                <div className="flex flex-col items-center gap-4 px-6 py-16 text-center">
+                  <Compass size={30} className="text-[#93C5FD]/50" />
+                  <p className="text-base font-[var(--font-pixel)] text-white">
+                    Kamu belum tergabung di guild manapun
+                  </p>
+                  <p className="max-w-sm font-[var(--font-pixel-mono)] text-sm text-[#93C5FD]/70">
+                    Cari komunitas sesuai instrumenmu untuk mulai mengerjakan Main Quest,
+                    Daily Mission, dan Challenge.
+                  </p>
+                  <PixelButton as={Link} href="/communities" variant="solid">
+                    Cari Guild
+                  </PixelButton>
+                </div>
+              </PixelPanel>
+            </div>
+          </div>
+        </QuestScreen>
       </AppLayout>
     );
   }
 
   return (
-    <AppLayout title="Dashboard" role="Member" communityName={community.community_name} communityId={Number(community.communities_id)}>
-      <header>
-        <p className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
-          Selamat berlatih,
-        </p>
-        <h1 className="font-fraunces text-3xl text-[#F3EEE2]">{user.name}</h1>
-        <div className="fixed top-6 right-8 z-50">
-            <NotificationBell />
-          </div>
-      </header>
-
-      {/* Kartu level */}
-      <section className="mt-6 rounded-xl border border-[#2A2333] bg-[#1E1826] p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <span className="font-manrope text-xs uppercase tracking-[0.14em] text-[#75708A]">
-              Level saat ini
-            </span>
-            <h2 className="font-fraunces text-2xl text-[#F3EEE2]">
-              {level ? `Level ${level.level} — ${level.title}` : 'Level belum tersedia'}
-            </h2>
-          </div>
-          <span className="font-mono text-sm text-[#D9A441]">{user.total_xp} XP</span>
-        </div>
-        {level && (
-          <div className="mt-5">
-            <StaffProgress
-              percentage={percentage}
-              label={`Menuju Level ${level.level + 1}`}
-              value={`${xpIntoLevel} / ${xpNeeded} XP`}
-              accent="brass"
-            />
-          </div>
-        )}
-      </section>
-
-      {/* Badge & Achievement */}
-      <BadgeAchievementShowcase badges={badges} achievements={achievements} />
-
-      {/* Grid modul komunitas */}
-      <section className="mt-6 grid gap-5 md:grid-cols-2">
-        {/* Main Quest */}
-        <Link
-          href="/main-quests"
-          className="rounded-xl border border-[#2A2333] bg-[#1E1826] p-6 transition-colors hover:border-[#D9A441]/40"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-[#D9A441]">
-              <Swords size={18} />
-              <span className="font-manrope text-sm">Main Quest</span>
-            </div>
-            <ChevronRight size={16} className="text-[#75708A]" />
-          </div>
-          <p className="mt-3 font-fraunces text-xl text-[#F3EEE2]">
-            {completedQuests} / {totalQuests} birama selesai
-          </p>
-          <div className="mt-4">
-            <StaffProgress percentage={totalQuests > 0 ? (completedQuests / totalQuests) * 100 : 0} accent="brass" />
-          </div>
-        </Link>
-
-        {/* Daily Mission */}
-        <Link
-          href="/daily-missions"
-          className="rounded-xl border border-[#2A2333] bg-[#1E1826] p-6 transition-colors hover:border-[#C1443C]/40"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-[#C1443C]">
-              <Flame size={18} />
-              <span className="font-manrope text-sm">Daily Mission</span>
-            </div>
-            <ChevronRight size={16} className="text-[#75708A]" />
-          </div>
-          <p className="mt-3 font-fraunces text-xl text-[#F3EEE2]">
-            {completedMissions} / {totalMissions} misi hari ini
-          </p>
-          <div className="mt-4 flex gap-1.5">
-            {dailyMissions.map((m) => (
-              <span
-                key={m.daily_missions_id}
-                className="h-1.5 flex-1 rounded-full"
-                style={{ backgroundColor: m.my_progress?.is_completed ? '#C1443C' : '#332B40' }}
-              />
-            ))}
-          </div>
-        </Link>
-
-        {/* Challenge */}
-        <Link
-          href="/challenge"
-          className="rounded-xl border border-[#2A2333] bg-[#1E1826] p-6 transition-colors hover:border-[#D9A441]/40 md:col-span-2"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-[#D9A441]">
-              <Trophy size={18} />
-              <span className="font-manrope text-sm">Challenge Aktif</span>
-            </div>
-            {challenge && (
-              <span className="font-mono text-xs text-[#D9A441]">+{challenge.xp_reward} XP</span>
-            )}
-          </div>
-          {challenge ? (
-            <>
-              <p className="mt-3 font-fraunces text-xl text-[#F3EEE2]">{challenge.title}</p>
-              <p className="mt-1 font-manrope text-xs text-[#75708A]">
-                Berakhir {new Date(challenge.end_date).toLocaleDateString('id-ID')}
-              </p>
-            </>
-          ) : (
-            <p className="mt-3 font-manrope text-sm text-[#75708A]">
-              Belum ada Challenge aktif di komunitas ini saat ini.
+    <AppLayout
+      title="Dashboard"
+      role="Member"
+      communityName={community.community_name}
+      communityId={Number(community.communities_id)}
+    >
+      <QuestScreen>
+        <div className="mx-auto max-w-6xl px-6 py-10">
+          <header>
+            <p className="text-[10px] font-[var(--font-pixel)] tracking-[0.25em] text-[#93C5FD] uppercase">
+              Selamat berlatih,
             </p>
-          )}
-        </Link>
-      </section>
+            <h1 className="mt-2 text-2xl font-[var(--font-pixel)] text-white sm:text-3xl">
+              {user.name}
+            </h1>
+            <div className="fixed top-6 right-8 z-50">
+              <NotificationBell />
+            </div>
+          </header>
 
-      {/* Forum ringkas */}
-      <section className="mt-6 rounded-xl border border-[#2A2333] bg-[#1E1826] p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-[#4C8C86]">
-            <MessageSquare size={18} />
-            <span className="font-manrope text-sm">Diskusi Terbaru</span>
+          {/* Kartu level = character sheet */}
+          <section className="mt-6">
+            <PixelPanel>
+              <div className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-[var(--font-pixel)] uppercase tracking-[0.2em] text-[#93C5FD]">
+                      Level saat ini
+                    </span>
+                    <h2 className="mt-1 text-xl font-[var(--font-pixel)] text-white">
+                      {level ? `Level ${level.level} — ${level.title}` : 'Level belum tersedia'}
+                    </h2>
+                  </div>
+                  <span className="font-[var(--font-pixel-mono)] text-sm text-[#38BDF8]">
+                    {user.total_xp} XP
+                  </span>
+                </div>
+                {level && (
+                  <div className="mt-5">
+                    <PixelProgress
+                      percentage={percentage}
+                      label={`Menuju Level ${level.level + 1}`}
+                      value={`${xpIntoLevel} / ${xpNeeded} XP`}
+                    />
+                  </div>
+                )}
+              </div>
+            </PixelPanel>
+          </section>
+
+          {/* Badge & Achievement */}
+          <div className="mt-6">
+            <BadgeAchievementShowcase badges={badges} achievements={achievements} />
           </div>
-          <Link href="/forum" className="font-manrope text-xs text-[#75708A] hover:text-[#F3EEE2]">
-            Lihat semua →
-          </Link>
-        </div>
-        <div className="mt-4 space-y-3">
-          {recentPosts.length === 0 ? (
-            <p className="font-manrope text-sm text-[#75708A]">Belum ada diskusi di forum komunitas ini.</p>
-          ) : (
-            recentPosts.map((p) => (
-              <Link
-                key={p.forum_posts_id}
-                href={`/forum/${p.forum_posts_id}`}
-                className="block rounded-lg bg-white/5 px-4 py-3 hover:bg-white/10"
-              >
-                <p className="font-manrope text-sm text-[#F3EEE2]">{p.title}</p>
-                <p className="mt-0.5 font-manrope text-xs text-[#75708A]">oleh {p.user.name}</p>
+
+          {/* Grid modul komunitas — quest board */}
+          <section className="mt-6 grid gap-5 md:grid-cols-2">
+            {/* Main Quest */}
+            <div className="group relative">
+              <CornerBrackets />
+              <Link href="/main-quests" className="block">
+                <PixelPanel className="transition-colors duration-300 group-hover:bg-white/[0.03]">
+                  <div className="p-6">
+                    <div className="flex items-center justify-between">
+                      <QuestTag color="#38BDF8">Main Quest</QuestTag>
+                      <div className="flex items-center gap-1 text-[#75708A]">
+                        <Swords size={16} className="text-[#38BDF8]" />
+                        <ChevronRight size={14} />
+                      </div>
+                    </div>
+                    <p className="mt-4 text-xl font-[var(--font-pixel)] text-white">
+                      {completedQuests} / {totalQuests} birama selesai
+                    </p>
+                    <div className="mt-4">
+                      <PixelProgress
+                        percentage={totalQuests > 0 ? (completedQuests / totalQuests) * 100 : 0}
+                      />
+                    </div>
+                  </div>
+                </PixelPanel>
               </Link>
-            ))
-          )}
+            </div>
+
+            {/* Daily Mission */}
+            <div className="group relative">
+              <CornerBrackets color="#F87171" />
+              <Link href="/daily-missions" className="block">
+                <PixelPanel className="transition-colors duration-300 group-hover:bg-white/[0.03]">
+                  <div className="p-6">
+                    <div className="flex items-center justify-between">
+                      <QuestTag color="#F87171">Daily Mission</QuestTag>
+                      <div className="flex items-center gap-1 text-[#75708A]">
+                        <Flame size={16} className="text-[#F87171]" />
+                        <ChevronRight size={14} />
+                      </div>
+                    </div>
+                    <p className="mt-4 text-xl font-[var(--font-pixel)] text-white">
+                      {completedMissions} / {totalMissions} misi hari ini
+                    </p>
+                    <div className="mt-4 flex gap-1.5">
+                      {dailyMissions.map((m) => (
+                        <span
+                          key={m.daily_missions_id}
+                          className="h-1.5 flex-1 rounded-full"
+                          style={{
+                            backgroundColor: m.my_progress?.is_completed
+                              ? '#F87171'
+                              : 'rgba(255,255,255,0.1)',
+                            boxShadow: m.my_progress?.is_completed
+                              ? '0 0 6px rgba(248,113,113,0.6)'
+                              : 'none',
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </PixelPanel>
+              </Link>
+            </div>
+
+            {/* Challenge */}
+            <div className="group relative md:col-span-2">
+              <CornerBrackets color="#FBBF24" />
+              <Link href="/challenge" className="block">
+                <PixelPanel className="transition-colors duration-300 group-hover:bg-white/[0.03]">
+                  <div className="p-6">
+                    <div className="flex items-center justify-between">
+                      <QuestTag color="#FBBF24">Challenge Aktif</QuestTag>
+                      <div className="flex items-center gap-3">
+                        {challenge && (
+                          <span className="font-[var(--font-pixel-mono)] text-xs text-[#FBBF24]">
+                            +{challenge.xp_reward} XP
+                          </span>
+                        )}
+                        <Trophy size={16} className="text-[#FBBF24]" />
+                      </div>
+                    </div>
+                    {challenge ? (
+                      <>
+                        <p className="mt-4 text-xl font-[var(--font-pixel)] text-white">
+                          {challenge.title}
+                        </p>
+                        <p className="mt-1 font-[var(--font-pixel-mono)] text-xs text-[#93C5FD]/60">
+                          Berakhir {new Date(challenge.end_date).toLocaleDateString('id-ID')}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="mt-4 font-[var(--font-pixel-mono)] text-sm text-[#93C5FD]/60">
+                        Belum ada Challenge aktif di komunitas ini saat ini.
+                      </p>
+                    )}
+                  </div>
+                </PixelPanel>
+              </Link>
+            </div>
+          </section>
+
+          {/* Forum ringkas */}
+          <section className="mt-6">
+            <PixelPanel>
+              <div className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-[#4ADE80]">
+                    <MessageSquare size={18} />
+                    <span className="text-[10px] font-[var(--font-pixel)] uppercase tracking-[0.2em]">
+                      Diskusi Terbaru
+                    </span>
+                  </div>
+                  <Link
+                    href="/forum"
+                    className="font-[var(--font-pixel-mono)] text-xs text-[#93C5FD] hover:text-white"
+                  >
+                    Lihat semua →
+                  </Link>
+                </div>
+                <div className="mt-4 space-y-2">
+                  {recentPosts.length === 0 ? (
+                    <p className="font-[var(--font-pixel-mono)] text-sm text-[#93C5FD]/60">
+                      Belum ada diskusi di forum komunitas ini.
+                    </p>
+                  ) : (
+                    recentPosts.map((p) => (
+                      <Link
+                        key={p.forum_posts_id}
+                        href={`/forum/${p.forum_posts_id}`}
+                        className="block rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 transition-colors hover:border-[#4ADE80]/30 hover:bg-white/[0.06]"
+                      >
+                        <p className="font-[var(--font-pixel-mono)] text-sm text-[#F3EEE2]">
+                          {p.title}
+                        </p>
+                        <p className="mt-0.5 font-[var(--font-pixel-mono)] text-xs text-[#93C5FD]/60">
+                          oleh {p.user.name}
+                        </p>
+                      </Link>
+                    ))
+                  )}
+                </div>
+              </div>
+            </PixelPanel>
+          </section>
         </div>
-      </section>
+      </QuestScreen>
     </AppLayout>
   );
 }
