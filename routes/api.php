@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\Route;
 | dengan rate-limiting/2FA/verifikasi email yang sudah diurus Fortify.
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     // ==== Onboarding: pilih kategori & instrument ====
     Route::get('/categories', [OnboardingController::class, 'categories']);
     Route::get('/categories/{category:music_categories_id}/instruments', [OnboardingController::class, 'instruments']);

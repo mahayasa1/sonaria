@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Community;
 use App\Models\ForumPost;
+use App\Services\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ForumPostController extends Controller
 {
+    public function __construct(protected NotificationService $notifications)
+    {
+    }
+
     /**
      * Forum diskusi komunitas, tampil di bawah Daily Mission & Challenge.
      */
@@ -46,6 +51,15 @@ class ForumPostController extends Controller
             'total_comment' => 0,
             'status' => 'Published',
         ]);
+
+        $this->notifications->sendToCommunityMembers(
+            $community,
+            NotificationService::TYPE_FORUM,
+            'Diskusi forum baru',
+            "{$request->user()->name} membuat diskusi baru \"{$post->title}\" di forum {$community->community_name}.",
+            $post,
+            $request->user()->users_id,
+        );
 
         return response()->json($post, 201);
     }
@@ -90,6 +104,16 @@ class ForumPostController extends Controller
             $forumPost->likes()->create(['user_id' => $user->users_id]);
             $forumPost->increment('total_like');
             $liked = true;
+
+            if ((int) $forumPost->user_id !== (int) $user->users_id) {
+                app(NotificationService::class)->sendOnce(
+                    $forumPost->user_id,
+                    NotificationService::TYPE_FORUM,
+                    'Post kamu disukai',
+                    "{$user->name} menyukai post \"{$forumPost->title}\".",
+                    $forumPost,
+                );
+            }
         }
 
         return response()->json(['liked' => $liked, 'total_like' => $forumPost->fresh()->total_like]);

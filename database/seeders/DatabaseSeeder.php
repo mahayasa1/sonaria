@@ -32,6 +32,10 @@ class DatabaseSeeder extends Seeder
             // masih bisa dipanggil manual (php artisan db:seed --class=DemoDataSeeder)
             // kalau sewaktu-waktu dibutuhkan.
             TestingUserSeeder::class,
+
+            // 1 akun Member per level (level1@sonaria.test ... level7@sonaria.test).
+            LevelAccountSeeder::class,
+
             TestingCommunitySeeder::class,
             TestingMediaSeeder::class,
         ]);

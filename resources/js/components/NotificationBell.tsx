@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Bell, CheckCheck, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { apiFetch } from '@/lib/api';
 import { PIXEL_CLIP } from '@/components/quest/quest-ui';
 
@@ -14,22 +15,42 @@ interface NotificationItem {
 
 interface Paginated<T> {
   data: T[];
+  unread_count?: number;
 }
+
+// Interval polling notifikasi baru (ms). Polling hanya jalan saat tab terlihat.
+const POLL_INTERVAL = 60_000;
 
 export default function NotificationBell() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [items, setItems] = useState<NotificationItem[]>([]);
+  const [serverUnread, setServerUnread] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const seenIds = useRef<Set<number> | null>(null);
 
-  const unreadCount = items.filter((n) => !n.is_read).length;
+  // Hitungan dari server mencakup notifikasi di luar 20 item terakhir; setelah
+  // user menandai dibaca secara lokal, pakai hitungan lokal yang lebih baru.
+  const localUnread = items.filter((n) => !n.is_read).length;
+  const unreadCount = serverUnread === null ? localUnread : Math.max(localUnread, serverUnread);
 
-  const load = async () => {
-    setLoading(true);
+  const load = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const res = await apiFetch<Paginated<NotificationItem>>('/api/notifications');
+
+      // Toast untuk notifikasi baru yang muncul setelah load pertama.
+      if (seenIds.current) {
+        res.data
+          .filter((n) => !n.is_read && !seenIds.current!.has(n.notifications_id))
+          .slice(0, 3)
+          .forEach((n) => toast(n.title, { description: n.message }));
+      }
+      seenIds.current = new Set(res.data.map((n) => n.notifications_id));
+
       setItems(res.data);
+      setServerUnread(res.unread_count ?? null);
       setLoaded(true);
     } catch {
       // biarkan silent, bell tetap bisa dibuka kosong
@@ -40,8 +61,14 @@ export default function NotificationBell() {
 
   useEffect(() => {
     // Ambil notifikasi sekali di awal supaya badge unread langsung akurat,
-    // tanpa perlu user membuka dropdown dulu.
+    // tanpa perlu user membuka dropdown dulu, lalu cek berkala.
     load();
+
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === 'visible') load(true);
+    }, POLL_INTERVAL);
+
+    return () => window.clearInterval(timer);
   }, []);
 
   useEffect(() => {
@@ -57,10 +84,12 @@ export default function NotificationBell() {
   const toggle = () => {
     setOpen((v) => !v);
     if (!loaded) load();
+    else if (!open) load(true);
   };
 
   const markRead = async (id: number) => {
     setItems((prev) => prev.map((n) => (n.notifications_id === id ? { ...n, is_read: true } : n)));
+    setServerUnread((v) => (v === null ? v : Math.max(0, v - 1)));
     try {
       await apiFetch(`/api/notifications/${id}/read`, { method: 'POST' });
     } catch {
@@ -70,6 +99,7 @@ export default function NotificationBell() {
 
   const markAllRead = async () => {
     setItems((prev) => prev.map((n) => ({ ...n, is_read: true })));
+    setServerUnread(0);
     try {
       await apiFetch('/api/notifications/read-all', { method: 'POST' });
     } catch {

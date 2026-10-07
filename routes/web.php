@@ -37,7 +37,11 @@ Route::get('/', fn () => Inertia::render('Landing'))->name('landing');
 // rate limiting login jadi tidak pernah benar-benar terpakai. Sekarang
 // Fortify adalah satu-satunya sumber untuk route-route auth tersebut.
 
-Route::middleware('auth')->group(function () {
+// 'verified': user yang belum klik tautan verifikasi email otomatis dialihkan
+// ke halaman verifikasi (route 'verification.notice' bawaan Fortify). Halaman
+// pengaturan profil (settings/profile) sengaja hanya pakai 'auth' supaya user
+// tetap bisa membetulkan alamat emailnya yang salah ketik.
+Route::middleware(['auth', 'verified'])->group(function () {
     // Satu pintu masuk dashboard — otomatis dialihkan ke tampilan yang
     // sesuai role (Admin/Ketua/Wakil Ketua/Staff/Member) di DashboardController.
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

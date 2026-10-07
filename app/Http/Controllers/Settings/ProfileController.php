@@ -50,11 +50,17 @@ class ProfileController extends Controller
             $user->photo = $request->file('photo')->store('avatars', 'public');
         }
 
-        if ($user->isDirty('email')) {
+        $emailChanged = $user->isDirty('email');
+
+        if ($emailChanged) {
             $user->email_verified_at = null;
         }
 
         $user->save();
+
+        if ($emailChanged) {
+            $user->sendEmailVerificationNotification();
+        }
 
         $user->profile()->updateOrCreate(
             ['user_id' => $user->users_id],

@@ -6,13 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
 use App\Services\GamificationService;
+use App\Services\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class QuizAttemptController extends Controller
 {
-    public function __construct(protected GamificationService $gamification)
-    {
+    public function __construct(
+        protected GamificationService $gamification,
+        protected NotificationService $notifications,
+    ) {
     }
 
     /**
@@ -79,6 +82,16 @@ class QuizAttemptController extends Controller
             'is_passed' => $isPassed,
             'finished_at' => now(),
         ]);
+
+        $this->notifications->send(
+            $attempt->user_id,
+            NotificationService::TYPE_QUIZ,
+            $isPassed ? 'Quiz lulus' : 'Quiz belum lulus',
+            $isPassed
+                ? "Selamat, kamu lulus quiz \"{$quiz->title}\" dengan skor {$scorePercentage}."
+                : "Skor quiz \"{$quiz->title}\" kamu {$scorePercentage}, belum mencapai passing score. Coba lagi!",
+            $attempt,
+        );
 
         if ($isPassed) {
             $user = $attempt->user;

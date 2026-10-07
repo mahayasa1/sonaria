@@ -23,6 +23,10 @@ use Illuminate\Support\Facades\DB;
  */
 class GamificationService
 {
+    public function __construct(protected NotificationService $notifications)
+    {
+    }
+
     /**
      * Tambahkan XP ke user, catat log, dan proses kenaikan level jika terpenuhi.
      */
@@ -78,6 +82,14 @@ class GamificationService
             $this->checkBadges($fresh);
 
             if ($leveledUp && $nextLevel) {
+                $this->notifications->send(
+                    $fresh,
+                    NotificationService::TYPE_SYSTEM,
+                    'Naik level!',
+                    "Selamat, kamu naik ke Level {$nextLevel->level} — {$nextLevel->title}.",
+                    $nextLevel,
+                );
+
                 if ($nextLevel->level == 5) {
                     $this->unlockAchievement($fresh, 'reach_level_5');
                 } elseif ($nextLevel->level == 10) {
@@ -152,6 +164,14 @@ class GamificationService
                 'badge_id' => $badge->badges_id,
                 'earned_at' => now(),
             ]);
+
+            $this->notifications->send(
+                $user,
+                NotificationService::TYPE_SYSTEM,
+                'Badge baru!',
+                "Kamu mendapatkan badge \"{$badge->badge_name}\".",
+                $badge,
+            );
         }
     }
 
@@ -183,6 +203,14 @@ class GamificationService
             'achievement_id' => $achievement->achievements_id,
             'achieved_at' => now(),
         ]);
+
+        $this->notifications->send(
+            $user,
+            NotificationService::TYPE_SYSTEM,
+            'Achievement terbuka!',
+            "Kamu membuka achievement \"{$achievement->title}\".",
+            $achievement,
+        );
 
         if ($achievement->xp_reward > 0) {
             $this->addXp($user, (int) $achievement->xp_reward, null, "Achievement: {$achievement->title}");
@@ -245,6 +273,14 @@ class GamificationService
         if ((int) $mainQuest->point_reward > 0) {
             $this->addPoint($user, (int) $mainQuest->point_reward, 'Main Quest Completed', MainQuest::class, $mainQuest->main_quests_id);
         }
+
+        $this->notifications->send(
+            $user,
+            NotificationService::TYPE_MAIN_QUEST,
+            'Main Quest selesai!',
+            "Selamat, kamu menuntaskan Main Quest \"{$mainQuest->title}\".",
+            $mainQuest,
+        );
     }
 
     /**

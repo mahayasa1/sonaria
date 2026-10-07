@@ -7,6 +7,7 @@ use App\Models\Community;
 use App\Models\DailyMission;
 use App\Models\UserDailyMission;
 use App\Services\GamificationService;
+use App\Services\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,8 +15,10 @@ use Illuminate\Validation\ValidationException;
 
 class DailyMissionController extends Controller
 {
-    public function __construct(protected GamificationService $gamification)
-    {
+    public function __construct(
+        protected GamificationService $gamification,
+        protected NotificationService $notifications,
+    ) {
     }
 
     /**
@@ -230,6 +233,14 @@ class DailyMissionController extends Controller
 
         $userMission->reward_claimed = true;
         $userMission->save();
+
+        $this->notifications->send(
+            $user,
+            NotificationService::TYPE_DAILY_MISSION,
+            'Daily Mission selesai',
+            "Daily Mission \"{$mission->title}\" selesai dan kamu mendapat {$rewardXp} XP.",
+            $mission,
+        );
 
         $this->maybeUnlockStreakAchievement($user);
 

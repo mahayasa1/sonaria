@@ -8,13 +8,17 @@ use App\Models\CommunityJoinRequest;
 use App\Models\CommunityMember;
 use App\Models\CommunityRole;
 use App\Models\Instrument;
-use App\Models\Notification;
+use App\Services\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class CommunityController extends Controller
 {
+    public function __construct(protected NotificationService $notifications)
+    {
+    }
+
     /**
      * List/cari komunitas, bisa difilter by kategori atau instrument.
      */
@@ -130,6 +134,16 @@ class CommunityController extends Controller
             'status' => 'Pending',
         ]);
 
+        $this->notifications->sendToCommunityRoles(
+            $community,
+            ['Ketua', 'Wakil Ketua'],
+            NotificationService::TYPE_SYSTEM,
+            'Permintaan gabung baru',
+            "{$user->name} mengajukan permintaan bergabung ke komunitas \"{$community->community_name}\".",
+            $joinRequest,
+            $user->users_id,
+        );
+
         return response()->json($joinRequest, 201);
     }
 
@@ -160,6 +174,14 @@ class CommunityController extends Controller
 
         $community->increment('total_member');
 
+        $this->notifications->send(
+            $joinRequest->user_id,
+            NotificationService::TYPE_SYSTEM,
+            'Permintaan bergabung disetujui',
+            "Selamat, kamu sekarang menjadi member komunitas \"{$community->community_name}\".",
+            $community,
+        );
+
         return response()->json(['message' => 'Permintaan bergabung disetujui.']);
     }
 
@@ -169,14 +191,13 @@ class CommunityController extends Controller
 
         $joinRequest->update(['status' => 'Removed']);
 
-        Notification::create([
-            'user_id' => $joinRequest->user_id,
-            'title' => 'Permintaan bergabung ditolak',
-            'message' => "Permintaan kamu untuk bergabung ke komunitas \"{$community->community_name}\" ditolak oleh pengelola.",
-            'type' => 'System',
-            'reference_type' => Community::class,
-            'reference_id' => $community->communities_id,
-        ]);
+        $this->notifications->send(
+            $joinRequest->user_id,
+            NotificationService::TYPE_SYSTEM,
+            'Permintaan bergabung ditolak',
+            "Permintaan kamu untuk bergabung ke komunitas \"{$community->community_name}\" ditolak oleh pengelola.",
+            $community,
+        );
 
         return response()->json(['message' => 'Permintaan bergabung ditolak.']);
     }
@@ -275,14 +296,13 @@ class CommunityController extends Controller
         $member->update(['status' => 'Removed']);
         $community->decrement('total_member');
 
-        Notification::create([
-            'user_id' => $member->user_id,
-            'title' => 'Dikeluarkan dari komunitas',
-            'message' => "Kamu dikeluarkan dari komunitas \"{$community->community_name}\" oleh pengelola.",
-            'type' => 'System',
-            'reference_type' => Community::class,
-            'reference_id' => $community->communities_id,
-        ]);
+        $this->notifications->send(
+            $member->user_id,
+            NotificationService::TYPE_SYSTEM,
+            'Dikeluarkan dari komunitas',
+            "Kamu dikeluarkan dari komunitas \"{$community->community_name}\" oleh pengelola.",
+            $community,
+        );
 
         return response()->json(['message' => 'Member dikeluarkan dari komunitas.']);
     }

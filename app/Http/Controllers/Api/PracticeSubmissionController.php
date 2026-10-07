@@ -7,6 +7,7 @@ use App\Models\Practice;
 use App\Models\PracticeReview;
 use App\Models\PracticeSubmission;
 use App\Services\GamificationService;
+use App\Services\NotificationService;
 use App\Support\UploadLimits;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,8 +15,10 @@ use Illuminate\Validation\ValidationException;
 
 class PracticeSubmissionController extends Controller
 {
-    public function __construct(protected GamificationService $gamification)
-    {
+    public function __construct(
+        protected GamificationService $gamification,
+        protected NotificationService $notifications,
+    ) {
     }
 
     /**
@@ -47,6 +50,16 @@ class PracticeSubmissionController extends Controller
             'submitted_at' => now(),
             'status' => 'Pending',
         ]);
+
+        $this->notifications->sendToCommunityRoles(
+            $practice->material->mainQuest->community,
+            ['Ketua', 'Wakil Ketua', 'Staff'],
+            NotificationService::TYPE_PRACTICE,
+            'Submission practice baru',
+            "{$request->user()->name} mengirim submission untuk practice \"{$practice->title}\" dan menunggu review.",
+            $submission,
+            $request->user()->users_id,
+        );
 
         return response()->json($submission, 201);
     }
@@ -90,6 +103,19 @@ class PracticeSubmissionController extends Controller
         ]);
 
         $submission->update(['status' => $data['status'] === 'Approved' ? 'Approved' : $data['status']]);
+
+        $this->notifications->send(
+            $submission->user_id,
+            NotificationService::TYPE_PRACTICE,
+            match ($data['status']) {
+                'Approved' => 'Latihan disetujui',
+                'Revision' => 'Latihan perlu revisi',
+                default => 'Latihan ditolak',
+            },
+            "Practice \"{$practice->title}\" kamu berstatus {$data['status']} dengan skor {$data['score']}."
+                .(! empty($data['feedback']) ? " Feedback: {$data['feedback']}" : ''),
+            $submission,
+        );
 
         if ($data['status'] === 'Approved' && $data['score'] >= (float) $practice->minimum_score) {
             $user = $submission->user;

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Challenge;
 use App\Models\ChallengeSubmission;
 use App\Services\GamificationService;
+use App\Services\NotificationService;
 use App\Support\UploadLimits;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,8 +14,10 @@ use Illuminate\Validation\ValidationException;
 
 class ChallengeSubmissionController extends Controller
 {
-    public function __construct(protected GamificationService $gamification)
-    {
+    public function __construct(
+        protected GamificationService $gamification,
+        protected NotificationService $notifications,
+    ) {
     }
 
     public function store(Request $request, Challenge $challenge): JsonResponse
@@ -39,6 +42,16 @@ class ChallengeSubmissionController extends Controller
             'submitted_at' => now(),
             'status' => 'Pending',
         ]);
+
+        $this->notifications->sendToCommunityRoles(
+            $challenge->community,
+            ['Ketua', 'Wakil Ketua', 'Staff'],
+            NotificationService::TYPE_CHALLENGE,
+            'Submission challenge baru',
+            "{$request->user()->name} mengirim submission untuk challenge \"{$challenge->title}\" dan menunggu review.",
+            $submission,
+            $request->user()->users_id,
+        );
 
         return response()->json($submission, 201);
     }
@@ -71,6 +84,19 @@ class ChallengeSubmissionController extends Controller
             'reviewed_by' => $request->user()->users_id,
             'reviewed_at' => now(),
         ]);
+
+        $this->notifications->send(
+            $submission->user_id,
+            NotificationService::TYPE_CHALLENGE,
+            match ($data['status']) {
+                'Approved' => 'Challenge disetujui',
+                'Revision' => 'Challenge perlu revisi',
+                default => 'Challenge ditolak',
+            },
+            "Submission challenge \"{$challenge->title}\" kamu berstatus {$data['status']}."
+                .(! empty($data['feedback']) ? " Feedback: {$data['feedback']}" : ''),
+            $submission,
+        );
 
         if ($data['status'] === 'Approved') {
             $user = $submission->user;
