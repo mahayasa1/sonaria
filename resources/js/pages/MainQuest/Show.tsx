@@ -35,12 +35,29 @@ interface Quiz {
   questions?: QuizQuestion[];
   user_has_passed?: boolean;
 }
+interface PracticeReviewResult {
+  score?: number | string | null;
+  technique_score?: number | string | null;
+  rhythm_score?: number | string | null;
+  expression_score?: number | string | null;
+  feedback?: string | null;
+  reviewed_at?: string | null;
+  reviewer_name?: string | null;
+}
+interface UserSubmission {
+  status: 'Pending' | 'Approved' | 'Revision' | 'Rejected';
+  video_title?: string | null;
+  submitted_at?: string | null;
+  review?: PracticeReviewResult | null;
+}
 interface Practice {
   practices_id: number;
   title: string;
   xp_reward: number;
   deadline?: string;
   user_submission_status?: 'Pending' | 'Approved' | 'Revision' | 'Rejected' | null;
+  // Hanya submission & review milik user yang sedang login.
+  user_submission?: UserSubmission | null;
 }
 interface MaterialProgress {
   progress_percentage: number;
@@ -273,6 +290,25 @@ function PracticePanel({ practice }: { practice: Practice }) {
         }`}
       >
         <p>{statusLabel[practice.user_submission_status] ?? 'Video sudah dikirim sebelumnya.'}</p>
+        {practice.user_submission?.review && (
+          <div className="mt-3 space-y-1 rounded-lg border border-current/20 p-3 text-xs">
+            <p>
+              Skor: <strong>{practice.user_submission.review.score ?? '-'}</strong>
+              {practice.user_submission.review.technique_score != null &&
+                ` · Teknik ${practice.user_submission.review.technique_score}`}
+              {practice.user_submission.review.rhythm_score != null &&
+                ` · Ritme ${practice.user_submission.review.rhythm_score}`}
+              {practice.user_submission.review.expression_score != null &&
+                ` · Ekspresi ${practice.user_submission.review.expression_score}`}
+            </p>
+            {practice.user_submission.review.feedback && (
+              <p>Feedback: {practice.user_submission.review.feedback}</p>
+            )}
+            {practice.user_submission.review.reviewer_name && (
+              <p className="opacity-70">Direview oleh {practice.user_submission.review.reviewer_name}</p>
+            )}
+          </div>
+        )}
         {!isApproved && (
           <button
             onClick={() => setResubmitting(true)}

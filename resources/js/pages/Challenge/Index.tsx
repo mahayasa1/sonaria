@@ -16,8 +16,9 @@ interface Challenge {
 
 interface Submission {
   status: string;
-  score?: number;
-  feedback?: string;
+  score?: number | string | null;
+  feedback?: string | null;
+  reviewer?: { name: string } | null;
 }
 
 export default function Index({
@@ -113,7 +114,15 @@ export default function Index({
                   }`}
                 >
                   Status submission kamu: <strong>{submission.status}</strong>
-                  {submission.feedback && <p className="mt-1 text-xs opacity-80">{submission.feedback}</p>}
+                  {submission.score != null && (
+                    <p className="mt-1 text-xs">
+                      Skor: <strong>{submission.score}</strong>
+                    </p>
+                  )}
+                  {submission.feedback && <p className="mt-1 text-xs opacity-80">Feedback: {submission.feedback}</p>}
+                  {submission.reviewer?.name && (
+                    <p className="mt-1 text-xs opacity-70">Direview oleh {submission.reviewer.name}</p>
+                  )}
                 </div>
               ) : (
                 <div className="space-y-3">

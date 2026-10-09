@@ -86,6 +86,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/materials/{material:materials_id}/practices', [PracticeController::class, 'store']);
         Route::post('/practices/{practice:practices_id}/submissions', [PracticeSubmissionController::class, 'store']);
         Route::get('/practices/{practice:practices_id}/submissions', [PracticeSubmissionController::class, 'index']);
+        // Member: hanya submission + review milik sendiri. Reviewer: boleh semua.
+        Route::get('/practices/{practice:practices_id}/my-submissions', [PracticeSubmissionController::class, 'mine']);
+        Route::get('/practice-submissions/{submission:practice_submissions_id}', [PracticeSubmissionController::class, 'show']);
         Route::post('/practice-submissions/{submission:practice_submissions_id}/review', [PracticeSubmissionController::class, 'review']);
 
         // ==== Quiz ====
@@ -107,6 +110,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/challenges/{challenge:challenges_id}', [ChallengeController::class, 'show']);
         Route::post('/challenges/{challenge:challenges_id}/submissions', [ChallengeSubmissionController::class, 'store']);
         Route::get('/challenges/{challenge:challenges_id}/submissions', [ChallengeSubmissionController::class, 'index']);
+        Route::get('/challenges/{challenge:challenges_id}/my-submissions', [ChallengeSubmissionController::class, 'mine']);
+        Route::get('/challenge-submissions/{submission:challenge_submissions_id}', [ChallengeSubmissionController::class, 'show']);
         Route::post('/challenge-submissions/{submission:challenge_submissions_id}/review', [ChallengeSubmissionController::class, 'review']);
         Route::post('/challenges/{challenge:challenges_id}/close', [ChallengeController::class, 'close']);
 

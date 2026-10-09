@@ -96,20 +96,6 @@ export default function ReviewChallenge({ submission }: { submission: Submission
               >
                 {loading && <Loader2 size={14} className="animate-spin" />} Setujui
               </button>
-              <button
-                onClick={() => submit('Revision')}
-                disabled={loading}
-                className="rounded-full border border-[#8B5CF6]/40 px-5 py-2.5 font-manrope text-sm text-[#8B5CF6] disabled:opacity-40"
-              >
-                Minta Revisi
-              </button>
-              <button
-                onClick={() => submit('Rejected')}
-                disabled={loading}
-                className="rounded-full border border-[#F87171]/40 px-5 py-2.5 font-manrope text-sm text-[#F87171] disabled:opacity-40"
-              >
-                Tolak
-              </button>
             </div>
             {error && <p className="font-manrope text-xs text-[#F87171]">{error}</p>}
           </div>

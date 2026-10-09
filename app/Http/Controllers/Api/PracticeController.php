@@ -44,6 +44,7 @@ class PracticeController extends Controller
         $practice->load('material');
         $mySubmission = $practice->submissions()
             ->where('user_id', $user->users_id)
+            ->with('review.reviewer:users_id,name')
             ->latest('submitted_at')
             ->first();
 

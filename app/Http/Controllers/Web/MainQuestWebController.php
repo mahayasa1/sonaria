@@ -71,6 +71,7 @@ class MainQuestWebController extends Controller
             'materials.quizzes.attempts' => fn ($q) => $q->where('user_id', $user->users_id)->latest('finished_at'),
             'materials.practices',
             'materials.practices.submissions' => fn ($q) => $q->where('user_id', $user->users_id)->latest('submitted_at'),
+            'materials.practices.submissions.review.reviewer:users_id,name',
             'materials.progress' => fn ($q) => $q->where('user_id', $user->users_id),
         ]);
 
@@ -85,6 +86,22 @@ class MainQuestWebController extends Controller
             foreach ($material->practices as $practice) {
                 $latestSubmission = $practice->submissions->first();
                 $practice->setAttribute('user_submission_status', $latestSubmission?->status);
+                // Hanya submission & review milik user yang sedang login
+                // (relasi di-filter user_id di atas), tidak ada data member lain.
+                $practice->setAttribute('user_submission', $latestSubmission ? [
+                    'status' => $latestSubmission->status,
+                    'video_title' => $latestSubmission->video_title,
+                    'submitted_at' => $latestSubmission->submitted_at,
+                    'review' => $latestSubmission->review ? [
+                        'score' => $latestSubmission->review->score,
+                        'technique_score' => $latestSubmission->review->technique_score,
+                        'rhythm_score' => $latestSubmission->review->rhythm_score,
+                        'expression_score' => $latestSubmission->review->expression_score,
+                        'feedback' => $latestSubmission->review->feedback,
+                        'reviewed_at' => $latestSubmission->review->reviewed_at,
+                        'reviewer_name' => $latestSubmission->review->reviewer?->name,
+                    ] : null,
+                ] : null);
                 $practice->unsetRelation('submissions');
             }
         }

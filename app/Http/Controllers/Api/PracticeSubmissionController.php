@@ -65,6 +65,37 @@ class PracticeSubmissionController extends Controller
     }
 
     /**
+     * Riwayat submission milik user yang sedang login untuk practice ini,
+     * lengkap dengan review-nya. Tidak pernah memuat submission user lain.
+     */
+    public function mine(Request $request, Practice $practice): JsonResponse
+    {
+        return response()->json(
+            $practice->submissions()
+                ->where('user_id', $request->user()->users_id)
+                ->with('review.reviewer:users_id,name')
+                ->latest('submitted_at')
+                ->get()
+        );
+    }
+
+    /**
+     * Detail 1 submission beserta review-nya. Member hanya boleh melihat
+     * submission miliknya sendiri; Ketua/Wakil Ketua/Staff boleh melihat
+     * submission siapa pun di komunitasnya.
+     */
+    public function show(Request $request, PracticeSubmission $submission): JsonResponse
+    {
+        $submission->load(['practice.material.mainQuest.community', 'review.reviewer:users_id,name']);
+
+        if ((int) $submission->user_id !== (int) $request->user()->users_id) {
+            $this->authorize('review', $submission->practice->material->mainQuest->community);
+        }
+
+        return response()->json($submission);
+    }
+
+    /**
      * Daftar submission untuk direview (khusus Ketua/Wakil Ketua komunitas).
      */
     public function index(Request $request, Practice $practice): JsonResponse

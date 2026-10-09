@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
             TestingUserSeeder::class,
 
             // 1 akun Member per level (level1@sonaria.test ... level7@sonaria.test).
-            LevelAccountSeeder::class,
+            LevelTestingSeeder::class,
 
             TestingCommunitySeeder::class,
             TestingMediaSeeder::class,

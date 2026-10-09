@@ -36,7 +36,8 @@ class ChallengeWebController extends Controller
             ->first();
 
         $mySubmission = $challenge
-            ? ChallengeSubmission::where('challenge_id', $challenge->challenges_id)
+            ? ChallengeSubmission::with('reviewer:users_id,name')
+                ->where('challenge_id', $challenge->challenges_id)
                 ->where('user_id', $user->users_id)
                 ->latest()
                 ->first()

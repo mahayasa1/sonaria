@@ -56,6 +56,37 @@ class ChallengeSubmissionController extends Controller
         return response()->json($submission, 201);
     }
 
+    /**
+     * Riwayat submission milik user yang sedang login untuk challenge ini.
+     * Tidak pernah memuat submission user lain.
+     */
+    public function mine(Request $request, Challenge $challenge): JsonResponse
+    {
+        return response()->json(
+            $challenge->submissions()
+                ->where('user_id', $request->user()->users_id)
+                ->with('reviewer:users_id,name')
+                ->latest('submitted_at')
+                ->get()
+        );
+    }
+
+    /**
+     * Detail 1 submission challenge beserta hasil review-nya. Member hanya
+     * boleh melihat miliknya sendiri; Ketua/Wakil Ketua/Staff boleh melihat
+     * semua submission di komunitasnya.
+     */
+    public function show(Request $request, ChallengeSubmission $submission): JsonResponse
+    {
+        $submission->load(['challenge.community', 'reviewer:users_id,name']);
+
+        if ((int) $submission->user_id !== (int) $request->user()->users_id) {
+            $this->authorize('review', $submission->challenge->community);
+        }
+
+        return response()->json($submission);
+    }
+
     public function index(Challenge $challenge): JsonResponse
     {
         $this->authorize('review', $challenge->community);
